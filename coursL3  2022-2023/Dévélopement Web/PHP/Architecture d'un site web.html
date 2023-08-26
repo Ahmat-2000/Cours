@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>Architecture d'un site web</title>
+<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png"> 
+<link rel="stylesheet" href="Architecture%20d'un%20site%20web_files/normalize.css">
+<link rel="stylesheet" type="text/css" href="Architecture%20d'un%20site%20web_files/fiche_alex.css">
+    <style>
+.object {
+  font-style: italic;
+  font-weight: bold;
+  color: #39b583;
+}.object {
+  font-style: italic;
+  font-weight: bold;
+  color: #39b583;
+}    </style> 
+</head>
+<body>
+<div id="wrapper">
+
+<header id="tetiere">
+	<div class="logo">
+	<a href="https://ensweb.users.info.unicaen.fr/TW4B/" title="Technologies du Web — Université de Caen" class="logo"><span class="accessibilite">Logo de l'université de Caen</span></a>
+	</div>
+	<div class="titreCours">
+			<h1>Architecture d'un site web</h1>
+						<p class="diplome">Licence Informatique 3ème année</p>
+			<p class="enseignants">Alexandre Niveau — Jean-Marc Lecarpentier</p>
+	</div>
+	<section class="contexte">
+	<h2><a href="https://ensweb.users.info.unicaen.fr/TW4B/">Enseignement des technologies du Web</a></h2>
+		<ul>
+			<li>Module&nbsp;: <a href="https://ensweb.users.info.unicaen.fr/TW4B/">TW4B : Programmation d’applications web avancées</a></li>
+		<li><a href="http://www.unicaen.fr/">Université de Caen</a>, année&nbsp;2022-2023</li>
+		</ul>
+	</section><!-- fin de contexte -->
+		<div class="clearer">&nbsp;</div>
+</header><!-- fin de tetiere -->
+
+<main id="majeur">
+
+
+
+<!--  ##########  introduction  ########  -->
+
+<section class="bloc"><h2>Architecture d'un site web</h2>
+<h3>Notes de cours</h3>
+<ul>
+<li><a class="titrePres" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/archi/">Architecture d’un site web</a>
+<ul>
+<li>Séparation traitement des données &amp; affichage</li>
+<li>Une architecture MVC pour un site web</li>
+<li>Démonstration d’utilisation de l’architecture&nbsp;: <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/archi/poemes/">site des poèmes</a> (<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/archi/poemes.zip">archive</a>)</li>
+</ul></li>
+</ul>
+</section><!-- fin de l'introduction -->
+<section class="bloc">
+<h2>Travail personnel</h2><section>
+<h3>Objectifs</h3>
+<p>
+Ce TP vous fait mettre en place l'architecture
+de site présentée en cours, de manière extrêmement progressive,
+afin de vous faire comprendre l'utilité de chaque élément.
+De ce fait, l'énoncé est très long… mais chaque étape est assez simple.
+</p>
+</section>
+	<section class="exo-among-others exercice" id="exo-01">
+		<h3>Exercice&nbsp;1&nbsp;— Choix du sujet pour le TP fil rouge / projet	<a href="#exo-01" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+		
+
+<p>Ce TP est le premier d’une série où vous allez construire 
+incrémentalement un site web conformément à l'architecture présentée en 
+cours. Le résultat de ce «&nbsp;TP fil rouge&nbsp;», auquel on vous 
+demandera d'ajouter quelques compléments, constituera votre DM/projet, 
+et sera à rendre <strong>individuellement</strong>.
+</p><p>L’énoncé du TP fil rouge utilise le prétexte d'un site sur des 
+animaux, mais pour votre rendu il faut choisir quelque chose d'autre, 
+qu'on appellera un <i class="object">objet</i>, qui soit différent pour chaque étudiant·e.
+</p><p>Cela pourra être par exemple des livres, chansons, pays, mots, 
+disques, personnes, événements historiques, arbres, boîtes de camembert…</p>
+<p>La contrainte est que les <i class="object">objets</i> doivent avoir au moins trois attributs&nbsp;:</p>
+<ul>
+<li>quelque chose qui s'apparente à un nom
+</li><li>une propriété de chaque <i class="object">objet</i> qui soit du texte (pour les poèmes, ce serait l'auteur ou le texte, pour les animaux l'espèce…)
+</li><li>une propriété de chaque <i class="object">objet</i> qui soit numérique (pour les animaux, c'est l'âge, pour les poèmes ça pourrait être l'année…)
+</li></ul>
+<p>
+Préférez un sujet original (en particulier, autre chose que votre page 
+perso, et autre chose que les Pokémon)&nbsp;; mais vous ne serez pas 
+jugé·e sur le choix du sujet.
+Cependant, ne reprenez pas tels quels les <i class="object">objets</i> «&nbsp;poème&nbsp;», «&nbsp;couleur&nbsp;» et «&nbsp;animal&nbsp;» manipulés en cours et en TP.</p>
+<p>Si vous êtes à l'aise vous pouvez faire le TP fil rouge directement avec vos <i class="object">objets</i>, mais si vous avez l'impression que ça vous embrouille, utilisez des animaux comme dans l'énoncé et adaptez ensuite.
+
+	</p></section>
+
+<!-- ********************************************************************** -->
+
+	<section class="exo-among-others exercice" id="exo-02">
+		<h3>Exercice&nbsp;2&nbsp;— Introduction à l’architecture MVCR	<a href="#exo-02" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+		<p>
+Cet exercice vise à construire un site web très simple
+utilisant l'architecture MVCR présentée en cours.
+</p>
+<p>
+L'objectif est d'introduire pas à pas, en les justifiant, chacun des 
+choix de conception présentés en cours.
+L'énoncé est donc très long, mais c'est parce que l'exercice est très 
+guidé&nbsp;: il n'y a aucune difficulté particulière jusqu'à la section 
+«&nbsp;Compléments&nbsp;».
+</p>
+<p>À la fin de l'exercice, vous devriez arriver à un résultat proche de
+l'exemple du site des poèmes présenté (en partie) en cours. Si nécessaire,
+vous pouvez regarder comment fonctionne le résultat final
+(<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/archi/poemes/">version en ligne</a>, <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/archi/poemes.zip">archive du code</a>),
+cependant <strong>cet énoncé étant très incrémental, vous passerez par des étapes que vous ne retrouverez
+pas forcément dans le résultat final du site des poèmes</strong>. N'utilisez surtout pas ce code pour faire
+du copier-coller, vous risquez de vous embrouiller dans les questions. C'est un outil de compréhension du cours, pas un corrigé.
+</p>
+
+
+<h4>Préliminaires</h4>
+<ol>
+<li>Créer un nouveau répertoire pour cet exercice,
+par exemple <code>exoMVCR</code> (c'est le nom
+qui sera utilisé dans cet énoncé). Dans toute la suite, on se placera dans ce répertoire.</li>
+<li>Créer dans <code>exoMVCR</code> un répertoire <code>src</code>, qui contiendra
+tout le code source de l'application (c'est-à-dire tout ce qui n'est pas censé être <em>directement</em> accessible depuis un client).</li>
+<li>Dans un fichier <code>src/Router.php</code>, créer une classe <code>Router</code>
+contenant uniquement une méthode <code>main</code> qui
+affiche quelque chose (par exemple «&nbsp;Hello world&nbsp;»).</li>
+<li>Créer un fichier <code>animaux.php</code> (à adapter à vos <i class="object">objets</i>) à la racine de <code>exoMVCR</code>
+avec le contenu suivant&nbsp;:
+<pre class="src">&lt;?php
+/*
+ * On indique que les chemins des fichiers qu'on inclut
+ * seront relatifs au répertoire src.
+ */
+set_include_path("./src");
+
+/* Inclusion des classes utilisées dans ce fichier */
+require_once("Router.php");
+
+/*
+ * Cette page est simplement le point d'arrivée de l'internaute
+ * sur notre site. On se contente de créer un routeur
+ * et de lancer son main.
+ */
+$router = new Router();
+$router-&gt;main();
+?&gt;</pre>
+</li>
+</ol>
+
+<p>Normalement, en allant à l'URL du répertoire (par exemple
+<code>https://dev-<i>NUMETU</i>.users.info.unicaen.fr/exoMVCR/animaux.php</code>,
+en adaptant le chemin), vous devriez voir le message du routeur.</p>
+
+
+<h4>Vue</h4>
+<ol>
+<li>Créer un répertoire <code>view</code> dans <code>src</code>, contenant
+une classe <code>View</code>
+avec deux attributs, <code>$title</code> et <code>$content</code>,
+et une méthode <code>render()</code> qui affiche une page HTML avec
+le contenu de ces attributs. (La méthode <code>render()</code> peut
+se contenter d'inclure un squelette défini dans un autre fichier,
+mais ce n'est pas obligatoire.)</li>
+<li>Ajouter une méthode <code>makeTestPage()</code> à <code>View</code>,
+qui remplit les attributs avec du texte quelconque.
+Dans le <code>main</code> du routeur,
+créer une instance de <code>View</code>
+et lui faire afficher la page de test. Tester le résultat.</li>
+<li>Ajouter une méthode <code>makeAnimalPage($name, $species)</code> <small>(adapter le nom à vos <i class="object">objets</i>)</small> à <code>View</code>,
+qui génère l'affichage d'une page sur l'animal passé en argument&nbsp;:
+par exemple, la page générée par l'appel <code>makeAnimalPage("Médor", "chien")</code>
+aura pour titre «&nbsp;Page sur Médor&nbsp;»
+et pour contenu «&nbsp;Médor est un animal de l'espèce chien&nbsp;».
+Tester cet affichage depuis le routeur.
+</li>
+</ol>
+<p>On a maintenant une page qui affiche des informations sur Médor. On va
+faire en sorte qu'elle puisse en afficher sur divers animaux, en fonction
+de l'URL. Pour cela, on va d'abord créer un contrôleur pour gérer les informations.
+</p>
+
+
+<h4>Contrôleur</h4>
+<ol>
+<li>Créer un répertoire <code>src/control</code>,
+contenant une classe <code>Controller</code> avec un attribut <code>$view</code>.
+Le constructeur doit prendre en argument
+une instance de <code>View</code> qu'il met dans cet attribut.</li>
+<li>Ajouter la méthode suivante dans le contrôleur&nbsp;:
+<pre class="src">public function showInformation($id) {
+	$this-&gt;view-&gt;makeAnimalPage("Médor", "chien");  //<small>(adapter le nom de la méthode à vos <i class="object">objets</i>)</small>
+}
+</pre>
+Modifier le routeur pour qu'il fasse appel à cette méthode (avec un argument quelconque)
+plutôt que d'appeler lui-même <code>makeAnimalPage</code>.
+Vérifier que tout fonctionne toujours comme avant,
+et corriger votre code si ce n'est pas le cas.
+</li>
+<li>Ajouter un attribut <code>$animalsTab</code> <small>(adapter le nom à vos <i class="object">objets</i>)</small> au contrôleur,
+contenant le tableau suivant&nbsp;:
+<pre class="src">array(
+	'medor' =&gt; array('Médor', 'chien'),
+	'felix' =&gt; array('Félix', 'chat'),
+	'denver' =&gt; array('Denver', 'dinosaure'),
+);
+</pre>
+(et ce que vous voulez d'autre…).
+Utiliser ce tableau dans <code>showInformation</code> pour que le site affiche que Médor est un chien, Félix un chat, Denver un dinosaure, etc., 
+en fonction de l'argument <code>$id</code> passé à la méthode,
+mais affiche un message d'erreur («&nbsp;Animal inconnu&nbsp;») s'il ne connaît pas
+l'identifiant. Tester depuis le routeur en passant différents identifiants.</li>
+<li>Si ce n'est déjà fait, faire en sorte que le message d'erreur mentionné à la question précédente soit généré par une méthode <code>makeUnknownAnimalPage()</code> de la vue <small>(adapter le nom à vos <i class="object">objets</i>)</small>.</li>
+</ol>
+
+<h4>Routeur</h4>
+<ol>
+<li>Modifier le routeur pour qu'il passe en argument à la méthode
+<code>showInformation</code> du contrôleur la valeur du
+paramètre <code>id</code> de l'URL.</li>
+<li>Tester&nbsp;: votre site devrait dire «&nbsp;Médor est un animal de l'espèce chien&nbsp;» si
+on met le paramètre <code>id=medor</code> dans l'URL, «&nbsp;Denver est un animal de l'espèce dinosaure&nbsp;»
+pour <code>id=denver</code>, etc., et devrait afficher le message d'erreur pour des identifiants inconnus.</li>
+<li>Que se passe-t-il s'il n'y a pas de paramètre <code>id</code> dans l'URL&nbsp;? Faire en sorte
+qu'une page d'accueil s'affiche, en modifiant le routeur, le contrôleur et la vue.</li>
+</ol>
+
+
+<h4>Modèle</h4>
+<p>On voudrait à présent donner plus d'information sur chaque <i class="object">objet</i>&nbsp;:
+outre son espèce, la page d'un animal doit maintenant donner son âge.
+Cela reste possible d'ajouter un argument <code>age</code>
+à la méthode <code>makeAnimalPage</code> de la vue,
+mais on voit bien les limites de cette approche&nbsp;: que se passerait-il
+si on avait des dizaines d'informations à donner sur chaque animal (taille, poids,
+nourriture préférée, etc.)&nbsp;?</p>
+<p>La solution est de manipuler les animaux comme des instances
+d'une classe <code>Animal</code>.</p>
+<ol>
+<li>Dans un répertoire <code>src/model</code>, créer une classe <code>Animal</code>,
+qui a comme attributs (au minimum) un nom, une espèce et un âge <small>(adapter le nom de la classe et le contenu à vos <i class="object">objets</i>)</small>. Créer le constructeur
+et les accesseurs appropriés (pas besoin de mutateurs, on ne modifiera pas les instances).
+</li>
+<li>Modifier le tableau <code>$animalsTab</code> dans le contrôleur pour qu'il contienne des instances de <code>Animal</code>
+<small>(attention&nbsp;: PHP ne voudra pas que vous définissiez le tableau en-dehors du constructeur dans ce cas)</small>,
+et changer la méthode <code>makeAnimalPage</code> de la vue pour qu'elle ne prenne
+plus qu'un <code>Animal</code> en argument. Vérifier que tout fonctionne toujours.</li>
+<li>Modifier la vue pour qu'elle affiche l'âge de l'animal.</li>
+</ol>
+
+<h4>Liste des animaux</h4>
+<p>On voudrait à présent faire une page spéciale, d'URL <code>animaux.php?liste</code>,
+qui affiche la liste de tous les animaux dont le site connaît l'espèce.</p>
+<ol>
+<li>Ajouter une méthode <code>makeListPage()</code> à la vue
+(qui pour l'instant affiche un contenu quelconque), une
+méthode <code>showList()</code> au contrôleur qui appelle <code>makeListPage()</code>,
+et faire en sorte que le routeur appelle <code>showList()</code> lorsque l'URL
+contient un paramètre <code>liste</code> (quelle que soit sa valeur).
+Vérifier que ça fonctionne.</li>
+<li>Faire en sorte que <code>makeListPage</code> prenne en argument
+un tableau d'instances de votre <i class="object">objet</i> et affiche une liste des noms.</li>
+<li>Modifier <code>showList</code> dans le contrôleur pour qu'elle passe
+à <code>makeListPage</code> la liste de tous les <i class="object">objets</i>.</li>
+<li>Faire en sorte que chaque nom dans la liste soit un lien vers la page
+de l'<i class="object">objet</i> en question.</li>
+<li>Pour faire la question précédente, avez-vous pris garde à ce que la vue
+ne fasse pas d'hypothèses sur la façon dont sont construites les URL&nbsp;?
+Si ce n'est déjà fait, créer une méthode <code>getAnimalURL($id)</code> <small>(adapter le nom à vos <i class="object">objets</i>)</small>
+dans le routeur, qui renvoie l'URL de la page d'un animal.
+Attention, la vue doit donc avoir accès à une instance du routeur&nbsp;:
+l'ajouter comme attribut et comme argument au constructeur.</li>
+</ol>
+
+<h4>Stockage</h4>
+<p>Pour l'instant, c'est le contrôleur qui «&nbsp;décide&nbsp;» des animaux connus par le site.
+Généralement, ce type d'information est plutôt contenu dans une base de données.
+On ne va pas utiliser de BD dans ce TP, mais on peut déjà adapter le contrôleur
+pour qu'il fonctionne dans tous les cas, BD ou non.</p>
+<ol>
+<li>Créer une interface <code>AnimalStorage</code> <small>(adapter le nom à vos <i class="object">objets</i>)</small> dans <code>src/model</code>&nbsp;;
+elle aura pour méthodes
+<ul>
+<li><code>read($id)</code>, dont les implémentations doivent renvoyer l'instance de <code>Animal</code> ayant pour identifiant celui passé en argument, ou <code>null</code> si aucun animal
+n'a cet identifiant&nbsp;; et</li>
+<li><code>readAll()</code>, dont les implémentations doivent
+renvoyer un tableau associatif identifiant&nbsp;⇒&nbsp;animal contenant tous les animaux de la «&nbsp;base&nbsp;».</li>
+</ul>
+</li>
+<li>Créer une classe <code>AnimalStorageStub</code> dans <code>src/model</code> <small>(adapter le nom à vos <i class="object">objets</i>)</small> 
+qui implémente l'interface <code>AnimalStorage</code>
+en utilisant des données écrites «&nbsp;en dur&nbsp;» (reprendre le tableau <code>$animalsTab</code> du contrôleur).</li>
+<li>Ajouter un argument de type <code>AnimalStorage</code>
+au constructeur du contrôleur. Le contrôleur doit enregistrer cette instance
+dans un attribut, et l'utiliser dans ses méthodes <code>showInformation</code> et <code>showList</code>
+à la place du tableau <code>$animalsTab</code>.</li>
+<li>Modifier le code du routeur pour qu'il passe une nouvelle instance de <code>AnimalStorageStub</code> au constructeur du contrôleur.</li>
+</ol>
+
+<p>À présent, le contrôleur est complètement indépendant de la façon dont sont stockées
+les données. C'est le routeur qui décide d'utiliser un <code>AnimalStorageStub</code>,
+mais il aurait pu utiliser un <code>AnimalStorageMySQL</code>, par exemple,
+sans que le contrôleur ne s'en rende compte.</p>
+
+
+<h4>Compléments (optionnel)</h4>
+<!-- <p class="info">Les questions suivantes sont destinées aux plus rapides et à celles et ceux qui voudraient
+approfondir leur travail. Si vous avez eu beaucoup de mal à faire ce qui précède,
+il vaut mieux tout recommencer une deuxième fois plutôt que s'attaquer à ces questions
+moins guidées.</p> -->
+<ol>
+<li>Ce n'est pas spécialement propre que ce soit le routeur
+qui prenne la décision de créer un <code>AnimalStorageStub</code>.
+Faire en sorte que l'instance de <code>AnimalStorage</code> que le routeur
+utilise pour créer le contrôleur soit elle-même récupérée dans le constructeur du
+routeur (ou mieux, comme paramètre du <code>main</code>).
+Ce sera donc <code>animaux.php</code>, c'est-à-dire
+le véritable point d'entrée de l'application, qui va prendre cette décision.
+(S'il prend plusieurs décisions de ce type, ce qui arrive très rapidement
+sur un site modérément compliqué, il peut être plus naturel de les déporter
+à nouveau dans un fichier de configuration, que <code>animaux.php</code>
+se contente d'inclure.)</li>
+<li>Comme on l'a vu en cours, les paramètres d'URL ne sont pas destinés
+à faire du routage. Il est relativement simple
+de modifier le code pour que les URL soient de la forme <code>animaux.php/denver</code>,
+en utilisant la variable <code>$_SERVER['PATH_INFO']</code>, qui contient
+la «&nbsp;partie virtuelle&nbsp;» de l'URL (le «&nbsp;chemin&nbsp;» qui se situe après le nom du script).
+Faire en sorte que ça soit le cas. Si votre code est propre, vous ne devriez
+avoir à changer que les méthodes <code>main</code> et <code>getAnimalURL</code>
+du routeur.</li>
+</ol>
+
+	</section>
+
+<!-- ********************************************************************** -->
+
+</section><!-- fin de travail -->
+</main><!-- fin de majeur -->
+
+
+</div> <!-- fermeture du wrapper -->
+
+
+</body></html>

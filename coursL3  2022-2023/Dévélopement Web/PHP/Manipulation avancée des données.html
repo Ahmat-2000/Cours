@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>Manipulation avancée des données</title>
+<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png"> 
+<link rel="stylesheet" href="Manipulation%20avanc%C3%A9e%20des%20donn%C3%A9es_files/normalize.css">
+<link rel="stylesheet" type="text/css" href="Manipulation%20avanc%C3%A9e%20des%20donn%C3%A9es_files/fiche_alex.css">
+    <style>
+.object {
+  font-style: italic;
+  font-weight: bold;
+  color: #39b583;
+}    </style> 
+</head>
+<body>
+<div id="wrapper">
+
+<header id="tetiere">
+	<div class="logo">
+	<a href="https://ensweb.users.info.unicaen.fr/TW4B/" title="Technologies du Web — Université de Caen" class="logo"><span class="accessibilite">Logo de l'université de Caen</span></a>
+	</div>
+	<div class="titreCours">
+			<h1>Manipulation avancée des données</h1>
+						<p class="diplome">Licence Informatique 3ème année</p>
+			<p class="enseignants">Alexandre Niveau — Jean-Marc Lecarpentier</p>
+	</div>
+	<section class="contexte">
+	<h2><a href="https://ensweb.users.info.unicaen.fr/TW4B/">Enseignement des technologies du Web</a></h2>
+		<ul>
+			<li>Module&nbsp;: <a href="https://ensweb.users.info.unicaen.fr/TW4B/">TW4B : Programmation d’applications web avancées</a></li>
+		<li><a href="http://www.unicaen.fr/">Université de Caen</a>, année&nbsp;2022-2023</li>
+		</ul>
+	</section><!-- fin de contexte -->
+		<div class="clearer">&nbsp;</div>
+</header><!-- fin de tetiere -->
+
+<main id="majeur">
+
+
+
+<!--  ##########  introduction  ########  -->
+
+<section class="bloc"><h2>Manipulation avancée des données</h2>
+<h3>Notes de cours</h3>
+<ul>
+<li><a class="titrePres" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/crud++/">Manipulation avancée des données</a>
+<ul>
+<li>POST-redirect-GET</li>
+<li>Feedback</li>
+<li>Autres améliorations</li>
+<li>Démonstration sur le <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/crud++/couleurs/">site des couleurs</a> (<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/crud++/couleurs.zip">archive</a>)</li>
+</ul></li>
+</ul>
+</section><!-- fin de l'introduction -->
+<section class="bloc">
+<h2>Travail personnel</h2><section>
+<h3>Objectifs</h3>
+<p>
+On continue à implémenter l'architecture du site. L'exercice de ce TP implémente les améliorations ergonomiques vues en cours
+</p></section>
+	<section class="exo-among-others exercice" id="exo-01">
+		<h3>Exercice&nbsp;1&nbsp;— Amélioration de l’ergonomie dans MVCR	<a href="#exo-01" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+		<p>On continue le site sur les animaux/<i class="object">objets</i> fait aux deux TP précédents,
+en ajoutant les améliorations présentées en cours.</p>
+<p>Avant de commencer cet exercice, il faut avoir avoir fait
+au moins toute la partie concernant la création d'un nouvel animal/<i class="object">objet</i>dans la partie précédente (c'est-à-dire jusqu'à «&nbsp;Suppression d'un animal&nbsp;»
+<strong>non</strong> compris).</p>
+<p>Comme d'habitude,
+ne pas hésiter à s'inspirer de l'exemple des couleurs
+si vous avez des doutes, n'hésitez pas à jeter un œil à l'exemple des couleurs 
+qui a été expliqué et complété en direct pendant le cours
+(<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/crud++/couleurs/">résultat final</a>, <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/crud++/couleurs.zip">archive du code</a>),
+mais
+ il est interdit de copier-coller (c'est de toute façon inutile — c'est 
+en écrivant soi-même, et en essayant de comprendre ce qu'on écrit, qu'on
+ apprend quelque chose).</p>
+
+<h4>Ajout d'un menu</h4>
+<p>Si ce n'est déjà fait, ajouter un attribut <code>$menu</code> à la vue,
+qui contient une liste de couples URL-texte.
+Cette liste doit être utilisée dans le squelette pour afficher un menu
+en haut de la page.</p>
+<p>Le menu doit contenir des liens vers la page d'accueil, la liste des animaux/<i class="object">objets</i>,
+et la page de création d'un animal/<i class="object">objet</i>.</p>
+
+<h4>POST-redirect-GET</h4>
+<p>Normalement, lors de la création d'un nouvel animal,
+le contrôleur appelle le <code>makeAnimalPage</code> de la vue.
+Comme vu en cours, ce n'est pas une bonne chose&nbsp;: on va plutôt
+demander au client de faire une nouvelle requête, en <code>GET</code>,
+vers la page de l'animal nouvellement créé.
+</p><ol>
+<li>
+Ajouter une méthode <code>POSTredirect($url, $feedback)</code>
+au routeur, qui envoie une réponse HTTP de type <code>303 See Other</code>
+demandant au client de se rediriger vers l'URL passée en argument (le paramètre <code>$feedback</code> est pour l'instant ignoré).
+</li>
+<li>Ajouter une méthode <code>displayAnimalCreationSuccess($id)</code> <small>(adapter le nom à vos <i class="object">objets</i>)</small>
+à la vue, qui utilise la méthode créée ci-dessus pour rediriger le client vers la page de l'animal dont l'identifiant
+est passé en paramètre (passer une chaîne quelconque comme feedback pour l'instant).
+Dans le contrôleur, lorsqu'un nouvel animal
+a été correctement ajouté, appeler cette nouvelle méthode
+plutôt que <code>makeAnimalPage</code>.</li>
+<li>Tester. Vérifier notamment que l'actualisation de la page
+fonctionne correctement après ajout d'un nouvel animal.
+</li></ol>
+
+<h4>Feedback</h4>
+<p>On voudrait donner un feedback à l'internaute,
+pour l'informer sur le résultat de ses actions (succès ou erreur).
+</p>
+<ol>
+<li>Ajouter un attribut <code>$feedback</code> à la vue,
+passé à son constructeur. Le squelette devra afficher le contenu de cet attribut quelque
+part en haut de la page.</li>
+<li>Modifier le routeur pour qu'il passe la chaîne <code>"Test"</code>
+comme feedback lorsqu'il construit la vue. Vérifier que ça fonctionne.</li>
+<li>À présent, on va utiliser une variable de session <code>$_SESSION['feedback']</code>
+pour
+passer le feedback d'une requête à l'autre.
+Commencer une session au début du <code>main</code> du routeur,
+utiliser la variable de session <code>$_SESSION['feedback']</code>
+pour construire la vue,
+puis supprimer le contenu de cette variable (le feedback n'est affiché
+qu'une seule fois).</li>
+<li>Modifier la méthode <code>POSTredirect</code>
+pour qu'elle mette dans
+<code>$_SESSION['feedback']</code> le contenu de son paramètre <code>$feedback</code>,
+avant la redirection.</li>
+<li>Tester (et mettre un message de feedback significatif).</li>
+</ol>
+
+<h4>Persistance des données de formulaire</h4>
+<p>On veut maintenant appliquer le POST-redirect-GET dans le cas où
+l'ajout d'un nouvel animal a échoué à cause d'erreurs dans le formulaire.
+Cela nécessite d'enregistrer l'animal en cours de création
+dans une variable de session.</p>
+<ol>
+<li>Lorsque l'internaute demande page
+de création d'un animal, qui dans votre code s'occupe de créer 
+la nouvelle instance de <code>AnimalBuilder</code>
+pour la passer à <code>makeAnimalCreationPage</code>&nbsp;?
+Ça ne devrait pas être le routeur, qui n'est pas censé manipuler
+des éléments du modèle. Si ce n'est déjà fait,
+transférer ceci dans une méthode <code>newAnimal</code> du contrôleur.
+Vérifier que tout marche toujours.</li>
+<li>Modifier la méthode <code>saveNewAnimal</code> du contrôleur&nbsp;:
+si l'animal créé par l'internaute est invalide,
+enregistrer l'instance de <code>AnimalBuilder</code>
+dans la variable de session <code>$_SESSION['currentNewAnimal']</code>.</li>
+<li>Modifier la méthode <code>newAnimal</code> pour qu'elle utilise l'instance
+de <code>AnimalBuilder</code> stockée en session si elle existe,
+plutôt que d'en créer une nouvelle.</li>
+<li>Tester&nbsp;: si on soumet un animal invalide, le formulaire devrait rester
+pré-rempli même si on change de page et qu'on revient.</li>
+<li>Ajouter une méthode <code>displayAnimalCreationFailure()</code> à la vue,
+qui redirige le client vers la page 
+de création d'un animal (avec un message de feedback pertinent). Modifier le contrôleur pour qu'il appelle cette méthode
+au lieu d'afficher le formulaire lorsque l'animal soumis est invalide.</li>
+<li>Tester&nbsp;: il devrait être possible d'actualiser après soumission d'un animal
+invalide.
+Il ne reste plus qu'à supprimer la variable de session lors d'une soumission
+réussie.
+</li>
+</ol>
+<h4>Compléments (optionnel)</h4>
+<p>Les principes présentés dans cet exercice devront
+être appliqués au reste de l'architecture (modification et suppression).
+Il pourrait aussi être une bonne idée de regarder les compléments dans les exercices des TP précédents.</p>
+	</section>
+
+<!-- ********************************************************************** -->
+
+</section><!-- fin de travail -->
+</main><!-- fin de majeur -->
+
+
+</div> <!-- fermeture du wrapper -->
+
+
+</body></html>

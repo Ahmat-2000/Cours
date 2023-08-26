@@ -1,0 +1,535 @@
+
+/* correction de normalize.css */
+@supports (text-decoration: underline dotted) {
+  abbr[title] {
+    border-bottom: inherit;
+    text-decoration: underline dotted;
+  }
+}
+
+
+code, kbd, pre, samp, .src {
+	font-family: 'Droid Sans Mono', monospace;
+	font-size: .9em;
+}
+
+pre, .src  {
+	margin: 5px;
+	background-color: ivory;
+	border: 1px dotted peru;
+	padding: 10px;
+	overflow: auto;
+}
+
+
+/* inline code */
+#presentation code {
+	background-color: cornsilk;
+	color: inherit;
+	font-weight: inherit;
+	border-radius: .2em;
+}
+
+/* block code: reset */
+#presentation pre code, #presentation .src code,
+#tutoriel pre code, #tutoriel .src code {
+	/*display: block;*/
+	padding: 0;
+	font-weight: inherit;
+	font-size: inherit;
+	color: inherit;
+	background-color: inherit;
+	border-radius: none;
+}
+
+#presentation .hl code, #tutoriel .hl code {
+	/* sinon c'est vraiment dur à lire.
+	 * idéalement il faudrait changer les couleurs pourries de PHP */
+	font-weight: bold;
+	display: block;
+}
+
+
+
+li, .p, p { margin: .7em 0; }
+.slide > p, .slide > .p { display: list-item; margin: .7em 0 .7em 40px;  }
+.slide > .p ul { margin: 0; list-style-type: square; }
+.conseq { list-style-type: none; display: block; }
+.conseq::before { content: "➤ "; }
+.sequence li:nth-child(n + 2) { list-style-type: none; }
+.sequence li:nth-child(n + 2)::before { content: "↳ "; }
+
+.predemo {
+	display: flex;
+	justify-content: space-around;
+	align-items: stretch;
+}
+
+
+
+/* liens */
+:link {color: darkblue;}
+:visited { color: darkmagenta; }
+
+/* backwards compat only */
+img.leader {display: block; margin: auto;}
+
+figure {
+	display: block;
+	margin: auto;
+	text-align: center;
+	overflow: auto;
+}
+
+figure img {
+	max-width: 100%;
+}
+
+figcaption {
+	padding: .2em;
+}
+
+
+.side {
+	float: right;
+	margin: 1em;
+}
+
+.sidecol {
+	float: right;
+	max-width: 40%;
+	margin: 1em;
+}
+
+ul ul { list-style-type: square; }
+
+
+blockquote {
+	border-left: .2em solid gray;
+	padding-left: .5em;
+}
+
+
+
+button, input, select, textarea {
+	/*font-family: inherit;*/
+	font-size: 100%;
+}
+
+main, header, footer, section, aside {
+	display: block;
+}
+
+h1, h2 {
+	color: #005D7E;
+	margin: 0;
+}
+
+h1 {
+	font-size: 250%;
+}
+
+h2, .auteur {
+	font-size: 175%;
+}
+
+#tutoriel h1, #tutoriel h2 {
+	margin: 1em;
+}
+
+.title.slide {
+	border: 1px solid #005D7E;
+	border-radius: .2em;
+	text-align: center;
+	padding: .5em;
+}
+
+	.auteur, .affiliation, .details, .proj_switch {
+		padding: .5em 0;
+	}
+
+	.auteur, .affiliation {
+		margin: 0;
+	}
+
+	.details {
+		margin: 1em 0 .2em;
+		font-size: smaller;
+	}
+
+
+	.proj_switch {
+		margin: auto 0 0;
+	}
+
+.slide {
+	clear: both;
+}
+
+.demo {
+	margin: 10px auto;
+}
+
+a.demo {
+	display: block;
+	background: darkblue;
+	color: white;
+	text-align: center;
+	padding: .5em;
+	max-width: 20em;
+	clear: both;
+}
+
+.smalldemo {
+	background: darkblue;
+	color: white;
+	padding: .1em .4em;
+	border-radius: .2em;
+}
+
+.html-hl .html-tag {
+	color: #486A25;
+}
+
+
+/* notes pour moi */
+.hidenotes .note {
+	display: none;
+}
+
+.note {
+	border: 3px double coral;
+	padding: .1em .5em;
+	border-radius: .1em;
+}
+
+.punchy .slide :is(h1, h2, h3, h4, h5, h6)::after {
+	content: " !!";
+}
+
+/*
+ * Spécifiques à l'écran
+ */
+@media only screen {
+
+	html {
+		background: url('../images/newnewLogo-white.png') no-repeat fixed 0px 0px #005D7E;
+		height: 100%;
+		font-family: 'Droid Sans', 'Arial', sans-serif;
+	}
+	html.tmp {
+		background: url('../images/newnewLogo-white.png') no-repeat fixed 0px 0px #8B0E2B;
+	}
+
+	body {
+		margin: 0;
+		padding: .1em; /* because of margin collapsing */
+		min-height: 100%;
+		max-width: calc(60em + .8*60em + 2*.8*1em);
+		min-width: 20em;
+		transition: .2s;
+		background: white;
+	}
+
+	.title.slide {
+		margin: .5em;
+	}
+
+	#contenu {
+		margin: .5em;
+	}
+	
+	#tutoriel {
+		padding: 0 1em;
+	}
+
+	.license {
+		clear: both;
+		border-top: 1px solid #005D7E;
+		text-align: center;
+		padding: .5em;
+		font-size: smaller;
+	}
+
+	.license .icone {
+		display: block;
+		box-sizing: border-box;
+	}
+
+	.license .texte {
+		max-width: 50em;
+		margin: auto;
+	}
+
+	/*
+	#presentation a[href^="http://"]::after, #presentation a[href^="https://"]::after {
+		display: inline-block;
+		content: " " url("../images/external.svg");
+		width:1em;
+	}
+	*/
+
+	#presentation a[href^="http://"]:not(.local),
+	#presentation a[href^="https://"]:not(.local),
+	#tutoriel a[href^="http://"]:not(.local),
+	#tutoriel a[href^="https://"]:not(.local) {
+	  /* not using background shortcut to allow for background-color modifications */
+		background-image: url("../images/external.svg");
+		background-repeat: no-repeat;
+		background-position: center right;
+		background-size: .8em .8em;
+		padding-right: 1em;
+	}
+
+
+	@media (min-width: 80em) {
+		body {
+			margin-left: 128px;
+		}
+
+		@media (min-height: 150px) {
+			.license .icone {
+				position: fixed;
+				bottom: 15px;
+				left: 0;
+				width: 128px;
+			}
+
+			.license .texte {
+				text-align: left;
+				max-width: none;
+				margin-bottom: 17px;
+			}
+		}
+	}
+
+	#presentation, #tutoriel {
+		box-sizing: border-box;
+		width: 100%;
+		max-width: 60em;
+	}
+
+
+	/* put the box-shadow here because of a Chrome bug (?) when printing */
+	.title.slide {
+		box-shadow: 1px 1px 2px 0px lightgray;
+	}
+
+	.slide {
+		padding: 1em;
+		overflow: auto;
+	}
+
+	/*
+	.boite_reponse {
+		border: 1px solid black;
+		background: lavender;
+		color: black;
+		padding: 1em;
+	}
+	.boite_reponse .reponse {
+		opacity: 0;
+		transition: 1s;
+	}
+	.boite_reponse:hover .reponse {
+		opacity: 1;
+	}
+	*/
+
+
+
+	/* no flex */
+	#presentation, #tutoriel, #liens {
+		float: left;
+	}
+
+	@supports (display: flex) {
+		#contenu {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: nowrap;
+			align-items: flex-start;
+		}
+
+		@media (max-width: 60em) {
+			#contenu {
+				flex-direction: column;
+			}
+
+			#liens {
+				align-self: center;
+			}
+		}
+
+		#presentation, #tutoriel {
+			flex: 0 1 auto;
+		}
+
+		#liens {
+			flex: 1 2 auto;
+		}
+
+		.title.slide {
+			display: flex;
+			flex-direction: column;
+		}
+	}
+
+	strong { color: crimson; font-weight: bold; }
+	em { font-style: italic; font-weight: bold; }
+
+	:target {
+		border-width: 2px .5em;
+		box-shadow: inset 0 0 1em 1em cornsilk;
+		border-color: #CABF0A;
+		border-style: solid;
+		padding: .2em .8em;
+	}
+
+  a.slide-link {
+	  font-size: 70%;
+	  font-style: normal;
+	  font-weight: normal;
+	  color: #999;
+	  float: right;
+	  padding: 0 0 0 1em;
+  }
+
+	/* COLONNE LIENS */
+	#liens {
+		box-sizing: border-box;
+		min-width: 20em;
+		max-width: 60em;
+		font-size: 0.8em;
+		border: 1px solid #005D7E;
+		padding: 0px;
+		margin: 4em 1em;
+	}
+
+	#liens a {
+		text-decoration: none;
+	}
+
+	#liens ul { 
+		margin: 5px;
+		padding: 8px;
+		list-style-type: none;
+	}
+
+	#liens li { 
+		margin: 5px 0px;
+		padding: 0px 0px 0px 5px;
+	}
+
+	#liens h3 { 
+		background-color: #005D7E;  /* #aa0022 */
+		color: white;
+		text-align: center;
+		margin: 0;
+	}
+
+
+ /* MODE PROJ */
+
+	.proj {
+	}
+
+	.proj body {
+		max-width: calc(60em);
+		font-size: 2em;
+	}
+
+	.proj .zoomable {
+	  transform: scale(2);
+	  transform-origin: top left;
+	}
+
+	.proj .title.slide {
+		border: 0;
+		box-shadow: none;
+	}
+
+	.proj h1 {
+		margin: auto 0 1em 0;
+	}
+
+	.proj .proj_switch {
+		font-size: 1rem;
+	}
+
+	.proj .slide {
+		box-sizing: border-box;
+		min-height: 100vh;
+		padding: 10vh 1em;
+	}
+
+	.proj .long {
+		max-height: 45vh;
+	}
+
+	.proj .long.full {
+		max-height: 80vh;
+	}
+
+	.proj a:visited {
+		color: darkblue;
+	}
+
+	.proj #liens {
+		display: none;
+	}
+
+	.proj .handout {
+		display: none;
+	}
+
+	.proj .license .texte {
+		font-size: .5em;
+	}
+
+	.proj .clicktosee {
+		border-bottom: 1px dotted grey;
+		color: transparent;
+		transition: .3s;
+	}
+	.proj .clicktosee:active {
+		color: inherit;
+		transition: .3s;
+	}
+	.proj small {
+		font-size: 50%;
+	}
+
+	.proj pre.reduced {
+		max-height: 45vh;
+		overflow: auto;
+		font-size: 50%;
+	}
+}
+
+/*
+ * PRINT
+ */
+
+@media print {
+	#presentation, #tutoriel {
+		margin-top: 1em;
+	}
+
+	a {
+		text-decoration: none;
+	}
+	/* Affichage de la destination des liens */
+	a::after {
+		content: " [" attr(href) "]";
+		color: black;
+	}
+
+	.proj_switch {
+		display: none;
+	}
+
+	.proj .slide {
+	  page-break-after: always;
+	}
+}

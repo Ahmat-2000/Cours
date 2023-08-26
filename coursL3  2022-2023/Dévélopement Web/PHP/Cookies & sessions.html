@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>Cookies &amp; sessions</title>
+<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png"> 
+<link rel="stylesheet" href="Cookies%20&amp;%20sessions_files/normalize.css">
+<link rel="stylesheet" type="text/css" href="Cookies%20&amp;%20sessions_files/fiche_alex.css">
+</head>
+<body>
+<div id="wrapper">
+
+<header id="tetiere">
+	<div class="logo">
+	<a href="https://ensweb.users.info.unicaen.fr/TW4B/" title="Technologies du Web — Université de Caen" class="logo"><span class="accessibilite">Logo de l'université de Caen</span></a>
+	</div>
+	<div class="titreCours">
+			<h1>Cookies &amp; sessions</h1>
+						<p class="diplome">Licence Informatique 3ème année</p>
+			<p class="enseignants">Alexandre Niveau — Jean-Marc Lecarpentier</p>
+	</div>
+	<section class="contexte">
+	<h2><a href="https://ensweb.users.info.unicaen.fr/TW4B/">Enseignement des technologies du Web</a></h2>
+		<ul>
+			<li>Module&nbsp;: <a href="https://ensweb.users.info.unicaen.fr/TW4B/">TW4B : Programmation d’applications web avancées</a></li>
+		<li><a href="http://www.unicaen.fr/">Université de Caen</a>, année&nbsp;2022-2023</li>
+		</ul>
+	</section><!-- fin de contexte -->
+		<div class="clearer">&nbsp;</div>
+</header><!-- fin de tetiere -->
+
+<main id="majeur">
+
+
+
+<!--  ##########  introduction  ########  -->
+
+<section class="bloc"><h2>Cookies &amp; sessions</h2>
+<h3>Notes de cours</h3>
+<ul>
+<li><a class="titrePres" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/sessions/">Cookies HTTP&nbsp;&amp; sessions PHP</a>
+<ul>
+</ul></li>
+</ul>
+</section><!-- fin de l'introduction -->
+<section class="bloc">
+<h2>Travail personnel</h2><section>
+<h3>Objectifs</h3>
+<p>Ce TP commence par deux exercices d'application directe des principes
+des cookies et des sessions. Ils ont l'avantage de vous faire manipuler
+du PHP simple et réfléchir un peu au fonctionnement de HTTP.</p>
+<p>Le troisième exercice montre une application
+classique des cookies, l'enregistrement de préférences de l'internaute.
+</p>
+</section>
+	<section class="exo-among-others exercice" id="exo-01">
+		<h3>Exercice&nbsp;1&nbsp;— Cookies	<a href="#exo-01" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+		<ol>
+<li>Écrire un script PHP qui crée une page HTML simple affichant la date et l'heure courantes.</li>
+<li><strong>En utilisant un cookie</strong>, faire en sorte que <em>si l'internaute a déjà visité la page</em>, alors la date et l'heure de sa dernière visite sont également affichées.
+<figure>
+<img src="Cookies%20&amp;%20sessions_files/modele.png" alt="Exemple de résultat" style="border: 1px solid grey; box-shadow: 1px 1px 1px 1px grey;">
+<figcaption>Exemple de résultat</figcaption>
+</figure></li>
+<li>Modifier le code précédent pour que le site ne se souvienne de l'internaute que pendant trente secondes.</li>
+<li>Ouvrir le <em>moniteur réseau</em> de Firefox (clic droit sur la 
+page &gt; Inspecter &gt; onglet «&nbsp;Réseau&nbsp;»&nbsp;; 
+raccourci&nbsp;: control-shift-E), et observer le cookie transmis dans 
+les en-têtes HTTP de la requête.</li>
+<li>Ouvrir l'<em>inspecteur de stockage</em> de Firefox (clic droit sur 
+la page &gt; Inspecter &gt; onglet «&nbsp;Stockage&nbsp;»&nbsp;; 
+raccourci&nbsp;: shift-F9). Vous pouvez voir les cookies enregistrés par
+ le navigateur pour les domaines utilisés par la page. Essayer de 
+modifier le cookie, et actualiser la page. En particulier, comment 
+s'affiche la page si vous mettez du HTML dans le cookie&nbsp;? Essayer 
+également de le supprimer.
+</li><li>
+ Conclure sur la confidentialité et la sécurité de l'utilisation des cookies.</li>
+</ol>
+	</section>
+
+<!-- ********************************************************************** -->
+
+	<section class="exo-among-others exercice" id="exo-02">
+		<h3>Exercice&nbsp;2&nbsp;— Sessions PHP	<a href="#exo-02" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+		<ol>
+<li><strong>En utilisant les sessions PHP</strong>, écrire un script
+qui crée une page HTML indiquant le nombre de visites de l'internaute, <a href="https://ensweb.users.info.unicaen.fr/TW4B/tp/sessions/compteur.php">en suivant ce modèle</a>.</li>
+<li>Ouvrir le moniteur réseau de Firefox <small>(clic droit sur la page &gt; Inspecter &gt; onglet «&nbsp;Réseau&nbsp;»&nbsp;; raccourci&nbsp;: control-shift-E)</small>, et observer le cookie de session transmis dans les en-têtes HTTP de la requête. Comment s'appelle-t-il&nbsp;?</li>
+<li>L’utilisation du nom par défaut pour le cookie de session est 
+déconseillée&nbsp;: il vaut mieux mettre un nom spécifique à votre 
+application, ce qui permet de faire tourner plusieurs applications sur 
+le même serveur sans risque qu'elles modifient les données les unes des 
+autres. Modifier le nom du cookie de session (et vérifier que cela a 
+bien pris effet).</li>
+<li>Ouvrir l'inspecteur de stockage de Firefox <small>(clic droit sur la page &gt; Inspecter &gt; onglet «&nbsp;Stockage&nbsp;»&nbsp;; raccourci&nbsp;: shift-F9)</small>,
+ supprimer le cookie et actualiser la page. Que se passe-t-il&nbsp;? 
+Essayer également de modifier la valeur de l'identifiant. Quelle est la 
+différence par rapport à si on avait utilisé un simple cookie <code>nb-visites</code>&nbsp;?</li>
+<li>Ajouter à la page <!-- un bouton ou --> un lien (vers une autre page, ou vers la même page avec un paramètre…) qui permet de remettre le compteur à zéro.</li>
+</ol>
+	</section>
+
+<!-- ********************************************************************** -->
+
+	<section class="exo-among-others exercice" id="exo-03">
+		<h3>Exercice&nbsp;3&nbsp;— Stockage de préférences avec un cookie	<a href="#exo-03" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+		<ol>
+<li>Écrire un script PHP qui crée une page HTML simple avec un titre et du texte.
+</li><li>Créer deux fichiers CSS (très simples&nbsp;!) pour cette page, <code>clair.css</code> et <code>sombre.css</code>, qui donnent des rendus très différents, le
+premier étant un thème sur fond clair et le second sur fond sombre.</li>
+<li>Le script doit regarder si l'URL contient le paramètre <code>theme</code>. S'il a la valeur <code>clair</code>, la page doit s'afficher avec le thème clair&nbsp;; s'il a la valeur <code>sombre</code>,
+ avec le thème sombre. Si le paramètre n'est pas présent ou a une autre 
+valeur que ces deux-là, la page doit s'afficher avec le thème clair 
+(thème par défaut).
+</li><li>Ajouter au contenu de la page des liens pour changer le thème (des liens vers la page elle-même, avec <code>theme=clair</code> ou <code>theme=sombre</code>
+ en paramètre d'URL). Vérifier que tout fonctionne correctement. Ajouter
+ aussi un lien vers la page elle-même sans aucun paramètre.
+</li><li>En utilisant un cookie, faire en sorte que la page sans 
+paramètre utilise le dernier thème choisi (et ne se rabat sur le thème 
+par défaut qu'en l'absence de cookie).
+</li></ol>
+<p>NB&nbsp;: pour vos tests et debugging, n'oubliez pas l'outil 
+«&nbsp;inspecteur de stockage&nbsp;» de Firefox, qui permet de supprimer
+ facilement un cookie.</p>
+
+	</section>
+
+<!-- ********************************************************************** -->
+
+</section><!-- fin de travail -->
+</main><!-- fin de majeur -->
+
+
+</div> <!-- fermeture du wrapper -->
+
+
+</body></html>

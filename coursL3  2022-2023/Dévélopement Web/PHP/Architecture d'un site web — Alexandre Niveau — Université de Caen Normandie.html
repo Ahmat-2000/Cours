@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<title>Architecture d'un site web — Alexandre Niveau — Université de Caen Normandie</title>
+
+	<meta name="author" content="Alexandre Niveau">
+	<meta name="company" content="Université de Caen">
+	<meta name="viewport" content="initial-scale=1">
+
+
+	<link rel="stylesheet" href="Architecture%20d'un%20site%20web%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/normalize.css">
+	<link rel="stylesheet" href="Architecture%20d'un%20site%20web%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/slides_alex.css">
+	<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png">
+
+	<!-- STYLES POUR DEMO -->
+	<style>
+.horiz {
+  display: flex;
+  flex-flow: row wrap;
+}
+.horiz h4 {
+  text-align: center;
+	margin: .2em auto;
+}
+	</style></head>
+<body>
+<header class="title slide">
+	<h1>Architecture d'un site web</h1>
+	<div class="auteur">Alexandre Niveau</div>
+	<div class="affiliation">GREYC — Université de Caen</div>
+	<div class="details">
+		En partie adapté du cours de Jean-Marc Lecarpentier
+	</div>	<div class="proj_switch"><button title="basculer entre mode normal et mode projection (raccourci clavier «&nbsp;m&nbsp;»)">Changer de mode</button></div>
+</header>
+
+<div id="contenu">
+<div id="presentation" class="hidenotes">
+
+
+<div class="note">
+TODO:
+<ul>
+<li>Préciser les contextes d'utilisation divers qui orientent les choix de conception :
+    <ul>
+<li>HTTP vs ligne de commande : on veut swapper le routeur, et la vue
+</li><li>HTML vs JSON : on veut swapper juste la vue
+</li></ul>
+</li><li>
+Un truc qui va pas : les appels directs à la vue depuis le routeur (pour
+ éviter une méthode
+de contrôleur qui ne fait quasi rien), comme la page d'accueil ou la 
+page d'erreur. Ça crée un couplage : on ne peut pas swapper vraiment 
+tranquillement le routeur (il me semble). Ou alors c'est juste que le 
+routeur ne devrait pas décider que le contrôleur n'a pas de travail à 
+faire.
+</li><li>Un autre truc : le storage ne doit pas faire partie du modèle. C'est un aspect indépendant du reste.
+En particulier, les identifiants (en BD) ne devraient (idéalement) pas être dans la classe Animal.
+</li><li>Encore un truc : c'est absurde qu'on puisse appeler plusieurs fois makeXYZPage de la vue.
+
+</li><li>Dernier truc, mais très important : il faudrait utiliser un 
+système un minimum robuste pour l'autoéchappement dans les vues (voir 
+TODO cours crud).
+
+</li><li>Aussi, c'est pourri de devoir arrêter les poèmes et de passer 
+aux couleurs en cours de route ! C'est impossible de s'y retrouver dans 
+le code existant (avec plein de petits trucs qui ont changé).
+Il faut commencer direct sur les couleurs.
+
+</li><li>
+ set_include_path et require_once.
+</li><li>
+  utiliser plutôt PATH_INFO ?
+</li><li>structures répertoires (voir slides commentés à la fin)
+</li><li>diagramme de classes…
+</li><li>config ?
+</li></ul>
+ 
+</div>
+
+<!--
+<div class="slide">
+<h2>Objectifs de la séance</h2>
+<ul>
+<li>séparation traitement/données</li>
+<li>modèle MVC simplifié</li>
+<li>implémentation en PHP (introduction) :
+   <ul>
+     <li>arborescence des répertoires</li>
+     <li>squelette HTML des pages</li>
+     <li>fragments HTML à inclure si besoin</li>
+     <li>architecture des fichiers PHP gérés par un switch</li>
+     <li>passage de paramètres dans l'URL, tableau PHP $_GET</li>
+     <li>configuration d'un site : utilisation de constantes prédéfinies permettant de faire facilement évoluer le site</li>
+   </ul>
+</li>
+</ul>
+</div>
+-->
+
+<!-- ########################################################################### -->
+
+<!--
+<div class="slide">
+<h2>Phase de conception du site</h2>
+Définir :<ol>
+<li>un site : pour quoi, pour qui, comment ? (fonctionnalités, publics, moyens)</li>
+<li>le nom de domaine (à réserver !)</li>
+<li>Combien ça coûte...<br />
+  Ou &laquo;&nbsp;combien cela rapporte ?&nbsp;&raquo;
+</ol>
+</div>
+-->
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Création d'un site&nbsp;: phase d'identification des besoins</h2>
+<div class="p">Identifier :<ul>
+<li>le graphisme déjà existant (à reprendre ou non)</li>
+<li>les différentes parties du site</li>
+<li>les utilisateurs du site et les fonctionnalités qui leur sont offertes</li>
+<li>les données à manipuler et leur nature</li>
+</ul>
+</div>
+  <div class="p">Exemple&nbsp;: site d'entreprise avec
+<ul>
+<li>vitrine</li>
+<li>espace clients</li>
+<li>espace VIP</li>
+<li>administration du site</li>
+</ul>
+</div>
+</div>
+
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Création d'un site&nbsp;: phase de conception</h2>
+<div class="p">La phase d'identification sert à déterminer&nbsp;:
+<ul>
+<li>le stockage des données (arborescence des répertoires, base de données, XML…)</li>
+<li>la charte graphique du site</li>
+<li>l'ergonomie du site :
+	<ul><li>navigation</li>
+	<li>compréhension de l'interface</li>
+	<li>facilité d'utilisation des fonctionnalités</li>
+	<li>lisibilité du contenu</li>
+	</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<!-- ########################################################################### -->
+
+
+<div class="slide">
+<h2>Création d'un site&nbsp;: phase de développement</h2>
+<div class="p">La phase de conception est la base
+sur laquelle le développement va s'appuyer, sans oublier de penser à
+<ul>
+<li>l'évolution future du site</li>
+<li>la maintenance du site (qui, quoi, comment&nbsp;?)</li>
+</ul>
+</div>
+<div class="p">Pour cela, on s'efforce de
+<ul>
+<li>réutiliser des composants existants (bibliothèques)</li>
+<li>comme toujours, <em>factoriser</em> et <em>modulariser</em> au maximum</li>
+<li class="conseq">en particulier, séparer la logique de l'affichage</li>
+</ul>
+</div>
+
+</div>
+
+<!-- ########################################################################### -->
+
+
+<div class="slide">
+<h2>Séparation traitement des données &amp; affichage</h2>
+<ul>
+<li>Séparer au maximum le PHP du HTML</li>
+<li>PHP génère le contenu <b>sans l'afficher</b></li>
+<li>Fichier HTML ne contient que des instructions <code>echo</code>
+pour afficher le contenu</li>
+</ul>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Exemple simplissime</h2>
+<div class="horiz">
+<section>
+<h4>Page PHP&nbsp;: <code>hello.php</code></h4>
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br>$titre&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"Une&nbsp;page&nbsp;PHP&nbsp;simple"</span><span style="color: #007700">;<br></span><span style="color: #0000BB">$info&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"Bonjour&nbsp;le&nbsp;monde&nbsp;!"</span><span style="color: #007700">;<br><br>include(</span><span style="color: #DD0000">"squelette.php"</span><span style="color: #007700">);<br></span><span style="color: #0000BB">?&gt;<br></span>
+</span>
+</code></div>
+</section>
+<section>
+<h4>Squelette&nbsp;: <code>squelette.php</code></h4>
+<div class="src hl "><code><span style="color: #000000">
+&lt;!DOCTYPE&nbsp;html&gt;&nbsp;<br>&lt;html&nbsp;lang="fr"&gt;<br>&lt;head&gt;<br>&nbsp;&nbsp;&lt;title&gt;<span style="color: #0000BB">&lt;?php&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$titre</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">?&gt;</span>&lt;/title&gt;<br>&lt;/head&gt;<br>&lt;body&gt;<br>&lt;h1&gt;<span style="color: #0000BB">&lt;?php&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$titre</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">?&gt;</span>&lt;/h1&gt;<br>&lt;p&gt;L'information&nbsp;à&nbsp;délivrer&nbsp;est&nbsp;simple&nbsp;:&lt;/p&gt;<br>&lt;div&gt;<br>&nbsp;&nbsp;<span style="color: #0000BB">&lt;?php&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$info</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">?&gt;<br></span>&lt;/div&gt;<br>&lt;p&gt;Voilà.&lt;/p&gt;<br>&lt;/body&gt;<br>&lt;/html&gt;<br></span>
+</code></div>
+</section>
+</div>
+<a class="demo" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/archi/demo1/hello.php">Résultat</a></div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Exemple à peine moins simple</h2>
+<div class="horiz">
+<section>
+<h4>Page PHP&nbsp;: <code>hello.php</code></h4>
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">key_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">'toto'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$_GET</span><span style="color: #007700">))&nbsp;{<br>&nbsp;&nbsp;</span><span style="color: #0000BB">$titre&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"Une&nbsp;page&nbsp;sur&nbsp;toto"</span><span style="color: #007700">;<br>&nbsp;&nbsp;</span><span style="color: #0000BB">$info&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"toto&nbsp;est&nbsp;une&nbsp;variable&nbsp;"&nbsp;</span><span style="color: #007700">.<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"métasyntaxique&nbsp;utilisée&nbsp;"&nbsp;</span><span style="color: #007700">.<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"dans&nbsp;les&nbsp;exemples&nbsp;de&nbsp;programmes."</span><span style="color: #007700">;<br>}&nbsp;else&nbsp;{<br>&nbsp;&nbsp;</span><span style="color: #0000BB">$titre&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"Une&nbsp;page&nbsp;PHP&nbsp;simple"</span><span style="color: #007700">;<br>&nbsp;&nbsp;</span><span style="color: #0000BB">$info&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"Bonjour&nbsp;le&nbsp;monde&nbsp;!"</span><span style="color: #007700">;<br>}<br></span><span style="color: #0000BB">$menu&nbsp;</span><span style="color: #007700">=<br>&nbsp;&nbsp;</span><span style="color: #DD0000">'&lt;a&nbsp;href="hello.php"&gt;Accueil&lt;/a&gt;&nbsp;|'&nbsp;</span><span style="color: #007700">.<br>&nbsp;&nbsp;</span><span style="color: #DD0000">'&nbsp;&lt;a&nbsp;href="hello.php?toto"&gt;toto&lt;/a&gt;'</span><span style="color: #007700">;<br><br>include(</span><span style="color: #DD0000">"squelette.php"</span><span style="color: #007700">);<br></span><span style="color: #0000BB">?&gt;<br></span>
+</span>
+</code></div>
+</section>
+<section>
+<h4>Squelette&nbsp;: <code>squelette.php</code></h4>
+<div class="src hl "><code><span style="color: #000000">
+&lt;!DOCTYPE&nbsp;html&gt;&nbsp;<br>&lt;html&nbsp;lang="fr"&gt;<br>&lt;head&gt;<br>&nbsp;&nbsp;&lt;title&gt;<span style="color: #0000BB">&lt;?php&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$titre</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">?&gt;</span>&lt;/title&gt;<br>&lt;/head&gt;<br>&lt;body&gt;<br>&lt;nav&gt;Navigation&nbsp;:&nbsp;<span style="color: #0000BB">&lt;?php&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$menu</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">?&gt;</span>&lt;/nav&gt;<br>&lt;h1&gt;<span style="color: #0000BB">&lt;?php&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$titre</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">?&gt;</span>&lt;/h1&gt;<br>&lt;p&gt;L'information&nbsp;à&nbsp;délivrer&nbsp;est&nbsp;simple&nbsp;:&lt;/p&gt;<br>&lt;div&gt;<br>&nbsp;&nbsp;<span style="color: #0000BB">&lt;?php&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$info</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">?&gt;<br></span>&lt;/div&gt;<br>&lt;p&gt;Voilà.&lt;/p&gt;<br>&lt;/body&gt;<br>&lt;/html&gt;<br></span>
+</code></div>
+</section>
+</div>
+<a class="demo" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/archi/demo2/hello.php">Résultat</a></div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Avantages de cette architecture</h2>
+<ul>
+  <li>Le script PHP gère toute la logique à un seul endroit, pas
+au milieu du code HTML
+<ul><li>plus facile à maintenir</li>
+<li>plus propre, notamment aucun risque d'erreur <i>headers already sent</i>
+si on manipule des en-têtes HTTP (cookies, redirections…)</li>
+</ul>
+</li><li>Squelette&nbsp;: fichier avec du HTML «&nbsp;à trous&nbsp;» (<i>template</i>), facile à maintenir
+séparément (potentiellement par une personne différente)</li>
+<li>Un problème de notre exemple&nbsp;?
+<span class="clicktosee">C'est le script PHP
+qui décide comment afficher le menu</span>
+</li>
+</ul>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Gestion du menu</h2>
+<ul>
+<li>L'affichage du menu doit être géré par le squelette…</li>
+<li>… mais on ne peut pas simplement tout passer de l'autre côté,
+car le nom des paramètres GET sera dupliqué</li>
+<li>C'est le PHP qui gère l'analyse des URL, il doit donc garder la main sur
+leur forme</li>
+<li>Solution&nbsp;: le script PHP donne un tableau avec les liens au squelette,
+qui les affiche comme il l'entend</li>
+</ul>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Exemple avec gestion du menu</h2>
+<div class="horiz">
+<section>
+<h4>Page PHP&nbsp;: <code>hello.php</code></h4>
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">key_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">'toto'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$_GET</span><span style="color: #007700">))&nbsp;{<br>&nbsp;&nbsp;</span><span style="color: #0000BB">$titre&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"Une&nbsp;page&nbsp;sur&nbsp;toto"</span><span style="color: #007700">;<br>&nbsp;&nbsp;</span><span style="color: #0000BB">$info&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"toto&nbsp;est&nbsp;une&nbsp;variable&nbsp;"&nbsp;</span><span style="color: #007700">.<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"métasyntaxique&nbsp;utilisée&nbsp;"&nbsp;</span><span style="color: #007700">.<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"dans&nbsp;les&nbsp;exemples&nbsp;de&nbsp;programmes."</span><span style="color: #007700">;<br>}&nbsp;else&nbsp;{<br>&nbsp;&nbsp;</span><span style="color: #0000BB">$titre&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"Une&nbsp;page&nbsp;PHP&nbsp;simple"</span><span style="color: #007700">;<br>&nbsp;&nbsp;</span><span style="color: #0000BB">$info&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"Bonjour&nbsp;le&nbsp;monde&nbsp;!"</span><span style="color: #007700">;<br>}<br></span><span style="color: #0000BB">$menu&nbsp;</span><span style="color: #007700">=&nbsp;array(<br>&nbsp;&nbsp;</span><span style="color: #DD0000">"Accueil"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"hello.php"</span><span style="color: #007700">,<br>&nbsp;&nbsp;</span><span style="color: #DD0000">"toto"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"hello.php?toto"</span><span style="color: #007700">,<br>);<br><br>include(</span><span style="color: #DD0000">"squelette.php"</span><span style="color: #007700">);<br></span><span style="color: #0000BB">?&gt;<br></span>
+</span>
+</code></div>
+</section>
+<section>
+<h4>Squelette&nbsp;: <code>squelette.php</code></h4>
+<div class="src hl "><code><span style="color: #000000">
+&lt;!DOCTYPE&nbsp;html&gt;&nbsp;<br>&lt;html&nbsp;lang="fr"&gt;<br>&lt;head&gt;<br>&nbsp;&nbsp;&lt;title&gt;<span style="color: #0000BB">&lt;?php&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$titre</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">?&gt;</span>&lt;/title&gt;<br>&lt;/head&gt;<br>&lt;body&gt;<br>&lt;nav&gt;Navigation&nbsp;:&nbsp;&lt;ul&gt;<br><span style="color: #0000BB">&lt;?php<br></span><span style="color: #007700">foreach&nbsp;(</span><span style="color: #0000BB">$menu&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$texte&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$lien</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"&lt;li&gt;"</span><span style="color: #007700">;<br>&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"&lt;a&nbsp;href=\"</span><span style="color: #0000BB">$lien</span><span style="color: #DD0000">\"&gt;</span><span style="color: #0000BB">$texte</span><span style="color: #DD0000">&lt;/a&gt;"</span><span style="color: #007700">;<br>&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"&lt;/li&gt;\n"</span><span style="color: #007700">;<br>}&nbsp;</span><span style="color: #0000BB">?&gt;<br></span>&lt;/ul&gt;&lt;/nav&gt;<br>&lt;h1&gt;<span style="color: #0000BB">&lt;?php&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$titre</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">?&gt;</span>&lt;/h1&gt;<br>&lt;p&gt;L'information&nbsp;à&nbsp;délivrer&nbsp;est&nbsp;simple&nbsp;:&lt;/p&gt;<br>&lt;div&gt;<br>&nbsp;&nbsp;<span style="color: #0000BB">&lt;?php&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$info</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">?&gt;<br></span>&lt;/div&gt;<br>&lt;p&gt;Voilà.&lt;/p&gt;<br>&lt;/body&gt;<br>&lt;/html&gt;<br></span>
+</code></div>
+</section>
+</div>
+<a class="demo" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/archi/demo3/hello.php">Résultat</a></div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Modularité</h2>
+<ul>
+<li>Le script ne transmet <em>que</em> l'information nécessaire au squelette,
+il ne fait aucun choix d'affichage</li>
+<li>Le squelette n'a pas besoin de connaître le nombre de liens à créer,
+ni la forme des liens</li>
+<li>Rajouter une nouvelle page sur le même modèle ne nécessite que de rajouter
+les contenus dans le script PHP</li>
+<li>C'est ce type de <em>modularité</em> que l'on recherche, <i>a fortiori</i>
+pour des applications complexes</li>
+</ul>
+</div>
+
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Problématique</h2>
+<ul>
+<li>Application moins triviale, où l'internaute peut faire des actions
+autres qu'afficher telle ou telle page</li>
+<li>On va préciser notre organisation modulaire</li>
+<li>Il faut séparer :
+  <ul>
+  <li>le fonctionnement de l'application</li>
+  <li>les affichages qui sont produits</li>
+  <li>le pilotage de l'application</li>
+</ul></li>
+<li>On va utiliser une architecture inspirée de MVC</li>
+</ul>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Architecture MVC</h2>
+<ul>
+<li>MVC&nbsp;: modèle-vue-contrôleur</li>
+<li>De façon générale&nbsp;:
+<ul>
+	<li>le modèle décrit le fonctionnement de l'application</li>
+	<li>la vue est l'affichage produit en fonction de l'état du modèle</li>
+	<li>le contrôleur capte les actions de l'utilisateur et les transmet au modèle</li>
+</ul>
+</li>
+<li>À partir de là&nbsp;: dizaines de variantes et de conceptions différentes</li>
+<li>Objectif&nbsp;: modularité, séparation des composants</li>
+<li>Règle générale&nbsp;: faire en sorte de pouvoir au maximum modifier chaque composant indépendamment</li>
+<li>Principes indépendants de l'utilisation de la programmation objet&nbsp;!</li>
+</ul>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>MVC sur le web&nbsp;?</h2>
+<p>Notre architecture est destinée à être utilisée dans le cadre du web</p>
+<p class="conseq">choix techniques spécifiques</p>
+<div class="p">Contrairement aux interfaces graphiques habituelles, sur le web les
+vues ne permettent pas d'interaction en temps réel
+<ul>
+<li>les vues permettent de faire des actions…</li>
+<li>… mais qui doivent passer par une requête HTTP</li>
+<li>requête HTTP = nouvelle page&nbsp;: on exécute à nouveau tout le programme depuis le début</li>
+<li class="conseq">le contrôleur ne peut pas «&nbsp;écouter&nbsp;» la vue,
+ni la vue «&nbsp;écouter&nbsp;» le modèle&nbsp;!</li>
+</ul>
+</div>
+</div>
+
+<!-- ########################################################################### -->
+<div class="slide">
+<h2>«&nbsp;MVCR&nbsp;»</h2>
+<div class="p">Une autre différence essentielle est la nature de l'interaction&nbsp;:
+<ul>
+<li>le serveur ne sait pas où l'internaute a cliqué</li>
+<li>il voit seulement ce qu'il y a dans la requête HTTP</li>
+<li class="conseq">concrètement, une action est constituée
+<ul>
+<li>d'une méthode HTTP (GET, POST, ou autre)</li>
+<li>d'une URL (paramétrée ou non)</li>
+<li>éventuellement, de données dans le corps de la requête (si POST<span class="note"> ou PUT&nbsp;!</span>)</li>
+</ul>
+</li></ul></div>
+<p class="conseq">On va utiliser un <em>routeur</em>&nbsp;: quatrième composant,
+qui s'occupe d'analyser la requête HTTP pour décider quoi faire (c'est-à-dire
+quelle méthode du contrôleur doit être exécutée)</p>
+<p>On parlera dans ce cours de «&nbsp;MVCR&nbsp;» pour insister sur les différences</p>
+<p>L'architecture que l'on va utiliser est une implémentation possible parmi d'autres</p>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Routeur</h2>
+<ul>
+<li>Le routeur (ou <i lang="en">dispatcher</i>)
+est le point d'entrée de l'application
+</li>
+<li>C'est le fichier principal qui va être
+appelé par l'internaute</li>
+<li>Les actions de l'internaute sont transmises par des clics
+sur des liens ou des soumissions de formulaires</li>
+<li class="conseq">Le travail du routeur est donc d'analyser le contenu
+de la requête HTTP&nbsp;:
+	<ul>
+	<li>méthode utilisée</li>
+	<li>URL</li>
+	<li>contenu des tableaux <code>$_GET</code> et <code>$_POST</code></li>
+	</ul>
+</li>
+<li>En fonction des choix de l'internaute&nbsp;:
+<ul>
+<li>il choisit le contrôleur et la vue à utiliser</li>
+<li>il en crée des instances (les précédentes ont disparu,
+puisqu'on recommence le programme depuis le début à chaque requête)</li>
+<li>il appelle la bonne méthode du contrôleur, en lui passant les bons paramètres</li>
+<li>à la fin, il affiche la vue</li>
+</ul>
+</li>
+<li>Il fait l'interface entre l'action de l'internaute et le contrôleur&nbsp;: en quelque sorte il remplace
+le <i lang="en">listener</i> entre le contrôleur et la vue dans le MVC habituel</li>
+<li>Il ne connaît pas le modèle, et il ne «&nbsp;sait&nbsp;» pas ce qui se passe dans les contrôleurs et les vues</li>
+</ul>
+</div>
+
+
+<div class="slide">
+<h2>Contrôleur</h2>
+<ul>
+<li>Comme dans le cadre classique, le contrôleur est le composant qui <em>effectue</em>
+les actions demandées</li>
+<li>En fonction des choix de l'internaute, qui ont été transmis par le routeur&nbsp;:
+<ul>
+<li>il met à jour le modèle</li>
+<li>il appelle la bonne méthode de la vue, avec en paramètre des éléments du modèle</li>
+</ul>
+</li>
+<li>Il fait le lien entre modèle et vue, mais n'utilise pas le routeur.</li>
+</ul>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Modèle</h2>
+<ul>
+<li>Le modèle est le cœur de l'application</li>
+<li>Données, algorithmes, traitements… <em>logique métier</em> de l'application</li>
+<li>L'idée est que le site web n'est qu'une interface possible&nbsp;:
+on veut pouvoir réutiliser le modèle dans un autre contexte</li>
+<li>Par exemple le modèle pourrait être manipulé en ligne de commande,
+ou alors par un programme plutôt que par un humain</li>
+<li class="conseq">le modèle ne connaît ni le routeur, ni le contrôleur,
+ni la vue</li>
+</ul>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Vue</h2>
+<ul>
+<li>La vue correspond à l'affichage</li>
+<li>Elle utilise l'état du modèle
+pour générer du HTML en fonctions des demandes du contrôleur</li>
+<li>Elle ne doit pas manipuler le modèle&nbsp;: c'est le travail du contrôleur&nbsp;!</li>
+<li class="conseq">elle se contente d'afficher son état courant</li>
+<li>La vue ne connaît pas le contrôleur, elle se contente de lui obéir</li>
+<li>Elle construit des liens et des formulaires pour que l'internaute puisse effectuer des actions</li>
+<li class="conseq">elle a donc besoin de savoir comment le routeur interprète les requêtes HTTP&nbsp;:
+<ul>
+<li>quelle URL pour aller à telle page&nbsp;?</li>
+<li>quel nom pour les clefs dans les données&nbsp;?</li>
+<li>méthode GET ou POST dans le formulaire&nbsp;?</li>
+</ul>
+</li><li>Pour cela, elle va interroger le routeur, qui va lui donner ces informations</li>
+</ul>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Détails sur les choix de conception</h2>
+<ul>
+<li>Le modèle sera généralement un ensemble de classes autonomes, dont certaines
+correspondront plus ou moins directement aux objets stockés en BD (attributs = champs de la table)</li>
+<li>Une vue = un squelette + une classe dont les attributs sont les «&nbsp;trous&nbsp;»
+du squelette, avec des méthodes pour remplir les trous de diverses manières,
+et une méthode <code>render</code> qui affiche le HTML final</li>
+<li>Le routeur contient principalement un switch (ou plusieurs) qui
+branche sur le contenu de l'URL pour appeler une méthode d'un contrôleur</li>
+<li>Chaque méthode d'un contrôleur va
+<ul>
+<li>exécuter du code sur le modèle (par exemple créer un nouvel objet, etc.)</li>
+<li>appeler une méthode de construction de la vue</li>
+</ul>
+</li><li>Finalement, le routeur appelle la méthode <code>render</code> de la vue.</li>
+</ul>
+</div>
+
+<!-- ################################################################### -->
+
+<div class="slide">
+<h2>Modèle et BD</h2>
+<ul>
+<li>Si on vise la modularité, il est important que le modèle soit
+indépendant du mode de stockage utilisé</li>
+<li>Divers SGBD, mais aussi modes de stockage autre que BD&nbsp;: fichiers, XML, etc.</li>
+<li>Le contrôleur va manipuler des <em>interfaces</em> de stockage,
+que l'on pourra implémenter de diverses façons sans toucher le reste du code</li>
+</ul>
+</div>
+
+<!-- ################################################################### -->
+
+<div class="slide">
+<h2>Modèle et BD</h2>
+<ul>
+<li>Si on vise la modularité, il est important que le modèle soit
+indépendant du mode de stockage utilisé</li>
+<li>Divers SGBD, mais aussi modes de stockage autre que BD&nbsp;: fichiers, XML, etc.</li>
+<li>Le contrôleur va manipuler des <em>interfaces</em> de stockage,
+que l'on pourra implémenter de diverses façons sans toucher le reste du code</li>
+</ul>
+</div>
+
+
+<!-- #################################################################### -->
+
+<div class="slide">
+<h2>Démo</h2>
+<p>Construction d'un site web de poèmes</p>
+<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/archi/class_diagram.png"><img src="Architecture%20d'un%20site%20web%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/class_diagram.png" alt="diagramme de classes du site des poèmes"></a>
+<ul><li><a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/archi/poemes/">Résultat final</a></li>
+<li><a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/archi/poemes.zip">Archive du code</a></li>
+</ul>
+</div>
+
+
+<!-- ########################################################################### -->
+
+
+</div> <!-- fin #presentation -->
+
+
+</div> <!-- fin #contenu -->
+
+<footer class="license">
+	<a class="icone" rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+		<img alt="Licence Creative Commons CC-BY-NC-SA" style="border-width:0" src="Architecture%20d'un%20site%20web%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/88x31.png">
+	</a>
+	<p class="texte">
+		Ce cours est mis à disposition selon les termes de la <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">licence Creative Commons Attribution — Pas d’utilisation commerciale — Partage dans les mêmes conditions 4.0 International</a>.
+	</p></footer>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+	function toggleProj() {
+		const currentParams = new URLSearchParams(window.location.search);
+		if (currentParams.get('mode') === 'proj') {
+			console.log('found proj');
+			document.documentElement.classList.remove('proj');
+			currentParams.delete('mode');
+		} else {
+			console.log('not found proj');
+			document.documentElement.classList.add('proj');
+			currentParams.set('mode', 'proj');
+		}
+		window.history.pushState({}, '', '?' + currentParams + window.location.hash);
+	};
+
+	var buttons = document.querySelectorAll('.proj_switch button'), i;
+	for (i = 0; i < buttons.length; ++i) {
+		buttons[i].addEventListener("click", toggleProj);
+	}
+
+	document.addEventListener("keypress", function(e) {
+		if (e.target == document.body && String.fromCharCode(e.keyCode || e.charCode) == "m") {
+			toggleProj();
+		}
+	});
+
+	/* ajout de liens aux titres qui ont un id */
+	let slidesWithId = document.querySelectorAll('.slide[id]');
+	for (const slide of slidesWithId) {
+		const link = document.createElement('a');
+		link.href = '#' + slide.id;
+		link.classList.add('slide-link');
+		link.title = 'Lien vers ce slide';
+		link.textContent = '#';
+		slide.insertAdjacentElement('afterbegin', link);
+	}
+
+
+});
+</script>
+
+
+</body></html>

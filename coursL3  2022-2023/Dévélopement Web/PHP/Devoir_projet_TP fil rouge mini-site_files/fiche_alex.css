@@ -1,0 +1,955 @@
+
+
+/****************************************************************************/
+/*                             version originale                            */
+/****************************************************************************/
+
+html {
+  background-color: #005D7E; /*#ffffee*/
+	overflow-y: scroll;
+	height: 100%
+}
+
+html.tmp {
+	/*background-color: #FFB6C1;*/
+	background-color: #8B0E2B;
+}
+
+body { 
+	overflow: auto;
+	background-color: white;
+  font-family: 'Droid Sans', 'Arial', sans-serif;
+  margin: auto;
+  max-width: 80rem;
+  padding: 0 .5rem;
+	line-height: 1.4;
+	min-height: 100%
+ }
+
+ body.single-exo {
+ 	 max-width: 50em;
+ 	 padding: 0 3em;
+ 	 margin: 0 auto;
+ }
+
+
+img {
+  max-width: 100%;
+}
+
+.bordered { 
+  border: 1px solid black;
+}
+
+/**********************************
+*
+*   Classes générales
+*
+***********************************/
+
+
+.clearer { 
+height: 0px;
+clear: both;
+ }
+
+.vspacer { 
+  line-height: 1.8em;
+ }
+
+
+.clair { 
+  background-color: #ffffee;
+ }
+
+.fonce { 
+  background-color: #ffffbb;
+ }
+
+.pointeur { 
+  cursor: pointer;
+ }
+
+.souligne { 
+  text-decoration: underline;
+ }
+
+.accessibilite { 
+  display: none;
+ }
+
+ /*
+li { 
+  line-height: 2em;
+ }
+ */
+
+/***********************************
+*
+*  organisation générale de la page
+*
+*************************************/
+
+#wrapper { 
+	overflow: auto;
+  margin: auto;
+	max-width: 75rem;
+ }
+
+#majeur { 
+	box-sizing: border-box;
+  max-width: 60rem;
+  width: 100%;
+  float: left;
+padding: 0px;
+	background-color: white;
+ }
+
+/*************************
+ *
+ *   Tetiere
+ *
+ *************************/
+
+@supports(display: flex) {
+	#tetiere {
+		display: flex;
+	}
+
+	#tetiere .titreCours {
+		flex: 1;
+	}
+}
+
+#tetiere { 
+  margin: 1em auto 0;
+  border: 1px solid black;
+  min-height: 12em;
+ }
+
+h1, h2, h3, h4, h5 { 
+  /*color: #aa0022; */
+  color: #005D7E; 
+ }
+
+html.tmp h1,
+html.tmp h2,
+html.tmp h3,
+html.tmp h4,
+html.tmp h5 {
+  color: #8B0E2B;
+}
+
+h5 { font-size: 1rem; }
+h4 { font-size: 1.2rem; }
+h4::before { content: "❦ "; font-size: 90%; color: #999; }
+h3 { font-size: 1.4rem; }
+
+
+.soustitre {
+	font-size: larger;
+	font-weight: bold;
+	color: #005D7E; 
+	margin: .2em 0;
+}
+
+#tetiere .logo { 
+  display: block;
+  width: 200px;
+  min-height: 12em;
+  float: left;
+ }
+
+#tetiere a.logo {
+	background-color: transparent;
+  background-image: url("../images/newnewLogo.png");
+  background-repeat: no-repeat;
+  background-position: 30px 50%;
+}
+
+#tetiere a {
+	text-decoration: none;
+}
+
+#tetiere a:hover { 
+  text-decoration: underline;
+ }
+
+
+#tetiere .contexte { 
+	box-sizing: border-box;
+  padding: 10px;
+  width: 240px;
+  float: right;
+	font-size: .75em;
+  min-height: calc(12em/.75);
+	 text-align: center;
+  border-left: 1px dotted gray;
+ }
+
+ #tetiere .contexte p {
+	 margin: .5em;
+ }
+
+ #tetiere .contexte ul {
+	 list-style-type: none;
+	 padding: 0;
+	 margin: 0;
+ }
+
+ #tetiere .contexte li {
+	 padding: .3em;
+ }
+
+ #tetiere .contexte h2 {
+	 margin: 0;
+ }
+
+.titreCours { 
+	box-sizing: border-box;
+  width: calc(100% - 440px);
+  float: left;
+	font-size: 1.3em;
+	text-align: center;
+ }
+
+ .titreCours h1 {
+	 margin-bottom: 0;
+ }
+
+ .titreCours p {
+	 margin: 0;
+ }
+
+
+ .titreCours .diplome {
+	 margin: 0 0 .2em 0;
+ }
+ .titreCours .enseignants {
+	 font-weight: bold;
+ }
+
+
+
+/******************************
+ *
+ *
+ ******************************/
+
+#colonne { 
+  margin: 1rem 0 0 1rem;
+	box-sizing: border-box;
+  width: 14rem;
+  /*border: 1px solid black;
+  padding: 5px;*/
+  float: right;
+ }
+
+#colonne-img { 
+	box-sizing: border-box;
+  /*border: 1px solid black;
+  padding: 5px;*/
+ }
+
+#colonne-img img { 
+  display: block;
+  margin: auto;
+ }
+
+#intervenants {
+	border: 1px solid black;
+	font-size: .8em;
+	padding: .4em;
+	margin-bottom: 1em;
+  text-align: center;
+}
+
+#intervenants ul {
+	list-style: none;
+	padding: 0;
+}
+#intervenants li {
+	margin: .3em;
+}
+
+#pied { 
+width: 1000px;
+border: none;
+border-top: 1px solid gray;
+padding: 10px;
+font-size: .8em;
+ }
+
+#pied h3 { 
+  margin: 0px;
+ }
+
+.bloc { /* , #intro, #biblio */
+  /*font-size: 1.1em;*/
+  /*line-height: 1.5em; */
+	box-sizing: border-box;
+  border: 1px solid black;
+  padding: 1em 5%;
+	margin: 1rem auto;
+  /* margin: 8px 0px 8px 0px; */
+ }
+
+.alerte {
+	border-color: #8B0E2B;
+	display: block;
+	font-size: 1.5em;
+	 text-align: center;
+	 text-decoration: none;
+	 font-weight: bold;
+	 box-shadow: 0 0 3px 2px #8B0E2B inset;
+}
+
+.alerte::before { content: "► "; color: #8B0E2B; }
+.alerte::after { content: " ◄"; color: #8B0E2B; }
+
+/***********************************
+*
+*  Typographie
+*
+*************************************/
+
+a { 
+  /*text-decoration: none;*/
+  color: #8B0E2B;
+  /* color: #aa0022;*/
+  /* color: #005D7E; */
+ }
+html.tmp a {
+  color: #005D7E; 
+}
+.a404, .disabled { 
+  color: #888888;
+  cursor: text;
+ }
+
+.a404:hover, .disabled:hover { 
+  text-decoration: none;
+ }
+
+#majeur a:hover,
+.single-exo a:hover { 
+	background-color: cornsilk;
+ }
+
+.titrePres {
+	font-weight: bold;
+	font-size: 1.05em;
+}
+
+/********************************
+*
+*  Page d'index des cours
+*
+*********************************/
+
+#structure ul { 
+  margin: 0px;
+  padding: 0px;
+ }
+
+#structure li { 
+  margin: 0px;
+  padding: 0px;
+  list-style-type: none;
+	/* line-height: 1.6em; */
+ }
+
+#structure { 
+	box-sizing: border-box;
+margin: 1em 0;
+border: 1px solid black;
+padding: 0px;
+ }
+
+#structure .cours { 
+  padding: 5px 0px 5px 0px;
+ }
+
+#structure .annexe {
+	border-top: 3px dotted #005D7E;
+}
+
+ #structure .cours > * {
+	 display: inline-block;
+	 vertical-align: middle;
+ }
+
+#structure a { 
+  font-weight: bold;
+  text-decoration: none;
+  display: block;
+ }
+
+#structure a:hover { 
+  text-decoration: underline;
+	background: inherit;
+ }
+#structure a.disabled { 
+  color: #888888;
+ }
+
+#structure a.disabled:hover { 
+  text-decoration: none;
+ }
+
+#structure .num { 
+	box-sizing: border-box;
+  font-weight: normal;
+  width: 30%;
+  padding: 1em 1em 1em 4em;
+ }
+
+#structure .intitules { 
+	box-sizing: border-box;
+  width: 60%;
+  padding: 1em 4em 1em 1em;
+ }
+
+
+
+/**********************************
+*
+*  outils
+*
+***********************************/
+.outils div { 
+   margin-top: 40px;
+}
+
+
+
+
+
+
+
+/**********************************
+*
+*  Bibliographie
+*
+***********************************/
+
+.bibliographie #structure a { 
+  display: inline;
+  font-weight: normal;
+ }
+
+.bibliographie #structure .couv { 
+  float: left;
+  width: 80px;
+  border: 1px solid black;
+  margin: 5px 5px 5px 5px;
+  padding: 2px;
+  text-align: center;
+  overflow: hidden;
+ }
+
+.bibliographie #structure .couv img { 
+  display: block;
+  margin: auto;
+  width: 90px;
+ }
+.bibliographie dt { 
+  font-weight: bold;
+  margin-top: 10px;
+ }
+/***********************************
+*
+*  Pages fiches de présentation d'un cours
+*
+************************************/
+
+#cours { 
+  width: 69%;
+  float: left;
+
+ }
+#contenu, #travail { 
+  border: 1px solid black;
+  padding: 3%;
+   margin: 1em 0;
+ }
+
+.exo-among-others { 
+  margin-top: 30px;
+  padding-top: 10px;
+  border-top: 1px solid black;
+  display: flow-root;
+}
+
+.exercice ol ol {
+	list-style: lower-latin;
+}
+
+
+.exercice > ul > li,
+.exercice > ol > li,
+.exercice li > p{
+	margin: .4em auto;
+}
+
+.titre, #majeur h2 { 
+font-size: 1.5em;
+font-weight: bold;
+background-image: url(../images/piedmouche.gif);
+background-position: 0 50%;
+background-repeat: no-repeat;
+padding-left: 40px;
+  /*color: #aa0022; */
+  /*color: #005D7E; */
+margin: 10px 5px 10px 0px;
+ }
+
+.date { 
+font-style: italic;
+ }
+
+#contenu h3, #travail h3 { 
+font-size: 1.25em;
+font-weight: bold;
+  /*color: #aa0022; */
+  color: #005D7E; 
+ }
+
+.description { 
+font-size: 1em;
+ /*line-height: 1.6em;*/
+padding: 3px 0px 3px 30px;
+ }
+
+#majeur ul.plan, #majeur ul.tp { 
+  margin: 3px 0px 3px 30px; 
+  color: #003300;
+ }
+
+#majeur ul.plan li, #majeur ul.tp li { 
+  /*line-height: auto;*/
+ }
+
+ /*
+#lectures { 
+width: 30%;
+float: right;
+border: 1px solid #aa0022;
+padding: 0px;
+font-size: .8em;
+margin: 5px 0px 5px 0px;
+ }
+
+#lectures ul { 
+  margin: 5px;
+  padding: 8px;
+  list-style-type: none;
+ }
+
+#lectures li { 
+  margin: 5px 0px 5px 0px;
+  padding: 0px 0px 0px 5px;
+ }
+
+#lectures h3 { 
+  background-color: #aa0022;
+  color: white;
+  margin: auto;
+  text-align: center;
+  /*line-height: 20px;*/
+	/*
+ }
+
+ */
+
+
+/****************************************************************************/
+/*                                  ajouts                                  */
+/****************************************************************************/
+
+
+figure {
+	margin: 10px auto;
+	text-align: center;
+	border: 2px outset #005D7E;
+	padding: 10px;
+	background-color: white;
+}
+
+figure.centered {
+  max-width: 400px;
+}
+
+/*************************************************************/
+
+.figlink {
+	margin: 10px auto;
+	display: block;
+	max-width: 400px;
+	text-align: center;
+	border: 2px outset #8B0E2B;
+}
+
+.figlink > figure {
+	border: none;
+	margin: auto;
+}
+
+.figlink:hover {
+	border-style: inset;
+
+	/* create a new stacking context in front of the page */
+	position: relative;
+	z-index: 1;
+}
+
+.figlink:hover > figure {
+  /* transparent background that will be shown in front of
+   * the figure's content */
+  background-color: hsla(31, 80%, 70%, 0.47);
+}
+
+.figlink:hover > figure > * {
+  /* put the content behind the figure */
+  position: relative;
+  z-index: -1;
+}
+
+/*************************************************************/
+
+.floating-right,
+.floating-left {
+  max-width: 400px;
+  margin: 0 auto 1em;
+}
+.floating-right {
+  float: right;
+  margin-left: 1em;
+}
+.floating-left {
+  float: left;
+  margin-right: 1em;
+}
+
+.narrow {
+  max-width: 200px;
+}
+/*************************************************************/
+
+.figuregallery {
+	text-align: center;
+}
+
+.figuregallery > * {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.figuregallery > a.figlink {
+	display: inline-block;
+	max-width: 300px;
+	margin: 0 50px;
+}
+
+.corr {
+	font-style: italic;
+	text-align: center;
+}
+	
+.info, .corr {
+	border: 1px solid #005D7E;
+	border-radius: .3em;
+	padding: .2em 1em;
+	margin: .8em auto;
+	width: 80%;
+	font-size: .9em;
+}
+
+.info h4 {
+  /*text-align: center;*/
+}
+
+.surprise {
+  color: rgba(0, 0, 0, 0);
+  transition: 0.2s;
+}
+.surprise:active {
+  color: unset;
+  transition: 1s;
+}
+
+.notes-cours {
+	margin: .8em auto;
+	padding: 0;
+}
+.notes-cours a {
+	margin: auto;
+	display: block;
+	padding: .2em 1em;
+	border: 1px solid #005D7E;
+	border-radius: .3em;
+	max-width: 17em;
+	font-size: 1.2em;
+	text-align: center;
+}
+.notes-cours a::before { content: "► "; color: #8B0E2B; }
+.notes-cours a::after { content: " ◄"; color: #8B0E2B; }
+
+
+.todo {
+	border: 1px solid #005D7E;
+	border-radius: .3em;
+	padding: .2em 1em;
+	font-size: .9em;
+	background-color: #333;
+	color: white;
+}
+.todo::before {
+	content: "[TODO] ";
+	font-weight: bold;
+}
+
+div.todo {
+	margin: .8em 0 .8em auto;
+	width: 30em;
+}
+div.todo::before {
+	display: block;
+	text-align: center;
+}
+div.todo ul {
+	list-style-type: "➤ ";
+	padding-left: .3em;
+}
+
+.rendu {
+	background-color: #f9eaee;
+	border: .1em solid #8B0E2B;
+	border-radius: .3em;
+	padding: .2em 1em;
+	margin: .8em auto;
+	width: 80%;
+}
+.rendu .src, .rendu code {
+	background-color: #f9cfd8;
+}
+
+.notation {
+	color: white;
+	background-color: #8B0E2B;
+	border-radius: 3em;
+	padding: .2em 1em;
+	margin: .8em auto;
+	max-width: 10em;
+	font-size: .9em;
+	font-weight: bold;
+	text-align: center;
+}
+
+code, .src {
+	background-color: cornsilk;
+	/* background-color: #CABF0A; */
+	border-radius: .3em;
+}
+
+code, kbd, pre, samp, .src {
+	font-family: 'Droid Sans Mono', monospace;
+	font-size: .9em;
+}
+
+pre code, pre kbd, pre samp, pre .src {
+	font-size: inherit;
+	display: block;
+}
+
+code.nowrap {
+	display: inline-block;
+}
+
+/* kbd in samp represents input as echoed by the system */
+samp kbd {
+	font-weight: bold;
+}
+
+.arborescence {
+	background-color: aliceblue;
+	width: 50ch;
+	max-width: 100%;
+	margin: auto;
+	box-shadow: 3px 3px 0 0px #005D7E;
+	border: 1px solid #005D7E;
+	padding: 1em;
+}
+
+
+.cours { 
+  background-color: #F4F4F4;
+ }
+
+.cours:nth-child(even) { 
+  background-color: white;
+  /* background-color: #ffffbb; */
+ }
+
+  .cours, .structure {
+    overflow: auto;
+  }
+
+table {
+	width: auto;
+  margin: auto;
+	border-collapse: collapse;
+}
+
+td, th {
+	border: 1px solid grey;
+	padding: .4em;
+}
+
+
+small.origin {
+	font-style: italic;
+	display: block;
+	margin-top: -1em;
+	text-align: right;
+}
+
+
+#structure-new {
+	box-sizing: border-box;
+margin: 1em 0;
+border: 1px solid black;
+padding: 0px;
+
+}
+
+#structure-new .cours { 
+  padding: 5px 0px 5px 0px;
+ }
+
+ #structure-new .cours > * {
+	 display: inline-block;
+	 vertical-align: middle;
+ }
+
+#structure-new .cours:target {
+/*	position: relative;
+	z-index: 10;
+	box-shadow: 0px 0px 1px 10px black;
+	*/
+border: 1em #005D7E;
+border-style: none solid;
+}
+
+
+ /*
+#structure-new a { 
+  font-weight: bold;
+  text-decoration: none;
+  display: block;
+ }
+
+#structure-new a:hover { 
+  text-decoration: underline;
+	background: inherit;
+ }
+#structure-new a.disabled { 
+  color: #888888;
+ }
+
+#structure-new a.disabled:hover { 
+  text-decoration: none;
+ }
+ */
+
+#structure-new .num { 
+	box-sizing: border-box;
+  font-weight: normal;
+  width: 30%;
+  padding: 1em 1em 1em 4em;
+ }
+
+#structure-new .intitules { 
+	box-sizing: border-box;
+  width: 60%;
+  padding: 1em 4em 1em 1em;
+ }
+
+#structure-new h3 { 
+background-image: url(../images/piedmouche.gif);
+background-position: 0 50%;
+background-repeat: no-repeat;
+padding-left: 40px;
+ }
+
+#structure-new li li {
+	font-size: .9em;
+}
+
+#majeur a.exo-link {
+	font-size: 70%;
+	font-style: normal;
+	font-weight: normal;
+	color: #767676;
+	float: right;
+	padding: 0 0 0 1em;
+}
+
+#majeur .exercice:target h3,
+#majeur .bloc:target  {
+	background-color: cornsilk;
+	border-width: 2px .5em;
+	border-color: #CABF0A;
+	border-style: solid;
+	padding: .2em .8em;
+}
+
+.separated-questions li {
+	border-width: 1px;
+	border-style: solid;
+	padding: .4em 1em;
+	border-image-source: linear-gradient(to top left, #222, transparent 50%);
+	/* border-image-slice: 1% 1%; */
+	border-image-slice: 1;
+	margin: .6em auto;
+	/*display: flow-root list-item;*/
+}
+
+.separated-questions li li {
+  all: unset;
+  all: revert;
+}
+
+.separated-questions li::after {
+  display: block;
+  clear: both;
+}
+
+.separated-questions li p:first-child {
+	margin-top: 0
+}
+.separated-questions li p:last-child {
+	margin-bottom: 0
+}
+
+
+@media (max-width: 75rem) {
+	#colonne { display: none; }
+}
+@media (max-width: 60rem) {
+	#tetiere .logo { display: none; }
+}
+@media (max-width: 45rem) {
+	#tetiere .contexte { display: none; }
+}
+@media (max-width: 30rem) {
+	#structure .num, #structure .intitules {
+		display: block;
+		width: 100%;
+		text-align: center;
+		padding: .5em;
+		margin: auto;
+	}
+}
+
+

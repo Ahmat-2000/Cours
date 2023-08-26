@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<title>Compléments sur les bases de PHP — Alexandre Niveau — Université de Caen Normandie</title>
+
+	<meta name="author" content="Alexandre Niveau">
+	<meta name="company" content="Université de Caen">
+	<meta name="viewport" content="initial-scale=1">
+
+
+	<link rel="stylesheet" href="Compl%C3%A9ments%20sur%20les%20bases%20de%20PHP%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/normalize.css">
+	<link rel="stylesheet" href="Compl%C3%A9ments%20sur%20les%20bases%20de%20PHP%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/slides_alex.css">
+	<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png">
+
+	<!-- STYLES POUR DEMO -->
+	<style>
+.demo table { border 1px solid black; }
+.demo td { text-align: center; border: 1px solid black; }
+
+.output { color: white; background-color: #333; }
+	</style></head>
+<body>
+<header class="title slide">
+	<h1>Compléments sur les bases de PHP</h1>
+	<div class="auteur">Alexandre Niveau</div>
+	<div class="affiliation">GREYC — Université de Caen</div>
+	<div class="details">
+		En partie adapté du cours de Jean-Marc Lecarpentier
+	</div>	<div class="proj_switch"><button title="basculer entre mode normal et mode projection (raccourci clavier «&nbsp;m&nbsp;»)">Changer de mode</button></div>
+</header>
+
+<div id="contenu">
+<div id="presentation" class="hidenotes">
+
+
+<div class="slide note">
+TODO fonctions anonymes:
+<ul>
+<li> passage d'une fonction existante : string
+ </li><li> use() pour faire une clôture
+</li></ul>
+
+TODO autres :
+
+<ul>
+<li> type checking ⇒ mis avec la POO
+</li><li> dates
+</li><li> namespaces
+</li><li>system()
+</li><li>serialisation
+</li><li> input filters ⇒ plutôt du web
+</li></ul></div>
+<div class="slide">
+<h2>Bizarreries des tableaux</h2>
+<p>Le fait que les tableaux, même numériques, soient en fait des <i>ordered map</i>
+peut causer
+des  surprises&nbsp;!</p>
+
+<div class="predemo">
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br>$tab&nbsp;</span><span style="color: #007700">=&nbsp;array();<br></span><span style="color: #0000BB">$tab</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">"zéro"</span><span style="color: #007700">;<br></span><span style="color: #0000BB">$tab</span><span style="color: #007700">[</span><span style="color: #0000BB">1</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">"un"</span><span style="color: #007700">;<br></span><span style="color: #0000BB">$tab</span><span style="color: #007700">[</span><span style="color: #0000BB">100</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">"cent"</span><span style="color: #007700">;<br></span><span style="color: #0000BB">$tab</span><span style="color: #007700">[]&nbsp;=&nbsp;</span><span style="color: #DD0000">"je&nbsp;suis&nbsp;le&nbsp;dernier"</span><span style="color: #007700">;<br></span><span style="color: #0000BB">$tab</span><span style="color: #007700">[</span><span style="color: #0000BB">2</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">"deux"</span><span style="color: #007700">;<br></span><span style="color: #0000BB">$tab</span><span style="color: #007700">[]&nbsp;=&nbsp;</span><span style="color: #DD0000">"où&nbsp;suis-je&nbsp;?"</span><span style="color: #007700">;<br>foreach&nbsp;(</span><span style="color: #0000BB">$tab&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$key&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$val</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"</span><span style="color: #0000BB">$key</span><span style="color: #DD0000">&nbsp;--&gt;&nbsp;</span><span style="color: #0000BB">$val</span><span style="color: #DD0000">\n"</span><span style="color: #007700">;<br>}</span>
+</span>
+</code></div>
+<pre class=" output">0 --&gt; zéro
+1 --&gt; un
+100 --&gt; cent
+101 --&gt; je suis le dernier
+2 --&gt; deux
+102 --&gt; où suis-je ?
+
+</pre>
+</div>
+<ul><li>Lors du parcours avec un foreach, seul l'ordre d'insertion dans le tableau compte.
+</li><li>La construction <code>$tab[] = ...</code> ajoute la valeur
+à une clef <em>numérique</em> qui est la plus grande clef numérique + 1
+</li></ul>
+<div class="p">Attention, on ne peut pas utiliser comme indice une chaîne de caractères «&nbsp;contenant&nbsp;» un entier,
+car elle est convertie en entier. Une façon de l'éviter est de faire commencer la chaîne par un <code>+</code>.
+ <span class="note">ce qui empêche d'utiliser === comme on voudrait</span>
+<div class="predemo">
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br>$tab&nbsp;</span><span style="color: #007700">=&nbsp;array();<br></span><span style="color: #0000BB">$tab</span><span style="color: #007700">[</span><span style="color: #DD0000">'0'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">'chaîne&nbsp;0'</span><span style="color: #007700">;<br></span><span style="color: #0000BB">$tab</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">'entier&nbsp;0'</span><span style="color: #007700">;<br></span><span style="color: #0000BB">$tab</span><span style="color: #007700">[</span><span style="color: #DD0000">'1.0'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">'chaîne&nbsp;1.0'</span><span style="color: #007700">;<br></span><span style="color: #0000BB">$tab</span><span style="color: #007700">[</span><span style="color: #0000BB">1.0</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">'flottant&nbsp;1.0'</span><span style="color: #007700">;<br></span><span style="color: #0000BB">$tab</span><span style="color: #007700">[</span><span style="color: #0000BB">1.1</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">'flottant&nbsp;1.1'</span><span style="color: #007700">;<br></span><span style="color: #0000BB">$tab</span><span style="color: #007700">[</span><span style="color: #DD0000">'+1'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">'chaîne&nbsp;+1'</span><span style="color: #007700">;<br>foreach&nbsp;(</span><span style="color: #0000BB">$tab&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$key&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$val</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"</span><span style="color: #0000BB">$key</span><span style="color: #DD0000">&nbsp;--&gt;&nbsp;</span><span style="color: #0000BB">$val</span><span style="color: #DD0000">\n"</span><span style="color: #007700">;<br>}</span>
+</span>
+</code></div>
+<pre class=" output">0 --&gt; entier 0
+1.0 --&gt; chaîne 1.0
+1 --&gt; flottant 1.1
++1 --&gt; chaîne +1
+
+</pre>
+</div>
+<div class="note">
+L'indice '0' est converti en 0, l'indice '100' est converti en 100, l'indice '-1' est converti en -1,
+mais les indices '0.0', '+1', '03', '00', '0x0', '2e2' restent des chaînes, car ce ne sont pas
+des «&nbsp;entiers décimaux valides ne commençant pas par +&nbsp;» (0.0 est flottant, +1 commence par +,
+03 et 00 seraient en octal, 0x0 en hexa, et 2e2 un float).
+</div>
+<a href="http://php.net/manual/en/language.types.array.php">détails sur la conversion des indices dans le manuel</a>
+</div>
+<p>Les tableaux sont manipulés «&nbsp;par copie&nbsp;» : dans le code suivant,
+la 2e ligne crée une copie du tableau&nbsp;!</p>
+<div class="predemo">
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br>$x&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'toto'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'tata'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">);<br></span><span style="color: #0000BB">$y&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$x</span><span style="color: #007700">;<br></span><span style="color: #0000BB">$x</span><span style="color: #007700">[</span><span style="color: #DD0000">'titi'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #0000BB">3</span><span style="color: #007700">;<br>echo&nbsp;</span><span style="color: #0000BB">count</span><span style="color: #007700">(</span><span style="color: #0000BB">$x</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br>echo&nbsp;</span><span style="color: #0000BB">count</span><span style="color: #007700">(</span><span style="color: #0000BB">$y</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;</span>
+</span>
+</code></div>
+<pre class=" output">3
+2
+
+</pre>
+</div>
+<div class="p">Ce n'est pas une erreur d'utiliser un nombre ou <code>null</code>
+comme un tableau. Ça renvoie simplement toujours <code>null</code>.
+<pre class="src"><code class="hl "><span style="color: #0000BB">$tab&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">;<br></span><span style="color: #0000BB">var_export</span><span style="color: #007700">(</span><span style="color: #0000BB">$tab</span><span style="color: #007700">[</span><span style="color: #DD0000">'toto'</span><span style="color: #007700">]);&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;NULL<br></span><span style="color: #0000BB">$tab&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">1234</span><span style="color: #007700">;<br></span><span style="color: #0000BB">var_export</span><span style="color: #007700">(</span><span style="color: #0000BB">$tab</span><span style="color: #007700">[</span><span style="color: #DD0000">'toto'</span><span style="color: #007700">]);&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;NULL</span></code></pre>
+</div>
+
+</div>
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Fonctions utiles avec les tableaux</h2>
+
+<div class="p">Principales fonctions utiles avec les tableaux&nbsp;:
+<ul>
+<li><em><code>key_exists($key, $array)</code></em>&nbsp;: renvoie <code>true</code>
+si le tableau <code>$array</code> contient la clef <code>$key</code>, et <code>false</code>
+sinon (il existe l'alias plus long <code>array_key_exists</code>)</li>
+<li><em><code>in_array($val, $array, true)</code></em>&nbsp;: renvoie <code>true</code>
+si le tableau <code>$array</code> contient la valeur <code>$val</code>, et <code>false</code>
+sinon.
+<div class="conseq"> Le troisième paramètre sert à utiliser la comparaison stricte (celle de <code>===</code>) plutôt que la comparaison faible (celle de <code>==</code>), qui est le défaut.
+<strong>À ne pas oublier&nbsp;!</strong> Si on l'enlève ou si on le met à <code>false</code>, les résultats <a href="http://php.net/manual/en/function.in-array.php#106319">peuvent être très surprenants…</a><div class="note">l'explication
+ est que le tableau contient true et false. Toute valeur est égale soit à
+ l'un soit à l'autre, donc in_array renverra toujours true.</div></div></li>
+<li><em><code>array_search($val, $array, true)</code></em> pour récupérer l'indice d'une valeur dans un tableau.  Attention à la comparaison faible&nbsp;:
+<ul>
+<li>il faut passer <code>true</code> comme 3e paramètre pour que la comparaison lors de la recherche soit stricte, comme pour <code>in_array</code>
+</li><li>mais il faut aussi faire attention à la valeur de retour&nbsp;: la fonction peut renvoyer 0 ou <code>false</code>, ce n'est pas du tout pareil&nbsp;!
+</li></ul>
+</li><li><em><code>unset($array[$key])</code></em> pour supprimer un élément&nbsp;; <strong>attention</strong>, il n'y a pas de redécalage des indices, utiliser <code>array_values</code> derrière si besoin
+</li><li>Voir aussi <code>array_keys</code>, <code>array_values</code>, <code>array_slice</code>, et éventuellement <code>array_flip</code>
+</li></ul>
+</div>
+<p><a href="https://www.php.net/manual/en/ref.array.php">toutes les fonctions sur les tableaux</a></p>
+<p><a href="https://code.tutsplus.com/tutorials/working-with-php-arrays-in-the-right-way--cms-28606">tuto sur la manipulation de tableaux</a></p>
+</div>
+
+<!-- ################################### -->
+
+
+<div class="slide">
+<h2>Fonctions anonymes</h2>
+
+<p>PHP permet d'utiliser des fonctions anonymes, comme en JavaScript. 
+</p><div class="p">On peut ainsi mettre une fonction dans une variable&nbsp;:
+<div class="predemo">
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br>$toto&nbsp;</span><span style="color: #007700">=&nbsp;function&nbsp;()&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"je&nbsp;suis&nbsp;anonyme\n"</span><span style="color: #007700">;<br>};<br></span><span style="color: #0000BB">$toto</span><span style="color: #007700">();<br><br></span><span style="color: #0000BB">$titi&nbsp;</span><span style="color: #007700">=&nbsp;function&nbsp;(</span><span style="color: #0000BB">$x</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"\$x&nbsp;=&nbsp;</span><span style="color: #0000BB">$x</span><span style="color: #DD0000">\n"</span><span style="color: #007700">;<br>};<br></span><span style="color: #0000BB">$titi</span><span style="color: #007700">(</span><span style="color: #DD0000">"salut"</span><span style="color: #007700">);<br><br></span><span style="color: #0000BB">$titi&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$toto</span><span style="color: #007700">;<br></span><span style="color: #0000BB">$titi</span><span style="color: #007700">();</span>
+</span>
+</code></div>
+<pre class="demo output">je suis anonyme
+$x = salut
+je suis anonyme
+
+</pre>
+</div>
+</div>
+<p>Cela évite de déclarer une fonction qui n'est utilisée qu'une seule fois
+</p><p class="conseq">Particulièrement utile comme paramètre de certaines fonctions (voir la suite)
+</p></div>
+
+<div class="slide">
+<h2>Map/Filter/Reduce sur des tableaux</h2>
+<p>Exemple d'utilisation de fonctions anonymes&nbsp;: filtrage ou modification des valeurs d'un tableau
+à l'aide d'une fonction
+</p><ul>
+<li>Modifier les valeurs d'un tableau&nbsp;: <code>array_map($fonction, $tab)</code> 
+applique la fonction <code>$fonction</code> à chaque élément du tableau <code>$tab</code> et retourne le résultat (sans modifier <code>$tab</code>)
+</li><li>Filtrer les valeurs d'un tableau&nbsp;: <code>array_filter($tab, $fonction)</code> renvoie
+un tableau ne contenant que les valeurs du tableau <code>$tab</code> pour lesquelles la fonction <code>$fonction</code> a renvoyé <code>true</code>
+</li></ul>
+<div class="predemo">
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br>$tab&nbsp;</span><span style="color: #007700">=&nbsp;[&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">12</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">3</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">7</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">15</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">20</span><span style="color: #007700">,&nbsp;-</span><span style="color: #0000BB">24&nbsp;</span><span style="color: #007700">];<br>echo&nbsp;</span><span style="color: #DD0000">"Tableau&nbsp;initial&nbsp;:\n"</span><span style="color: #007700">;<br></span><span style="color: #0000BB">var_export</span><span style="color: #007700">(</span><span style="color: #0000BB">$tab</span><span style="color: #007700">);<br>echo&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br><br></span><span style="color: #0000BB">$tab2&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">array_map</span><span style="color: #007700">(function&nbsp;(</span><span style="color: #0000BB">$value</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$value&nbsp;</span><span style="color: #007700">*&nbsp;</span><span style="color: #0000BB">3</span><span style="color: #007700">;<br>},&nbsp;</span><span style="color: #0000BB">$tab</span><span style="color: #007700">);<br>echo&nbsp;</span><span style="color: #DD0000">"Tableau&nbsp;modifié&nbsp;:\n"</span><span style="color: #007700">;<br></span><span style="color: #0000BB">var_export</span><span style="color: #007700">(</span><span style="color: #0000BB">$tab2</span><span style="color: #007700">);<br>echo&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br><br></span><span style="color: #0000BB">$tab3&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">array_filter</span><span style="color: #007700">(</span><span style="color: #0000BB">$tab2</span><span style="color: #007700">,&nbsp;function&nbsp;(</span><span style="color: #0000BB">$value</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$value&nbsp;</span><span style="color: #007700">&lt;&nbsp;</span><span style="color: #0000BB">25</span><span style="color: #007700">;<br>});<br>echo&nbsp;</span><span style="color: #DD0000">"Tableau&nbsp;résultant&nbsp;filtré&nbsp;:\n"</span><span style="color: #007700">;<br></span><span style="color: #0000BB">var_export</span><span style="color: #007700">(</span><span style="color: #0000BB">$tab3</span><span style="color: #007700">);<br>echo&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br><br>echo&nbsp;</span><span style="color: #DD0000">"NB:&nbsp;le&nbsp;tableau&nbsp;initial\n&nbsp;n'a&nbsp;pas&nbsp;bougé&nbsp;:\n"</span><span style="color: #007700">;<br></span><span style="color: #0000BB">var_export</span><span style="color: #007700">(</span><span style="color: #0000BB">$tab</span><span style="color: #007700">);<br>echo&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br></span>
+</span>
+</code></div>
+<pre class="demo output">Tableau initial :
+array (
+  0 =&gt; 1,
+  1 =&gt; 12,
+  2 =&gt; 3,
+  3 =&gt; 7,
+  4 =&gt; 15,
+  5 =&gt; 20,
+  6 =&gt; -24,
+)
+Tableau modifié :
+array (
+  0 =&gt; 3,
+  1 =&gt; 36,
+  2 =&gt; 9,
+  3 =&gt; 21,
+  4 =&gt; 45,
+  5 =&gt; 60,
+  6 =&gt; -72,
+)
+Tableau résultant filtré :
+array (
+  0 =&gt; 3,
+  2 =&gt; 9,
+  3 =&gt; 21,
+  6 =&gt; -72,
+)
+NB: le tableau initial
+ n'a pas bougé :
+array (
+  0 =&gt; 1,
+  1 =&gt; 12,
+  2 =&gt; 3,
+  3 =&gt; 7,
+  4 =&gt; 15,
+  5 =&gt; 20,
+  6 =&gt; -24,
+)
+
+</pre>
+</div>
+
+<p><em>Attention</em>, attention, l'ordre des paramètres n'est pas le même dans les deux fonctions
+</p><div class="p">Dans la même famille, mais plus subtil, il existe aussi <a href="https://www.php.net/manual/fr/function.array-reduce.php">array_reduce</a>, pour effectuer une opération sur toutes les valeurs à la fois
+<div class="conseq">cependant les réductions les plus courantes ont une fonction dédiée :
+<ul>
+<li><code>array_sum</code> pour la somme, <code>array_product</code> pour le produit
+</li><li><code>min</code> et <code>max</code> pour le minimum et le maximum
+</li></ul>
+</div>
+</div>
+</div>
+
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Tableaux de tableaux</h2>
+
+<p>On peut bien sûr mettre des tableaux dans des tableaux, et récursivement,
+sans difficulté&nbsp;:</p>
+
+<div class="predemo">
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br>$couleurs&nbsp;</span><span style="color: #007700">=&nbsp;array(<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"aqua"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">255</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">255</span><span style="color: #007700">),<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"black"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">),<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"blue"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">255</span><span style="color: #007700">),<br>);<br><br></span><span style="color: #0000BB">$couleurs</span><span style="color: #007700">[</span><span style="color: #DD0000">"white"</span><span style="color: #007700">]&nbsp;=&nbsp;array(</span><span style="color: #0000BB">255</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">255</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">255</span><span style="color: #007700">);<br><br></span><span style="color: #FF8000">//&nbsp;On&nbsp;parcourt&nbsp;le&nbsp;tableau&nbsp;$couleurs<br></span><span style="color: #007700">foreach&nbsp;(</span><span style="color: #0000BB">$couleurs&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$c&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$rgb</span><span style="color: #007700">)&nbsp;{&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Ici&nbsp;$rgb&nbsp;est&nbsp;lui-même&nbsp;un&nbsp;tableau<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"</span><span style="color: #0000BB">$c</span><span style="color: #DD0000">&nbsp;=&nbsp;rgb(</span><span style="color: #0000BB">$rgb</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">]</span><span style="color: #DD0000">,&nbsp;</span><span style="color: #0000BB">$rgb</span><span style="color: #007700">[</span><span style="color: #0000BB">1</span><span style="color: #007700">]</span><span style="color: #DD0000">,&nbsp;</span><span style="color: #0000BB">$rgb</span><span style="color: #007700">[</span><span style="color: #0000BB">2</span><span style="color: #007700">]</span><span style="color: #DD0000">)\n"</span><span style="color: #007700">;<br>}</span>
+</span>
+</code></div>
+<pre class="demo output">aqua = rgb(0, 255, 255)
+black = rgb(0, 0, 0)
+blue = rgb(0, 0, 255)
+white = rgb(255, 255, 255)
+
+</pre>
+</div>
+</div>
+
+<!-- ################################### -->
+
+<!-- ################################### -->
+
+
+<div class="slide">
+<h2>Tableaux en paramètres des fonctions</h2>
+<p>Passer un gros tableau à une fonction peut sembler une mauvaise idée,
+car la sémantique des paramètres est celle du «&nbsp;passage par copie&nbsp;»
+</p><p>Cependant, le moteur de PHP fait cette copie <em>paresseusement</em>,
+c'est-à-dire uniquement au moment où ça devient nécessaire
+</p><p class="conseq">si le tableau n'est jamais modifié, il n'est jamais copié&nbsp;!
+</p><p>On a parfois besoin de faire des fonctions qui <em>modifient</em>
+un tableau donné en place ; dans ce cas on peut passer en paramètre une <em>référence</em>
+vers le tableau, en ajoutant <code>&amp;</code> devant le paramètre formel</p>
+<div class="predemo">
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">no_modif</span><span style="color: #007700">(</span><span style="color: #0000BB">$tab</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;</span><span style="color: #0000BB">$tab</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">'youpi'</span><span style="color: #007700">;<br>}<br>function&nbsp;</span><span style="color: #0000BB">yes_modif</span><span style="color: #007700">(&amp;</span><span style="color: #0000BB">$tab</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;</span><span style="color: #0000BB">$tab</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">'youpi'</span><span style="color: #007700">;<br>}<br><br></span><span style="color: #0000BB">$x&nbsp;</span><span style="color: #007700">=&nbsp;[&nbsp;</span><span style="color: #DD0000">'toto'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'tutu'&nbsp;</span><span style="color: #007700">];<br>echo&nbsp;</span><span style="color: #DD0000">"no_modif&nbsp;ne&nbsp;modifie&nbsp;pas&nbsp;le&nbsp;tableau&nbsp;:\n"</span><span style="color: #007700">;<br></span><span style="color: #0000BB">no_modif</span><span style="color: #007700">(</span><span style="color: #0000BB">$x</span><span style="color: #007700">);<br></span><span style="color: #0000BB">var_export</span><span style="color: #007700">(</span><span style="color: #0000BB">$x</span><span style="color: #007700">);<br><br>echo&nbsp;</span><span style="color: #DD0000">"\n--------\n"</span><span style="color: #007700">;<br>echo&nbsp;</span><span style="color: #DD0000">"yes_modif&nbsp;modifie&nbsp;le&nbsp;tableau&nbsp;:\n"</span><span style="color: #007700">;<br></span><span style="color: #0000BB">yes_modif</span><span style="color: #007700">(</span><span style="color: #0000BB">$x</span><span style="color: #007700">);<br></span><span style="color: #0000BB">var_export</span><span style="color: #007700">(</span><span style="color: #0000BB">$x</span><span style="color: #007700">);</span>
+</span>
+</code></div>
+<pre class="demo output">no_modif ne modifie pas le tableau :
+array (
+  0 =&gt; 'toto',
+  1 =&gt; 'tutu',
+)
+--------
+yes_modif modifie le tableau :
+array (
+  0 =&gt; 'youpi',
+  1 =&gt; 'tutu',
+)
+</pre>
+</div>
+<p>NB&nbsp;: le <code>&amp;</code> est à mettre seulement lors de la définition de
+la fonction, pas lorsqu'on l'appelle. On ne passe pas explicitement un «&nbsp;pointeur&nbsp;».
+</p></div>
+
+
+<!-- ################################### -->
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Manipulation simple de fichiers</h2>
+<div class="p">
+Les fonctions suivantes sont simples à utiliser, mais pas forcément 
+pertinentes sur de gros fichiers (on charge tout le fichier en mémoire).
+</div>
+<ul>
+<li>
+Lire le contenu d'un fichier : <code>file_get_contents("nomdufichier")</code>,
+qui renvoie le contenu du fichier sous forme d'une chaîne de caractères.
+</li><li>Pour récupérer les lignes du fichier, on peut utiliser <code>file("nomdufichier")</code>,
+qui renvoie un tableau contenant toutes les lignes du fichier (avec les sauts de ligne).
+</li><li>Écrire un fichier : <code>file_put_contents("nomdufichier", "contenu")</code>
+</li><li>Ajouter du contenu à un fichier&nbsp;: <code>file_put_contents("nomdufichier", "contenu", FILE_APPEND)</code>
+(on utilise un paramètre optionnel de la fonction)
+</li></ul>
+<div class="predemo">
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br>$file&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"demo/fichier.txt"</span><span style="color: #007700">;<br><br></span><span style="color: #0000BB">$contents&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">file_get_contents</span><span style="color: #007700">(</span><span style="color: #0000BB">$file</span><span style="color: #007700">);<br>echo&nbsp;</span><span style="color: #DD0000">"Contenu&nbsp;du&nbsp;fichier,&nbsp;V1&nbsp;:\n</span><span style="color: #0000BB">$contents</span><span style="color: #DD0000">"</span><span style="color: #007700">;<br><br></span><span style="color: #FF8000">//&nbsp;get&nbsp;contents&nbsp;of&nbsp;a&nbsp;file&nbsp;line&nbsp;by&nbsp;line<br></span><span style="color: #0000BB">$lines&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">file</span><span style="color: #007700">(</span><span style="color: #0000BB">$file</span><span style="color: #007700">);<br>foreach&nbsp;(</span><span style="color: #0000BB">$lines&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$num&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$line</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Ligne&nbsp;</span><span style="color: #0000BB">$num</span><span style="color: #DD0000">&nbsp;:&nbsp;«&nbsp;</span><span style="color: #0000BB">$line</span><span style="color: #DD0000">&nbsp;»\n"</span><span style="color: #007700">;<br>}<br><br></span>
+</span>
+</code></div>
+<pre class="demo output">Contenu du fichier, V1&nbsp;:
+Coucou,
+je suis un fichier !
+
+Au revoir
+
+Ligne 0 : « Coucou,
+ »
+Ligne 1 : « je suis un fichier !
+ »
+Ligne 2 : « 
+ »
+Ligne 3 : « Au revoir
+ »
+Ligne 4 : « 
+ »
+
+</pre>
+</div>
+</div>
+
+
+<div class="slide">
+<h2>Manipulation subtile de fichiers</h2>
+<div class="p">
+Pour des besoins plus précis, ou pour des fichiers lourds, il existe des fonctions bas niveau
+<small>c'est en fait une surcouche très fine de la bibliothèque standard de C</small>&nbsp;:
+
+<ul>
+  <li>La fonction <code>fopen</code> prend en 2e paramètre le mode d'ouverture du fichier : <code>r r+ w w+ a a+</code></li>
+  <li>La fonction <code>fread</code> lit le contenu du fichier jusqu'à une limite donnée</li>
+  <li>La fonction <code>fgets</code> envoie la ligne courante sur laquelle se trouve le pointeur du fichier</li>
+  <li>La fonction <code>fwrite</code> permet d'écrire dans un fichier <!--, mais il faut que le serveur ait le droit d'écriture sur le fichier --></li>
+  <li>La fonction <code>fclose</code> permet de fermer la ressource (elle est cependant fermée automatiquement à la fin du script)</li>
+  <!-- <li>La fonction <code>htmlspecialchars</code> transforme les caractères
+spéciaux du HTML (<code>&amp; &lt; &gt; &quot;</code>)en entités HTML — on en reparlera</li> -->
+
+</ul>
+</div>
+<div class="predemo">
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br>$file&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"demo/fichier.txt"</span><span style="color: #007700">;<br><br></span><span style="color: #FF8000">//&nbsp;à&nbsp;l'ancienne<br></span><span style="color: #0000BB">$fd&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">fopen</span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"r"&nbsp;</span><span style="color: #007700">);<br></span><span style="color: #0000BB">$contents&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">fread</span><span style="color: #007700">(</span><span style="color: #0000BB">$fd</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">filesize</span><span style="color: #007700">(</span><span style="color: #0000BB">$file</span><span style="color: #007700">));<br>echo&nbsp;</span><span style="color: #DD0000">"Contenu&nbsp;du&nbsp;fichier,&nbsp;V2&nbsp;:\n</span><span style="color: #0000BB">$contents</span><span style="color: #DD0000">"</span><span style="color: #007700">;<br></span><span style="color: #0000BB">fclose</span><span style="color: #007700">(</span><span style="color: #0000BB">$fd</span><span style="color: #007700">);<br><br></span><span style="color: #FF8000">//&nbsp;get&nbsp;contents&nbsp;of&nbsp;a&nbsp;file&nbsp;line&nbsp;by&nbsp;line<br></span><span style="color: #0000BB">$fd&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">fopen</span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"r"&nbsp;</span><span style="color: #007700">);<br>while&nbsp;(</span><span style="color: #0000BB">$line&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">fgets</span><span style="color: #007700">(</span><span style="color: #0000BB">$fd</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">4096</span><span style="color: #007700">))&nbsp;{<br>&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"&lt;p&gt;une&nbsp;ligne&nbsp;:&nbsp;«&nbsp;</span><span style="color: #0000BB">$line</span><span style="color: #DD0000">&nbsp;»&lt;/p&gt;"</span><span style="color: #007700">;<br>}<br></span><span style="color: #0000BB">fclose</span><span style="color: #007700">(</span><span style="color: #0000BB">$fd</span><span style="color: #007700">);<br></span>
+</span>
+</code></div>
+<pre class="demo output">Contenu du fichier, V2&nbsp;:
+Coucou,
+je suis un fichier !
+
+Au revoir
+
+<p>une ligne&nbsp;: « Coucou,
+ »</p><p>une ligne&nbsp;: « je suis un fichier !
+ »</p><p>une ligne&nbsp;: « 
+ »</p><p>une ligne&nbsp;: « Au revoir
+ »</p><p>une ligne&nbsp;: « 
+ »</p>
+</pre>
+</div>
+</div>
+<!-- ################################### -->
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Expressions régulières</h2>
+<p><a href="https://www.php.net/manual/fr/ref.pcre.php">Plusieurs fonctions existent</a>
+pour faire des recherches et remplacements dans des chaînes ou des tableaux en utilisant
+des expressions régulières (regex)
+</p><p>Le format des regex est celui de Perl («PCRE»), comme la plupart des langages modernes (notamment Python ou Java)
+</p><p><a href="https://www.php.net/manual/fr/book.pcre.php">Voir la doc pour tous les détails sur le format des regex ou les options des fonctions</a>
+</p></div>
+
+
+
+<div class="note">
+<h1>Compléments à trier</h1>
+
+<section class="slide">
+<h2>PHP en ligne de commande</h2>
+<pre class="src"><code class="hl "><span style="color: #0000BB"></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">usage</span><span style="color: #007700">(</span><span style="color: #0000BB">$msg</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Error:&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$msg</span><span style="color: #007700">.</span><span style="color: #0000BB">PHP_EOL</span><span style="color: #007700">;<br>&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Usage:&nbsp;blabla…'</span><span style="color: #007700">.</span><span style="color: #0000BB">PHP_EOL</span><span style="color: #007700">;<br>&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br>}<br></span><span style="color: #FF8000">/*&nbsp;PHP_SAPI&nbsp;indicates&nbsp;the&nbsp;access&nbsp;mode&nbsp;*/<br></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">PHP_SAPI&nbsp;</span><span style="color: #007700">!==&nbsp;</span><span style="color: #DD0000">'cli'</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">usage</span><span style="color: #007700">(</span><span style="color: #DD0000">'command&nbsp;line&nbsp;only'</span><span style="color: #007700">);<br>}<br></span><span style="color: #FF8000">/*&nbsp;$argv&nbsp;contains&nbsp;the&nbsp;argv&nbsp;array&nbsp;from&nbsp;C&nbsp;(there&nbsp;is&nbsp;no&nbsp;$argc)&nbsp;*/<br></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">count</span><span style="color: #007700">(</span><span style="color: #0000BB">$argv</span><span style="color: #007700">)&nbsp;!=&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">usage</span><span style="color: #007700">(</span><span style="color: #DD0000">'takes&nbsp;one&nbsp;argument'</span><span style="color: #007700">);<br>}<br></span><span style="color: #0000BB">$mode&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$argv</span><span style="color: #007700">[</span><span style="color: #0000BB">1</span><span style="color: #007700">];</span></code></pre>
+</section>
+<section class="slide">
+<h2>Namespaces</h2>
+<p>Si on utilise des namespaces, on a envie d'utiliser <code>use</code></p>
+<div class="p">Mais du coup sans autoloader c'est pas très DRY&nbsp;:
+<pre class="src">    require_once('views/View.php');
+    use views\View;
+</pre>
+</div>
+<p>Mais ça m'embête de définir une fonction d'autoload à la main qu'il faut mettre dans tous les projets…</p>
+<p> J'ai regardé un peu, et a priori la solution la plus simple c'est d'utiliser l'autoloader par défaut.
+Il suffit de mettre <code>spl_autoload_register();</code> quelque part, et il va chercher le fichier de classe dans le répertoire correspondant au namespace.</p>
+<p> Seul bémol : le nom du fichier de classe doit être tout en 
+minuscules, sinon ça ne marche pas.
+(NB: Les noms de classes et de fonctions en PHP ne sont pas sensibles à 
+la casse.) C'est pas génial, mais c'est pas dramatique non plus.</p>
+<p>Alternative&nbsp;: ne pas utiliser les namespaces comme des packages,
+ mais juste pour protéger notre espace de noms. On peut continuer à 
+utiliser des
+répertoires pour grouper nos fichiers, même s'ils sont dans le même 
+namespace.</p>
+
+</section>
+
+
+</div><!-- fin notes -->
+
+
+</div> <!-- fin #presentation -->
+
+<aside id="liens">
+<h3>Spécifications et normes</h3>
+<ul>
+<li><a href="http://www.php.net/manual/fr/index.php">Manuel de PHP</a> (en français)</li>
+</ul>
+<h3>Tutoriels</h3>
+<ul>
+<li><a href="https://code.tutsplus.com/tutorials/working-with-php-arrays-in-the-right-way--cms-28606">Working with PHP arrays the right way</a></li>
+</ul>
+
+</aside><!-- fin #liens -->
+</div> <!-- fin #contenu -->
+
+<footer class="license">
+	<a class="icone" rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+		<img alt="Licence Creative Commons CC-BY-NC-SA" style="border-width:0" src="Compl%C3%A9ments%20sur%20les%20bases%20de%20PHP%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/88x31.png">
+	</a>
+	<p class="texte">
+		Ce cours est mis à disposition selon les termes de la <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">licence Creative Commons Attribution — Pas d’utilisation commerciale — Partage dans les mêmes conditions 4.0 International</a>.
+	</p></footer>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+	function toggleProj() {
+		const currentParams = new URLSearchParams(window.location.search);
+		if (currentParams.get('mode') === 'proj') {
+			console.log('found proj');
+			document.documentElement.classList.remove('proj');
+			currentParams.delete('mode');
+		} else {
+			console.log('not found proj');
+			document.documentElement.classList.add('proj');
+			currentParams.set('mode', 'proj');
+		}
+		window.history.pushState({}, '', '?' + currentParams + window.location.hash);
+	};
+
+	var buttons = document.querySelectorAll('.proj_switch button'), i;
+	for (i = 0; i < buttons.length; ++i) {
+		buttons[i].addEventListener("click", toggleProj);
+	}
+
+	document.addEventListener("keypress", function(e) {
+		if (e.target == document.body && String.fromCharCode(e.keyCode || e.charCode) == "m") {
+			toggleProj();
+		}
+	});
+
+	/* ajout de liens aux titres qui ont un id */
+	let slidesWithId = document.querySelectorAll('.slide[id]');
+	for (const slide of slidesWithId) {
+		const link = document.createElement('a');
+		link.href = '#' + slide.id;
+		link.classList.add('slide-link');
+		link.title = 'Lien vers ce slide';
+		link.textContent = '#';
+		slide.insertAdjacentElement('afterbegin', link);
+	}
+
+
+});
+</script>
+
+
+
+</body></html>

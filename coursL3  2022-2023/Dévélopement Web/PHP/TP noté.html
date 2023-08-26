@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>TP noté</title>
+<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png"> 
+<link rel="stylesheet" href="TP%20not%C3%A9_files/normalize.css">
+<link rel="stylesheet" type="text/css" href="TP%20not%C3%A9_files/fiche_alex.css">
+</head>
+<body>
+<div id="wrapper">
+
+<header id="tetiere">
+	<div class="logo">
+	<a href="https://ensweb.users.info.unicaen.fr/TW4B/" title="Technologies du Web — Université de Caen" class="logo"><span class="accessibilite">Logo de l'université de Caen</span></a>
+	</div>
+	<div class="titreCours">
+			<h1>TP noté</h1>
+			<p class="soustitre">2022-2023</p>
+			<p class="diplome">Licence Informatique 3ème année</p>
+			<p class="enseignants">Alexandre Niveau — Jean-Marc Lecarpentier</p>
+	</div>
+	<section class="contexte">
+	<h2><a href="https://ensweb.users.info.unicaen.fr/TW4B/">Enseignement des technologies du Web</a></h2>
+		<ul>
+			<li>Module&nbsp;: <a href="https://ensweb.users.info.unicaen.fr/TW4B/">TW4B : Programmation d’applications web avancées</a></li>
+		<li><a href="http://www.unicaen.fr/">Université de Caen</a>, année&nbsp;2022-2023</li>
+		</ul>
+	</section><!-- fin de contexte -->
+		<div class="clearer">&nbsp;</div>
+</header><!-- fin de tetiere -->
+
+<main id="majeur">
+
+
+
+<!--  ##########  introduction  ########  -->
+
+<section class="bloc"><h2>TP noté</h2><p class="soustitre">2022-2023</p>
+<div id="sujet">
+
+<p><strong>Durée : 1h</strong></p>
+
+<h3>Mise en place de l'examen</h3>
+
+
+<!--
+<p><strong>Le répertoire de travail <code>/users/NUMETU/www-dev/</code> a été créé dans votre compte web.
+  Ne pas le déplacer ni le renommer !</strong>
+Il contient les fichiers nécessaires à l'examen.
+Vous devrez réaliser votre travail dans ce répertoire.
+</p>
+-->
+
+<p><strong>Téléchargez <a href="https://ensweb.users.info.unicaen.fr/TW4B/eval/exam1-aighaet1huMe6aifieWo/archive-tp-note-tw4b-2022.zip">l'archive du sujet</a></strong>, et décompressez-la. Elle contient un répertoire <code>tp-note-tw4b-2022-VOTRELOGIN</code> dans lequel vous effectuerez votre travail. <strong>Renommez-le en remplaçant <code>VOTRELOGIN</code> par votre login</strong> <small>(ça donnera donc par exemple <code>tp-note-tw4b-2022-dupont223</code> ou <code>tp-note-tw4b-2022-21912345</code>)</small>.</p>
+<p>
+Vous pouvez placer ce répertoire où vous voulez, pas forcément sur votre
+ espace web (on ne corrigera que ce que vous déposerez sur ecampus). 
+Vous pouvez laisser le répertoire sur votre compte normal et utiliser le
+ serveur de développement inclus avec PHP de cette façon&nbsp;:
+</p><ol>
+<li>Ouvrez un terminal dans le répertoire <code>tp-note-tw4b-2022-<var>LOGIN</var></code> que vous avez extrait et renommé
+</li><li>Lancez la commande <code>php -S localhost:20202 -d display_errors=true</code> <small>(remplacez 20202 par un autre port si celui-ci ne marche pas…)</small>.
+</li><li>Allez à l'URL <code>http://localhost:20202/</code>&nbsp;: vous devriez voir le résultat de l'exécution du fichier <code>index.php</code> qui est dans ce répertoire. <small>(Il y a des erreurs PHP, c'est normal.)</small></li>
+</ol>
+<p>Attention, les erreurs affichées dans les pages sautent moins aux 
+yeux que sur le serveur, et la stack trace est moins lisible. Cependant,
+ toutes les erreurs PHP sont aussi affichées dans le terminal où vous 
+avez lancé le serveur, et la stack trace y est un peu mieux.. Notez 
+aussi que ce serveur de développement, très basique, ne sait pas 
+afficher d'index des répertoires, comme le fait le serveur Apache 
+utilisé pour votre www-dev.</p>
+
+
+<h3>Important</h3>
+
+<p>Vous devez rendre à l'issue de l'examen 
+une archive <code>zip</code> contenant (à la racine) votre répertoire <code>tp-note-tw4b-2022-<var>LOGIN</var></code>, déposée <a href="https://ecampus.unicaen.fr/mod/assign/view.php?id=896668">sur Ecampus dans la zone prévue à cet effet</a>.
+ Le nom de l'archive n'a pas d'importance, mais il est important que 
+l'archive contienne le répertoire demandé (et pas son contenu par 
+exemple).</p>
+<p><strong>Faites bien attention à ne pas déposer l'archive initiale</strong>, mais bien celle avec votre travail&nbsp;! <small>Normalement, si vous avez bien renommé le répertoire, il ne devrait pas y avoir de confusion possible.</small></p>
+
+
+<div class="exercice">
+<h2>Exercice</h2>
+
+<p>Le répertoire <code>tp-note-tw4b-2022-<var>LOGIN</var></code> contient l'architecture d'un site très simple&nbsp;: il s'agit d'un pseudo-forum. <a href="https://ensweb.users.info.unicaen.fr/TW4B/eval/exam1-aighaet1huMe6aifieWo/comm/">On peut le voir en action ici.</a>
+Il suit les principes présentés en cours, sauf que la «&nbsp;base de données&nbsp;» est un simple tableau stocké en session <small>(c'est-à-dire que chaque internaute ne voit que ses propres
+commentaires&nbsp;! Ça suffira pour un TP noté…)</small>. Au démarrage, le tableau contient deux commentaires (toujours les mêmes).</p>
+<p>Une partie du code a été enlevée (des exceptions «&nbsp;not yet 
+implemented&nbsp;» sont lancées à la place)&nbsp;: il manque la méthode 
+de la vue permettant d'afficher le fil des commentaires, et les méthodes
+ du contrôleur et de la vue
+qui concernent l'ajout d'un nouveau commentaire.
+NB&nbsp;: rien d'autre n'a été supprimé ! En particulier, vous n'avez a 
+priori pas besoin de modifier le routeur (mais ce n'est pas interdit).
+</p>
+<ol>
+<li>Regarder les classes fournies et s'assurer de comprendre comment ça marche. <small>(NB&nbsp;: il n'y a pas d'action permettant d'afficher un commentaire seul.)</small>
+</li><li>Implémenter la méthode <code>makeListPage</code> de la vue pour qu'elle affiche la liste des commentaires (optionnel&nbsp;: on la fera s'afficher de bas en haut),
+ainsi qu'un lien vers la page d'ajout de commentaire.</li>
+<li>Faire en sorte que le contrôleur appelle la méthode <code>makeCommCreationPage</code> de la vue lorsque l'utilisateur veut ajouter un nouveau commentaire.</li>
+<li>Implémenter l'enregistrement d'un nouveau commentaire dans la base. NB&nbsp;: rien n'a été supprimé dans la classe <code>CommStorageSession</code>, il ne devrait pas y avoir besoin de la modifier.
+</li><li>Si ce n'est déjà fait, gérer les données invalides&nbsp;: 
+l'auteur ne doit pas être vide, et on obligera chaque commentaire à 
+avoir une longueur minimale de 10 caractères. NB&nbsp;: vous disposez 
+d'une classe <code>CommBuilder</code> dont rien n'a été supprimé non plus.
+</li><li>Si ce n'est déjà fait, gérer la redirection après une requête POST, et le feedback associé.
+</li><li>Si ce n'est déjà fait, faire en sorte que soumettre un 
+commentaire invalide ne remette pas les champs du formulaire à zéro, 
+mais les laisse en l'état.
+</li></ol>
+</div>
+
+
+
+</div>
+
+
+
+
+
+</section><!-- fin de l'introduction -->
+
+</main><!-- fin de majeur -->
+
+
+</div> <!-- fermeture du wrapper -->
+
+
+</body></html>

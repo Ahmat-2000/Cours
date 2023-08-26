@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<title>Sensibilisation à l'ergonomie des sites web — Alexandre Niveau — Université de Caen Normandie</title>
+
+	<meta name="author" content="Alexandre Niveau">
+	<meta name="company" content="Université de Caen">
+	<meta name="viewport" content="initial-scale=1">
+
+
+	<link rel="stylesheet" href="Sensibilisation%20%C3%A0%20l'ergonomie%20des%20sites%20web%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/normalize.css">
+	<link rel="stylesheet" href="Sensibilisation%20%C3%A0%20l'ergonomie%20des%20sites%20web%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/slides_alex.css">
+	<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png">
+
+	<!-- STYLES POUR DEMO -->
+	<style>
+		.demo.fitts li {list-style: none; width: 400px; height: 50px; border: 1px solid black; border-radius: .5em; background: lightgray; text-align: center; line-height: 50px; }
+	</style></head>
+<body>
+<header class="title slide">
+	<h1>Sensibilisation à l'ergonomie des sites web</h1>
+	<div class="auteur">Alexandre Niveau</div>
+	<div class="affiliation">GREYC — Université de Caen</div>
+	<div class="details">
+		Principalement adapté du cours de Jean-Marc Lecarpentier et du livre d'Amélie Boucher
+	</div>	<div class="proj_switch"><button title="basculer entre mode normal et mode projection (raccourci clavier «&nbsp;m&nbsp;»)">Changer de mode</button></div>
+</header>
+
+<div id="contenu">
+<div id="presentation" class="hidenotes">
+
+
+
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Ergonomie ?</h2>
+
+<ul>
+  <li>Discipline, démarche, point de vue applicable aux outils utilisés
+  par l'être humain</li>
+<li>Alain Wisner (~1950) : <blockquote>L'ensemble des connaissances 
+scientifiques relatives à l'Homme nécessaires pour concevoir des outils,
+ des machines, et des dispositifs qui puissent être utilisés avec le 
+maximum de confort, de sécurité et d'efficacité.</blockquote></li>
+
+<li>Cette définition se décline différemment selon les domaines,
+les tâches, les individus…</li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Site web ergonomique</h2>
+<ul>
+  <li>Un site web peut être qualifié d'ergonomique s'il
+	est <em>utile</em> et <em>utilisable</em>
+<ul>
+<li>Utilité : répondre à un besoin. Permet d'attirer les internautes
+ (ils viennent sur le site pour faire quelque chose)</li>
+<li>Utilisabilité : faciliter la satisfaction du besoin. Permet de 
+prolonger la visite (l'internaute reste et va jusqu'au bout de son 
+projet)</li>
+</ul>
+</li>
+<li>C'est surtout l'utilisabilité qui concerne le développeur web</li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Notion d'utilisabilité&nbsp;: norme ISO 9241</h2>
+
+<p><a href="http://en.wikipedia.org/wiki/ISO_9241">Introduction à la norme ISO 9241</a> sur Wikipedia</p>
+
+<blockquote>Un produit est dit utilisable lorsqu'il peut être utilisé 
+avec efficacité, efficience, et satisfaction par des utilisateurs 
+donnés, cherchant à atteindre des objectifs donnés, dans un contexte 
+d'utilisation donné.</blockquote>
+
+<ul>
+  <li><em>Efficacité</em>&nbsp;: l'utilisateur réussit à faire ce qu'il veut faire (aisance, facilité d'apprentissage)</li>
+<li><em>Efficience</em>&nbsp;: il réussit rapidement et avec le moins d'erreurs possibles</li>
+<li><em>Satisfaction</em>&nbsp;: il prend plaisir à le faire (critères esthétiques, marketing…)</li>
+</ul>
+
+<p><em>Utilisateurs, objectifs et contexte donnés</em> : on ne peut pas 
+optimiser l'ergonomie de manière générique</p>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>L'ergonomie, un investissement rentable ?</h2>
+<ul>
+<li><em>Usability Return on Investment</em>, Nielsen &amp; Gilutz (2003)</li>
+<li>Étude sur l'utilisabilité de 42 sites après refonte</li>
+<li>Résultat : + 202% d'utilisabilité</li>
+<li>Selon d'autres études, les modifications coûtent 100 fois plus cher 
+après lancement du site que lors de la phase de conception fonctionnelle</li>
+<li>En résumé : ne pas négliger l'ergonomie, à toutes les étapes de la conception
+</li></ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### 
+
+<div class="slide">
+<h2>La règle des 3 clics</h2>
+<ul>
+<li>Se méfier de toute règle édictée comme principe intangible : tout dépend du contexte</li>
+<li>Choisir un lien = processus mental de sélection et de comparaison</li>
+<li>Objectif : ce processus doit être inconscient</li>
+<li>Travail cognitif : mieux vaut 2 clics simples  qu'un seul clic <em>compliqué</em></li>
+<li>Pourquoi le départ de l'internaute ? Parce qu'il ne trouve pas ce qu'il cherche !</li>
+<li>Cependant : critère à prendre en compte &rArr; atteindre rapidement et facilement son but</li>
+</ul>
+</div>
+
+
+<div class="slide">
+<h2>Web 2.0, Ajax...</h2>
+<ul>
+<li>... vont rendre mon  site plus ergonomique</li>
+<li>Technologie doit être au service de l'ergonomie</li>
+<li>Technologie à tout prix &rArr; contraintes supplémentaires</li>
+<li>Exemple : <a href="http://realbusiness.com">Flash</a></li> 
+</ul>
+</div>
+
+
+<div class="slide">
+<h2>Les internautes ne <em>scrollent</em> pas</h2>
+<ul>
+<li>L'internaute <em>sait</em> qu'il peut descendre !</li>
+<li>Eléments indispensables ? &Agrave; une place logique ?</li>
+<li>Pages de contenu : scroll quasi indispensable ! Et naturel pour lire la suite d'un article, recette, etc.</li>
+<li>Pages de navigation ou transactionnelle : contenu secondaire sous le seuil (ou cas particulier selon les besoins)</li>
+<li><em>No scroll</em> pour voir et actionner les éléments primordiaux</li>
+<li>Seuil de scroll : 540px (en 1024x768)</li>
+<li>Une étude : <a
+	  href="http://blog.clicktale.com/2007/10/05/clicktale-scrolling-research-report-v20-part-1-visibility-and-scroll-reach/">1<sup>e</sup> partie</a>, <a href="http://blog.clicktale.com/2007/12/04/clicktale-scrolling-research-report-v20-part-2-visitor-attention-and-web-page-exposure/">2<sup>e</sup> partie</a></li>
+</ul>
+</div>
+
+
+<div class="slide">
+<h2>The myth of the page fold</h2>
+<ul>
+<li><a href="http://www.cxpartners.co.uk/cxblog/the_myth_of_the_page_fold_evidence_from_user_testing/">Etude</a> basée sur <em>eye tracking</em> (plus <a href="http://webusability-blog.com/page-fold-myth-or-reality/">des exemples</a>)</li>
+<li>Exemple de sites <em>peu lus</em>... 
+<br/><a href="img/longpages.png"><img alt="Longues pages" style="width: 400px; border: none;" src="img/longpages.png"/></a></li>
+</ul>
+</div>
+
+-->
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Théorie de la Gestalt</h2>
+<ul>
+  <li>Psychologie de la forme</li>
+<li>Recherches en psychologie cognitive début XX<sup>e</sup> siècle,
+école de Berlin</li>
+<li>Modèle théorique, fournit un support d'analyse des interfaces</li>
+<li>Le tout est <strong>plus</strong> que la somme des parties</li>
+<li>Page web = formes mises à côté les unes des autres et qui dessinent un tout</li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Loi de proximité</h2>
+<ul>
+<li>Le cerveau regroupe ce qui est proche physiquement</li>
+<li>Réflexe : proximité physique ⇒ proximité conceptuelle</li>
+</ul>
+<figure>
+	<img src="Sensibilisation%20%C3%A0%20l'ergonomie%20des%20sites%20web%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/Gestalt_ley_de_proximidad.png" alt="Illustration de la loi de proximité">
+</figure>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Proximité : application au web</h2>
+<ul>
+<li>Rapprocher les éléments ayant un rapport fonctionnel</li>
+<li>Éloigner ceux qui n'ont rien en commun</li>
+<li>À appliquer à toutes les échelles, de la forme générale de la page aux «&nbsp;micro-formes&nbsp;»</li>
+</ul>
+<figure>
+	<img src="Sensibilisation%20%C3%A0%20l'ergonomie%20des%20sites%20web%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/sncf.png" alt="Importance de la loi de proximité sur le web">
+	<figcaption>Quel item le bouton du milieu sélectionne-t-il&nbsp;?</figcaption>
+</figure>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Loi de similarité</h2>
+<ul>
+<li>Le cerveau regroupe ce qui se ressemble (forme, couleur, contenu, comportement…)</li>
+<li>Ressemblance ⇒ proximité conceptuelle</li>
+<li>Différence ⇒ opposition conceptuelle</li>
+</ul>
+<figure>
+<img src="Sensibilisation%20%C3%A0%20l'ergonomie%20des%20sites%20web%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/similariteTaille.jpg" alt="Illustration de la loi de similarité par taille" style="border: 1px solid black;"> <img src="Sensibilisation%20%C3%A0%20l'ergonomie%20des%20sites%20web%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/similariteForme.jpg" alt="Illustration de la loi de similarité par forme" style="border: 1px solid black;"> <img src="Sensibilisation%20%C3%A0%20l'ergonomie%20des%20sites%20web%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/similariteCouleur.jpg" alt="Illustration de la loi de similarité par couleur" style="border: 1px solid black;">
+</figure>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Similarité : application au web</h2>
+<figure>
+	<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/ergo/img/chaussettes.jpg"><img src="Sensibilisation%20%C3%A0%20l'ergonomie%20des%20sites%20web%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/chaussettes_thumb.jpg" alt="Chaussettes et couleurs" width="300" height="303"></a>
+	<figcaption>Un exemple d'application de la loi de similarité <a href="http://www.archiduchesse.com/">(site original)</a><br>
+(Quels problèmes cette idée peut-elle poser&nbsp;?)
+</figcaption>
+</figure>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Loi de Fitts</h2>
+<ul>
+<li>Paul Fitts, 1954, recherches sur l'ergonomie des cockpits d'avion
+</li><li>La loi de Fitts est une formule mathématique qui quantifie la règle suivante&nbsp;:
+<blockquote>Une cible est d'autant plus facile à atteindre qu'elle est proche et grande</blockquote></li>
+<li>Application au web&nbsp;:
+<ul>
+<li>Augmenter la taille des éléments cliquables</li>
+<li>Réduire leur distance du point de départ</li>
+<li>Les 2 règles peuvent se compenser&nbsp;!</li>
+</ul>
+</li>
+<li>Faciliter le clic ⇒ plus rapide et moins d'erreurs</li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Loi de Fitts : Exemples</h2>
+<ul>
+<li>Augmenter la taille réelle (ou la surface) des éléments cliquables</li>
+<li>Augmenter aussi la taille virtuelle&nbsp;:
+<ul class="demo fitts">
+	<li>Cliquer <a href="javascript:alert('Lien activ%C3%A9')">ici</a></li> 
+	<li><a href="javascript:alert('Lien activ%C3%A9')">Cliquer ici</a></li> 
+	<li><a href="javascript:alert('Lien activ%C3%A9')">Site de Toto</a></li>
+	<li><a href="javascript:alert('Lien activ%C3%A9')" style="display: block;">Site de Toto</a></li>
+</ul>
+Autres exemples&nbsp;: <a href="http://www.google.fr/search?hl=fr&amp;q=chien&amp;btnG=Recherche+Google&amp;meta=&amp;aq=f&amp;oq=">pagination Google</a><span class="handout"> (comparer la taille
+du lien «&nbsp;suivant&nbsp;» par rapport aux autres)</span>,
+cases
+<form><div><input type="checkbox" id="coche1"> <label for="coche1">faciles à cocher (cliquer sur le texte)</label></div>
+<div><input type="checkbox" id="coche2"> <label>difficiles à cocher</label></div></form>
+</li>
+<li>Augmenter la distance entre éléments cliquables</li>
+<li>Penser à changer l'apparence au survol ⇒ <em>affordance perçue</em></li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Concept d'affordance</h2>
+<ul>
+<li>James Gibson (fin 70s), psychologie cognitive&nbsp;: les affordances sont les possibilités d'action sur un objet</li>
+<li>Donald Norman (1988), introduit le concept d'<em>affordances perçues</em> pour le design d'IHM</li>
+<li>Affordances perçues = possibilités d'actions que <em>renvoie</em> un objet quand on le perçoit</li>
+<li>Utiliser les affordances perçues permet d'optimiser l'utilisabilité :
+ elles permettent à l'utilisateur d'anticiper le comportement
+des objets</li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Affordance perçue et web</h2>
+<figure class="sidecol">
+	<img src="Sensibilisation%20%C3%A0%20l'ergonomie%20des%20sites%20web%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/false_affordance.jpg" alt="Un menu sur Dribbble.com dont les affordances perçues sont trompeuses" width="262" height="185">
+	<figcaption>Un menu sur Dribbble.com dont les affordances perçues sont trompeuses&nbsp;: <span class="clicktosee">tous les items sont cliquables, sauf «&nbsp;777 views&nbsp;»&nbsp;!</span></figcaption>
+</figure>
+<ul>
+<li><em>Affordances perçues</em> : possibilités d'action suggérées par les caractéristiques d'un objet</li>
+<li>Dépendent fortement des conventions</li>
+<li>Affordance perçue «&nbsp;Vous pouvez me cliquer&nbsp;» : doit être 
+très forte pour la navigation principale, moins pour la navigation 
+secondaire
+</li>
+<li>Affordance perçue «&nbsp;Vous pouvez interagir avec moi&nbsp;» : champs de saisie, doivent attirer l'attention
+</li><li><a href="http://www.amazon.fr/Dont-Make-Me-Think-Usability/dp/0321344758/">Exemples</a>
+<span class="handout"><ul><li>Texte «&nbsp;Feuilleter&nbsp;» avec la flèche + curseur qui devient un index</li>
+<li>Sur la vue en grand, le curseur devient une main</li></ul></span></li>
+<li>Attention aux fausses affordances ! <a href="https://dribbble.com/shots/1886611-More-cards">Un exemple</a> (via <a href="http://www.smashingmagazine.com/2014/06/24/affordance-most-underrated-word-in-web-design/">cet article</a>)</li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Nombre magique de Miller et loi de Hick-Hayman</h2>
+<p>Georges A. Miller, <a href="http://psychclassics.yorku.ca/Miller/">The magical number seven, Plus or Minus Two</a>, 1956</p>
+<ul>
+<li>Pas plus de 7 objets en tête, plus ou moins deux</li>
+<li>Mémoire de travail</li>
+<li style="list-style: none;">⇒ capacité d'appréhension immédiate</li>
+<li style="list-style: none;">⇒ ne pas surcharger l'interface</li>
+</ul>
+<p>William Hick, <em>On the rate of gain of information</em>, 1952</p>
+<ul>
+<li>Il est plus facile de décider parmi un nombre réduit d'éléments</li>
+<li style="list-style: none;">⇒ conception de menus</li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Ergonomie et accessibilité</h2>
+<ul>
+  <li>L'ergonomie va de pair avec l'accessibilité</li>
+  <li>L'accessibilité commence par un codage propre (séparation
+  fond-forme)</li>
+<li>Conception des liens : le texte du lien doit être explicite (Pas de <em>Cliquer ici</em> !)</li>
+<li>Attributs <code>alt</code> des images, <code>title</code> des
+liens (exemple&nbsp;: <a href="#" title="Je donne des informations sur la cible du lien !">laisser la souris sur ce lien</a>)</li>
+<li>Optimisation des couleurs : par ex. différences de couleurs fond/texte</li>
+<li>Optimisation des textes : typographie, par ex. pas de long texte en majuscules ou en italiques</li>
+<li>Voir les <a href="http://www.w3.org/WAI/">recommandations du W3C</a></li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>12 règles</h2>
+  <p>Les points à prendre en compte pour optimiser
+  l'ergonomie d'un site, selon Amélie Boucher :</p>
+
+<ol style="-moz-columns: 2; -webkit-columns: 2; columns: 2;">
+<li>Architecture</li>
+<li>Organisation visuelle</li>
+<li>Cohérence</li>
+<li>Conventions</li>
+<li>Information</li>
+<li>Compréhension</li>
+<li>Assistance</li>
+<li>Gestion des erreurs</li>
+<li>Rapidité</li>
+<li>Liberté</li>
+<li>Accessibilité</li>
+<li>Satisfaction</li>
+</ol>
+
+
+
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Architecture</h2>
+<ul>
+<li>Le <em>contenu du site</em> est bien rangé</li>
+<li>Localiser rapidement ce qu'on cherche</li>
+<li>Travail <em>déconnecté</em> de la présentation</li>
+<li style="list-style: none;">⇒ regroupements logiques</li>
+<li style="list-style: none;">⇒ mettre en avant les contenus clefs</li>
+<li style="list-style: none;">⇒ menus aidant à naviguer dans les contenus</li>
+<!--
+je ne sais pas si c'est encore valable…
+<li><a href="http://nytimes.com">NY Times</a> ou <a href="http://lemonde.fr">Le Monde</a> ?</li>
+-->
+<li>Attention aux catégories discutables, ex <a href="http://www.coursesu.com/caen/AccueilMagasin/_mag">courses en ligne Super U</a>&nbsp;:
+<ul>
+<li>Où est le lait UHT&nbsp;? <span class="clicktosee">dans les produits frais</span></li>
+<!-- <li>Où est le Babybel ? <span class="clicktosee">dans les fromages du terroir !</span></li>  CORRIGÉ ! -->
+<li>Où sont les «&nbsp;graines de tournesol grillées et salées&nbsp;»&nbsp;? <span class="clicktosee">pas
+ dans «&nbsp;Epicerie salée &gt; Grignotage salé &gt; Mélange graines et
+ fruits&nbsp;», mais dans «&nbsp;Produits frais &gt; Fruits &gt; Fruits 
+secs grignotage, apéritif&nbsp;»&nbsp;!</span></li>
+</ul>
+ </li><!--<a href="http://www.cuisine-plus.fr/">Catégories discutables</a></li>-->
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Organisation visuelle</h2>
+<ul>
+<li>La <em>page</em> est bien rangée  ⇒ éviter trop d'informations</li>
+<li>Essayer de diviser le nombre de mots par 2 ⇒ scan visuel rapide (pas sur les pages de contenu !)</li>
+<li>Afficher seulement les principaux éléments de navigation et d'interaction</li>
+<li>Attention : 
+hétérogénéité, images de fond et  animations ⇒ augmentation de la charge informationnelle</li>
+</ul>
+<figure>
+	<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/ergo/img/cdiscount.jpg">
+		<img src="Sensibilisation%20%C3%A0%20l'ergonomie%20des%20sites%20web%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/cdiscount_thumb.jpg" alt="Cdiscount.com" width="" height="">
+	</a>
+	<figcaption>Exemple de charge informationnelle trop forte (<a href="http://www.cdiscount.com/">page originale</a>)</figcaption>
+</figure>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Cohérence</h2>
+<ul>
+<li>Capitaliser sur l'apprentissage interne</li>
+<li>L'utilisateur retrouve les mêmes comportements dans toutes les pages</li>
+<li>Cohérence des <ul>
+<li>localisations</li>
+<li>appellations</li>
+<li>formats de présentation</li>
+<li>interactions</li>	
+</ul>
+</li>
+<!--
+je ne me souviens plus de ce qu'il y a à voir ;
+peut-être que l'onglet Store n'ouvre pas de menu ?
+<li>
+<a href="http://www.saint-maclou.com/">Exemple</a></li>
+-->
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Conventions</h2>
+<ul>
+<li>Capitaliser sur l'apprentissage externe</li>
+<li>Selon Nielsen : <ul>
+<li>Standard : &gt; 80% des sites utilisent un même principe</li>
+<li>Convention : 50 à 79% des sites utilisent un même principe</li>
+</ul>
+</li>
+<li>Un site ne respectant pas une convention pourra être considéré comme
+fonctionnant mal</li>
+<li>Conventions de :<ul>
+<li>localisation</li>
+<li>vocabulaire</li>
+<li>présentation et interaction</li>
+</ul></li>
+<li>Bien observer les sites que vous visitez !</li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Conventions : Exemples</h2>
+<ul>
+<li>De nombreuses personnes ont l'habitude de cliquer sur le logo ou la bannière
+pour revenir à la page d'accueil, mais tous les sites ne le permettent pas</li>
+<li><a href="http://lemonde.fr/">lemonde.fr&nbsp;: on peut cliquer sur les titres et sur les images</a>, très ennuyeux quand ce n'est pas le cas</li>
+<!-- ça a été corrigé ! <li><a href="http://www.nicolas.com/fr/commander_bordeaux.html">Mais pas sur les images...</a></li> -->
+<li>Panier et achat&nbsp;: voir article <a href="http://www.capitaine-commerce.com/2011/03/24/27767-ergonomie-pourquoi-il-est-dangereux-de-secarter-des-conventions/">«&nbsp;Ergonomie&nbsp;: pourquoi il est dangereux de s'écarter des conventions&nbsp;»</a></li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Information (1)</h2>
+<ul>
+<li>Le site informe l'internaute et lui répond</li>
+<li>Information générale : qui et quoi ?
+  <ul>
+  <li>éléments génériques : logo, <em>tagline</em>, barre de navigation principale</li>
+  <li>page d'accueil</li>
+  </ul>
+</li>
+<li>Information ponctuelle : se repérer dans le site / ce qu'on attend de l'utilisateur
+  <ul>
+  <li>navigation principale</li>
+  <li>où est-on dans le site ?</li>
+  <li>options possibles</li>
+  <li>pages déjà vues…</li>
+  </ul>
+</li><li>Exemple&nbsp;: <a href="http://www.laboutiquevpc.com/sur-la-route-des-epices/244-creme-de-douche-ayurvedique-oriental.html">select inutile</a>
+<figure class="handout">
+	<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/ergo/img/select_inutile.jpg">
+		<img src="Sensibilisation%20%C3%A0%20l'ergonomie%20des%20sites%20web%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/select_inutile_thumb.jpg" alt="Un select avec un seul item ne sert à rien" width="" height="">
+	</a>
+</figure>
+</li>
+
+<li>Informer au bon moment&nbsp;! Exemples&nbsp;:
+<ul>
+<li><a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/ergo/img/1855-1.jpg">Article pas disponible&nbsp;? (voir en haut à droite)</a>
+En effet, <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/ergo/img/1855-2.jpg">c'était bien indiqué…</a> (<a href="http://www.1855.com/">site original</a>)
+<span class="handout">Il aurait été malin de rendre plus explicite les produit pas en stock, plutôt que l'inverse…</span></li>
+<li>lien interne vs lien externe</li>
+</ul> 
+</li></ul></div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+
+<div class="slide">
+<h2>Information (2)</h2>
+<ul>
+<li>Répondre aux actions de l'internaute (feedback)</li>
+<li>Cas général : changement de page</li>
+<li>Cas particuliers : pages très semblables ou rechargement partiel de la page</li>
+<li>Changement dans la page trop éloigné du clic ⇒ l'utilisateur ne voit pas</li>
+<li>Exemple : <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/ergo/img/nicolas1.jpg">je clique sur «&nbsp;ajouter au panier&nbsp;»</a>, je suis ramené <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/ergo/img/nicolas2.jpg">en haut de la page</a>. Ça a marché ou non&nbsp;?
+(<a href="http://www.nicolas.com/fr/commander_bordeaux.html">page originale</a>)</li>
+
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Compréhension</h2>
+<ul>
+<li>Mots et symboles choisis minutieusement</li>
+<li style="list-style: none;">⇒ pas de jargon ou mots techniques</li>
+<li style="list-style: none;">⇒ icônes seules déconseillées</li>
+<li>Instructions claires et exprimées simplement,
+vocabulaire précis et exact</li>
+<li>Exemples : que signifie «&nbsp;je continue&nbsp;» ou «&nbsp;recherche
+  express&nbsp;» ?
+</li><li>Utiliser le vocabulaire de <em>vos</em> internautes</li>
+<li>Utiliser les conventions</li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Assistance</h2>
+<ul>
+<li>Le site aide et dirige l'internaute</li>
+<li>Pas que les textes explicatifs !</li>
+<li>Il faut rendre visible ce dont l'utilisateur a besoin</li>
+<li>… surtout ce qu'il n'attend pas (quelle quantité de contenu ?)</li>
+<li>Avoir des clics logiques, exemple : <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/ergo/img/carglass.jpg">«&nbsp;cliquez à droite de l'écran&nbsp;»</a>
+(<a href="http://www.carglass.fr/Bris-de-glace.773.0.html">page originale</a>)</li>
+<li>Utiliser les affordances perçues</li>
+<li>Simplifier le modèle d'interaction permet d'éviter
+les problématiques d'assistance</li>
+<li>Exemple&nbsp;: <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/ergo/img/nicolas_recalcul1.jpg">j'ai 6 bouteilles dans mon panier</a>&nbsp;; je modifie le nombre de bouteilles et <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/ergo/img/nicolas_recalcul2.jpg">je
+clique sur valider…</a> Non, il fallait d'abord cliquer sur recalculer, et <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/ergo/img/nicolas_recalcul3.jpg">laisser le site choisir le nombre</a>…
+(<a href="http://www.nicolas.com/">site original</a>)</li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Gestion des erreurs</h2>
+<ul>
+<li>Prévoir que l'internaute se trompe</li>
+<li>Créer une interface qui entraîne le moins d'erreurs possible</li>
+<li>Faciliter le repérage des erreurs</li>
+<li>Expliquer précisément et clairement l'erreur</li>
+<li>Possibilité de corriger ses erreurs</li>
+<li>Être courtois !</li>
+</ul>
+Exemple de <a href="http://voyages-sncf.com/">voyages-sncf.com</a>&nbsp;: refuse strictement les heures de départ antérieures à l'heure actuelle.<br>
+<span class="handout">⇒ comment regarder les départs dans l'heure en cours&nbsp;? Comment regarder l'heure à laquelle un train parti plus tôt va <em>arriver</em> en gare&nbsp;?</span>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Rapidité</h2>
+<ul>
+<li>L'utilisateur ne perd pas son temps</li>
+<li>Appliquer la loi de Fitts</li>
+<!-- <li>Penser efficience</li> -->
+<li>Optimiser la navigation</li>
+<li>Multiplier les points d'entrée vers une page, 
+faciliter les interactions (exemples déjà vus)</li>
+<li>Ne pas demander deux fois la même chose (si j'ai ajouté
+un objet au panier, j'en veux au moins 1 exemplaire)</li>
+<li>Exemple&nbsp;: commande <em>1-click</em> chez amazon</li>
+<li>Contre-exemple&nbsp;: 
+<!-- gestion du panier sur <a href="http://www.coursesu.com/caen/AccueilMagasin/_mag">coursesu.com</a>
+<ul class="handout">
+<li>dans la page, plusieurs clics d'affilée sur la partie gauche de « ajouter » &rArr; on se retrouve à cliquer sur « - »</li>
+<li>dans le panier, cliquer plusieurs fois sur le « + » du premier article est impossible, le <i lang="en">feedback</i>
+vient recouvrir le bouton</li>
+<li>toujours dans le panier, changer les quantités d'un article fait remonter tout en haut de la liste</li>
+</ul>
+-->
+<a href="https://ecampus.unicaen.fr/">ecampus</a>
+</li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Liberté : c'est l'internaute qui commande</h2>
+<ul>
+<li>Ne pas essayer de bloquer les actions usuelles (bouton <i>back</i>, copier/coller, etc.)</li>
+<li>Pas d'<em>actions</em> au survol : complètement contre-intuitif
+(voir <a href="http://dontclick.it/">une interface expérimentale
+  sans aucun clic</a>)</li>
+<li>Flexibilité, possibilité de contournement (couper le son, arrêter ou avancer une animation…)</li>
+<li>Pas de comportement passif (spot publicitaire, transitions animées trop longues)</li>
+<li>Système non enfermant (ex. navigation libre) et non intrusif
+(pop-ups, «&nbsp;Voulez-vous vraiment quitter cette page ?&nbsp;»)</li>
+<li>Ne pas empêcher l'accès à l'information pour les navigateurs non standard&nbsp;!
+<!-- 
+Exemple, le <a href="http://fr.ulule.com/hall-of-fame/"><i lang="en">Hall of Fame</i> d'Ulule</a> : JavaScript est-il vraiment nécessaire
+pour afficher l'autre sous-page (« 10 belles histoires ») ? -->
+<span class="conseq">En particulier, JavaScript doit être utilisé pour 
+améliorer l'expérience utilisateur quand il est disponible, il ne faut 
+pas construire son site sur l'hypothèse
+que ce sera le cas. Bien sûr, certains sites particuliers ne peuvent pas
+ vraiment s'en passer (par ex. Google Maps), mais c'est une minorité.</span>
+</li><li><strong>Si votre site utilise JavaScript, vérifiez qu'il fonctionne correctement sans&nbsp;!</strong>
+<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/ergo/disable-js.html">Quelques informations sur la façon de procéder</a></li>
+<!--
+<li>Exemple : <a href="http://www.1855.com/app/89/fr/margaux/">Me laisse décider</a> du nombre d'objets ou  <a href="http://www.nicolas.com/page.php/fr/18_409_7448.htm?act=add&id_prod=7448">non</a></li>
+-->
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Accessibilité</h2>
+<ul>
+<li>Physique ⇒ recommandations W3C</li>
+<li>Technologique ⇒ penser à la variété de SE, navigateur, taille d'écran, présence ou non de JavaScript, <i>plugins</i>, versions de logiciels, etc. <br>
+⇒ Toujours viser la <strong><i lang="en">graceful degradation</i></strong>, l'important est l'accès à l'information&nbsp;: tant pis si le site est moche
+sous IE7 ou avec JavaScript désactivé, à condition que le contenu soit accessible&nbsp;!</li>
+<li>Si ce n'est pas possible, indiquer à l'utilisateur pour quelle 
+raison technique il ne peut pas accéder au contenu et lui indiquer ce 
+qu'il doit faire
+(rejoint les problématiques d'<em>information</em> et de <em>gestion des erreurs</em>).
+Par ex <a href="https://www.sncf.com/fr">sncf.com</a> ne fonctionne pas sans JS mais ne le dit pas. Il est pourtant très simple et efficace de mettre une balise <code>noscript</code>.
+<!--
+ Exemple : <a href="http://www.sncf.com/fr/horaires-info-trafic">infolignes.com</a>
+<span class="handout">ne fonctionne pas sans les cookies, mais ne le dit pas, et agit de manière incompréhensible</span>
+</li> -->
+<!-- <li>Contre-exemple : <a href="http://www.virginmega.fr/">http://www.virginmega.fr/</a></li> Fermé… -->
+</li></ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Satisfaction</h2>
+<ul>
+<li>Règle n°1 !</li>
+<li>Critère d'utilité (micro-fonctionnalités)</li>
+<li>Esthétique et expérience utilisateur</li>
+<li>Qualité du service</li>
+<li>Fiabilité technique</li>
+<li>Augmente la confiance de l'utilisateur dans le site</li>
+</ul>
+</div>
+
+<!-- #######################################################
+
+<div class="slide">
+<h2>Réalisation du site</h2>
+<ul>
+<li>Définition des contenus</li>
+<li>Architecture de l'information et des interactions</li>
+<li>Zoning et maquettes</li>
+</ul>
+</div>
+
+
+
+<div class="slide">
+<h2>Définition des contenus</h2>
+<ul>
+<li>Répondre à un  besoin</li>
+<li>Quelle est l'utilité du site ?</li>
+<li>Créer des micro-utilités</li>
+<li>Analyser : site existant, acteurs du projet, concurrents, besoins des internautes ou clients</li>
+</ul>
+</div>
+
+
+<div class="slide">
+<h2>Architecture de l'information</h2>
+<ul>
+<li>Ranger pour aider à trouver</li>
+<li>3 grandes familles<ul>
+<li>Recherche par mot-clé</li>
+<li>Navigation ciblée (navigation globale + locale)</li>
+<li>Navigation libre (transversale, générée en fonction du besoin)</li>
+</ul>
+</li>
+<li>Exemple complet : <a href="http://www.amazon.fr/" onclick="window.open(this.href); return false;">amazon</a></li>
+<li><a href="http://www.amazon.fr/Information-Architecture-World-Wide-Web/dp/0596527349/" onclick="window.open(this.href); return false;">Information Architecture for the World Wide Web</a>, Morville &amp; Rosenfeld, O'Reilly Media 2006
+</ul>
+</div>
+
+
+
+<div class="slide">
+<h2>Concevoir l'architecture</h2>
+<ul>
+<li>Catégoriser puis structurer</li>
+<li>Catégoriser : regrouper pour simplifier</li>
+<li>Structurer : obtenir une vue hiérarchisée</li>
+<li>Représentation de la structure
+  <ul>
+  <li>Principale : menus de navigation</li>
+  <li>Secondaire : liens contextuels</li>
+  <li>Floue : liens au fil du texte</li>
+  </ul>
+</li>
+<li>Réaliser un plan de site</li>
+<li>Structure horizontale ou verticale ?</li>
+<li>Architecturer les interactions : penser les parcours clients </li>
+</ul>
+</div>
+
+
+
+<div class="slide">
+<h2>Zoning et maquettes</h2>
+<ul>
+<li>Choix de la résolution</li>
+<li>Espace horizontal : ne pas dépasser la limite</li>
+<li>Espace vertical et notion de <em>fold</em> : l'essentiel <em>above the fold</em></li>
+<li>Zones : identité du site, navigation, contenus mis en avant, outils, pied de page, publicité, etc.</li>
+<li>Maquette conceptuelle : détailler chaque zone</li>
+</ul>
+</div>
+
+####################################################### -->
+
+<div class="slide">
+<h2>Pour conclure</h2>
+<ul>
+<li>Steve Krug: «&nbsp;Don't make me <em>think</em>!&nbsp;»</li>
+<li>KISS : Keep It Simple, Stupid</li>
+<li>Vous avez 5 secondes pour indiquer à l'utilisateur qu'il est bien sur la page qu'il cherche</li>
+<li>Ergonomie et design fonctionnent de pair, ils ne sont pas antinomiques !</li>
+</ul>
+</div>
+
+
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+
+
+
+</div> <!-- fin #presentation -->
+
+<aside id="liens">
+<h3>Références et guides</h3>
+<ul>
+<li><a href="http://www.w3.org/WAI/">Règles d'accessibilité par le W3C</a> , un bon point de départ</li>
+</ul>
+<h3>Sites</h3>
+<ul>
+<li><a href="http://www.useit.com/">Jakob Nielsen on Usability and Web Design</a></li>
+<li><a href="http://usabilitygeek.com/">Usability Geek</a></li>
+<li><a href="http://www.capitaine-commerce.com/">Blog sur le commerce électronique, notamment les questions d'ergonomie</a></li>
+<li><a href="http://www.usefulusability.com/">usefulusability.com</a></li>
+</ul>
+<h3>Tutoriels</h3>
+<ul>
+<li><a href="http://www.smashingmagazine.com/2014/06/24/affordance-most-underrated-word-in-web-design/">Article sur les affordances perçues</a> assez complet, avec des exemples</li>
+</ul>
+<h3>Lectures complémentaires</h3>
+<ul>
+<li><a href="http://www.useit.com/alertbox/banner-blindness.html">Banner Blindness</a> : un article sur les bannières</li>
+<li><a href="http://www.teehanlax.com/blog/affordances-matter/">Affordances matter</a> exemple de la touche shift sur le clavier de iOS 7</li>
+</ul>
+<h3>Cours en ligne</h3>
+<ul>
+<li><a href="http://stellar.mit.edu/S/course/6/sp14/6.813/materials.html?showKind=lectureNotes">Cours du MIT sur le design et l'implémentation d'interfaces utilisateur</a></li>
+</ul>
+<h3>Livres</h3>
+<ul>
+<li><a href="http://www.worldcat.org/isbn/978-2212132151">Ergonomie Web : Pour des sites web efficaces 3<sup>e</sup> édition</a> , Amélie Boucher (Eyrolles 2011)</li>
+<li><a href="http://www.worldcat.org/isbn/978-2952850704">Internet, donne-moi ce que je veux ! 60 modèles de navigation pour satisfaire vos internautes</a> , Patricia Gallot-Lavallée (Kenazart Strategy Interactive 2007)</li>
+<li><a href="http://www.worldcat.org/isbn/978-0321344755">Don't make me think</a> Steve Krug (Campus Press 2007) — traduction française <a href="http://www.worldcat.org/isbn/978-2744021893">«&nbsp;Je ne veux pas chercher&nbsp;!&nbsp;»</a></li>
+</ul>
+
+</aside><!-- fin #liens -->
+</div> <!-- fin #contenu -->
+
+<footer class="license">
+	<a class="icone" rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+		<img alt="Licence Creative Commons CC-BY-NC-SA" style="border-width:0" src="Sensibilisation%20%C3%A0%20l'ergonomie%20des%20sites%20web%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/88x31.png">
+	</a>
+	<p class="texte">
+		Ce cours est mis à disposition selon les termes de la <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">licence Creative Commons Attribution — Pas d’utilisation commerciale — Partage dans les mêmes conditions 4.0 International</a>.
+	</p></footer>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+	function toggleProj() {
+		const currentParams = new URLSearchParams(window.location.search);
+		if (currentParams.get('mode') === 'proj') {
+			console.log('found proj');
+			document.documentElement.classList.remove('proj');
+			currentParams.delete('mode');
+		} else {
+			console.log('not found proj');
+			document.documentElement.classList.add('proj');
+			currentParams.set('mode', 'proj');
+		}
+		window.history.pushState({}, '', '?' + currentParams + window.location.hash);
+	};
+
+	var buttons = document.querySelectorAll('.proj_switch button'), i;
+	for (i = 0; i < buttons.length; ++i) {
+		buttons[i].addEventListener("click", toggleProj);
+	}
+
+	document.addEventListener("keypress", function(e) {
+		if (e.target == document.body && String.fromCharCode(e.keyCode || e.charCode) == "m") {
+			toggleProj();
+		}
+	});
+
+	/* ajout de liens aux titres qui ont un id */
+	let slidesWithId = document.querySelectorAll('.slide[id]');
+	for (const slide of slidesWithId) {
+		const link = document.createElement('a');
+		link.href = '#' + slide.id;
+		link.classList.add('slide-link');
+		link.title = 'Lien vers ce slide';
+		link.textContent = '#';
+		slide.insertAdjacentElement('afterbegin', link);
+	}
+
+
+});
+</script>
+
+
+</body></html>

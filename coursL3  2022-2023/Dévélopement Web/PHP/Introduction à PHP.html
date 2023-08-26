@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>Introduction à PHP</title>
+<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png"> 
+<link rel="stylesheet" href="Introduction%20%C3%A0%20PHP_files/normalize.css">
+<link rel="stylesheet" type="text/css" href="Introduction%20%C3%A0%20PHP_files/fiche_alex.css">
+</head>
+<body>
+<div id="wrapper">
+
+<header id="tetiere">
+	<div class="logo">
+	<a href="https://ensweb.users.info.unicaen.fr/TW4B/" title="Technologies du Web — Université de Caen" class="logo"><span class="accessibilite">Logo de l'université de Caen</span></a>
+	</div>
+	<div class="titreCours">
+			<h1>Introduction à PHP</h1>
+						<p class="diplome">Licence Informatique 3ème année</p>
+			<p class="enseignants">Alexandre Niveau — Jean-Marc Lecarpentier</p>
+	</div>
+	<section class="contexte">
+	<h2><a href="https://ensweb.users.info.unicaen.fr/TW4B/">Enseignement des technologies du Web</a></h2>
+		<ul>
+			<li>Module&nbsp;: <a href="https://ensweb.users.info.unicaen.fr/TW4B/">TW4B : Programmation d’applications web avancées</a></li>
+		<li><a href="http://www.unicaen.fr/">Université de Caen</a>, année&nbsp;2022-2023</li>
+		</ul>
+	</section><!-- fin de contexte -->
+		<div class="clearer">&nbsp;</div>
+</header><!-- fin de tetiere -->
+
+<main id="majeur">
+
+
+
+<!--  ##########  introduction  ########  -->
+
+<section class="bloc"><h2>Introduction à PHP</h2>
+<h3>Notes de cours</h3>
+<ul>
+<li><a class="titrePres" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/php/intro.php">Introduction à PHP</a>
+<ul>
+<li>Syntaxe générale&nbsp;: variables, structures de contrôle, fonctions…</li>
+<li>Tableaux associatifs</li>
+</ul></li>
+</ul>
+</section><!-- fin de l'introduction -->
+<section class="bloc">
+<h2>Travail personnel</h2><section>
+<h3>Objectifs</h3>
+<p>
+Dans ce TP on voit les bases du langage PHP, en l'utilisant depuis un terminal.
+</p>
+</section>
+	<section class="exo-among-others exercice" id="exo-01">
+		<h3>Exercice&nbsp;1&nbsp;— Boucles, tableaux et fonctions en PHP	<a href="#exo-01" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+		<p>Cet exercice a pour objectif de vous faire manipuler la syntaxe de base
+de PHP <small>en essayant parfois de vous faire tomber dans des pièges classiques</small>.</p>
+<h4>Échauffement</h4>
+<ol>
+<li>Créer un script PHP <code>test.php</code> qui affiche tous les nombres entiers
+de 1234 à 5678, avec un saut de ligne après chaque nombre.</li>
+<li>Dans un script PHP, mettre dans une variable <code>$tab</code> un tableau (<i lang="en">array</i>) vide,
+et le remplir avec 100 valeurs en utilisant une boucle <code>for</code>,
+de façon à ce que la case
+d'indice <i>i</i> contienne la valeur 3×<i>i</i>+2.</li>
+<li>Afficher le contenu de <code>$tab</code> en utilisant une boucle <code>foreach</code>.
+</li>
+<li>Dans un script PHP, créer une fonction prenant en paramètre un 
+tableau de nombres et renvoyant la moyenne arithmétique de ces nombres. 
+Tester par exemple sur le tableau <code>$tab</code>.</li>
+</ol>
+<h4>Tableaux associatifs</h4>
+<ol>
+<li>Dans un script PHP, créer un tableau associatif <code>$persos</code>
+indiquant la taille de quatre ou cinq personnages de fiction (les clefs seront
+les noms des personnages, et les valeurs des flottants). <small>NB&nbsp;: ne perdez pas
+de temps à chercher des infos, ça n'a aucun intérêt… Vous pouvez même inventer des personnages…</small>
+</li><li>En utilisant une boucle <code>foreach</code>, afficher la taille de chaque
+personnage sous la forme «&nbsp;<var>Personnage</var> mesure <var>x</var> cm.&nbsp;»
+</li><li>Écrire une fonction «&nbsp;minimum()&nbsp;» prenant en paramètre un tableau,
+qui cherche la plus petite valeur du tableau et la renvoie.
+Tester sur votre tableau <code>$persos</code>.
+</li><li>Ajouter un <em>paramètre optionnel</em> booléen <code>$return_key</code> à la fonction minimum,
+qui prend par défaut la valeur <code>false</code> <small>(comme le veut l'usage pour les paramètres booléens)</small>. S'il est mis à <code>true</code>, on renvoie <em>la clef</em> 
+correspondant à la plus petite valeur (et non la valeur elle-même). Tester sur votre tableau <code>$persos</code>&nbsp;: cela doit renvoyer le nom du personnage le plus petit.
+</li><li>Écrire une fonction «&nbsp;min_and_max()&nbsp;» qui renvoie cette fois un tableau de taille 2,
+contenant la valeur la plus petite et la valeur la plus grande du tableau donné en paramètre. Tester sur <code>$persos</code>.
+</li></ol>
+<h4>Fonctions de tri de tableaux</h4>
+<ol>
+<li>Afficher le tableau avec chacune des trois fonctions d'affichage debug&nbsp;:
+<code>print_r</code>, <code>var_dump</code>, <code>var_export</code>. Choisissez-en
+une pour la suite.
+</li><li>Appeler les fonctions suivantes sur le tableau, et regarder l'effet grâce à une des fonctions d'affichage&nbsp;:
+<ul>
+<li>asort() et son inverse arsort()
+</li><li>ksort() et son inverse krsort()
+</li><li>sort() et son inverse rsort()
+</li><li>shuffle()
+</li></ul>
+Si vous êtes perdu·e&nbsp;:
+<a href="https://www.php.net/manual/en/array.sorting.php">plus d'infos sur les fonctions de tri de tableaux</a>
+</li></ol>
+
+<h4>Recherche d'une valeur dans un tableau</h4>
+<p>La fonction <a href="https://www.php.net/manual/fr/function.array-search.php"><code>array_search($val, $tab)</code></a> cherche si le tableau $tab contient la valeur $val, et renvoie la première clef correspondante si c'est le cas, et <code>false</code> sinon.
+</p><p>Regardez le script suivant et <strong>essayez de deviner</strong> ce qui va s'afficher.
+</p><pre class="src"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">contient_toto</span><span style="color: #007700">(</span><span style="color: #0000BB">$tab</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">array_search</span><span style="color: #007700">(</span><span style="color: #DD0000">'toto'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$tab</span><span style="color: #007700">)&nbsp;==&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Le&nbsp;tableau&nbsp;ne&nbsp;contient&nbsp;pas&nbsp;toto\n"</span><span style="color: #007700">;<br>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Le&nbsp;tableau&nbsp;contient&nbsp;toto&nbsp;!!\n"</span><span style="color: #007700">;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}<br><br></span><span style="color: #0000BB">$x&nbsp;</span><span style="color: #007700">=&nbsp;[&nbsp;</span><span style="color: #DD0000">'titi'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'toto'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'tutu'&nbsp;</span><span style="color: #007700">];<br></span><span style="color: #0000BB">contient_toto</span><span style="color: #007700">(</span><span style="color: #0000BB">$x</span><span style="color: #007700">);<br></span><span style="color: #0000BB">$y&nbsp;</span><span style="color: #007700">=&nbsp;[&nbsp;</span><span style="color: #DD0000">'tutu'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'titi'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'tete'&nbsp;</span><span style="color: #007700">];<br></span><span style="color: #0000BB">contient_toto</span><span style="color: #007700">(</span><span style="color: #0000BB">$y</span><span style="color: #007700">);<br></span><span style="color: #0000BB">$z&nbsp;</span><span style="color: #007700">=&nbsp;[&nbsp;</span><span style="color: #DD0000">'toto'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'titi'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'tutu'&nbsp;</span><span style="color: #007700">];<br></span><span style="color: #0000BB">contient_toto</span><span style="color: #007700">(</span><span style="color: #0000BB">$z</span><span style="color: #007700">);<br></span><span style="color: #0000BB">$t&nbsp;</span><span style="color: #007700">=&nbsp;[&nbsp;</span><span style="color: #DD0000">'titi'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'tutu'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0&nbsp;&nbsp;</span><span style="color: #007700">];<br></span><span style="color: #0000BB">contient_toto</span><span style="color: #007700">(</span><span style="color: #0000BB">$t</span><span style="color: #007700">);</span>
+</span>
+</code></pre>
+<p>
+<strong>Recopiez-le ensuite</strong> dans un script, et exécutez-le&nbsp;: aviez-vous vu juste&nbsp;?
+Si non, essayez de comprendre ce qui se passe. <small>La page du manuel, en lien ci-dessus, peut être utile&nbsp;!</small>
+
+</p>
+
+
+	</section>
+
+<!-- ********************************************************************** -->
+
+	<section class="exo-among-others exercice" id="exo-02">
+		<h3>Exercice&nbsp;2&nbsp;— Chaînes de caractères en PHP	<a href="#exo-02" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+		<p>La <a href="https://www.php.net/manual/fr/function.readline.php">fonction <code>readline</code></a>
+est l'équivalent de <code>input</code> en Python&nbsp;: elle attend que l'utilisateur/trice tape une ligne de texte
+dans le terminal, et retourne le résultat sous forme de chaîne de caractères.
+</p><ol>
+<li>Écrire un script PHP qui demande le nom et le prénom de l'utilisateur/trice,
+et lui dit ensuite une phrase de bienvenue personnalisée.
+</li><li>Le script doit ensuite afficher le nombre de caractères du 
+prénom. Vérifiez bien que ça fonctionne
+même pour les prénoms comportant des caractères spéciaux, ou même des 
+émoticônes, comme 🐳, qui doit être considéré comme un seul caractère.
+</li><li>Ajouter le code suivant à la fin de votre script (en adaptant si besoin les noms des variables)&nbsp;:
+<pre class="src">if ($prenom + $nom == 'JeanValjean') {
+    echo "Surprise !\n";
+}</pre>
+La surprise s'affiche-t-elle si vous dites que vous vous appelez Jean 
+Valjean, ou l'inverse ? Comprenez-vous ce qui se passe&nbsp;? <small>Si vous ne comprenez pas, essayez de débugger…</small>
+</li><li>Trouver la fonction PHP permettant de renvoyer l'indice du 
+premier caractère «&nbsp;a&nbsp;» dans une chaîne. Compléter le script 
+pour qu'il indique quelque chose comme «&nbsp;Vous avez un a en position
+ 12 dans votre prénom&nbsp;» ou «&nbsp;Vous n'avez pas de a dans votre 
+prénom&nbsp;», en fonction des cas. Vérifiez que ça marche pour les 
+prénoms «&nbsp;jean&nbsp;», «&nbsp;albert&nbsp;» et 
+«&nbsp;béatrice&nbsp;», en minuscules. <strong>Optionnel</strong>&nbsp;: faire en sorte que ça marche aussi correctement si le prénom commence par une majuscule.
+</li><li>La <a href="https://www.php.net/manual/fr/function.explode.php">fonction <code>explode</code></a>
+ découpe une chaîne de caractères selon un délimiteur donné et renvoie 
+les morceaux dans un tableau. Demander à l'utilisateur/trice de rentrer 
+une phrase, et en utilisant cette fonction, affichez le troisième mot de
+ la phrase.
+</li><li>La <a href="https://www.php.net/manual/fr/function.implode.php">fonction <code>implode</code></a>
+ fait l'inverse de la précédente&nbsp;: elle s'applique à un tableau 
+contenant des chaînes, et renvoie le résultat de la concaténation de ces
+ chaînes, séparées par un séparateur donné en paramètre. <small>L'équivalent en Python est la méthode <code>str.join</code>.</small>
+<p>En utilisant notamment cette fonction, affichez la phrase rentrée par
+ l'utilisateur/trice, mais avec les mots rangés dans l'ordre 
+alphabétique.
+</p></li>
+</ol> 
+	</section>
+
+<!-- ********************************************************************** -->
+
+</section><!-- fin de travail -->
+</main><!-- fin de majeur -->
+
+
+</div> <!-- fermeture du wrapper -->
+
+
+</body></html>

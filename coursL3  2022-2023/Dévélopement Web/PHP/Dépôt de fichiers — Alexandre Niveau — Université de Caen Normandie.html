@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<title>Dépôt de fichiers — Alexandre Niveau — Université de Caen Normandie</title>
+
+	<meta name="author" content="Alexandre Niveau">
+	<meta name="company" content="Université de Caen">
+	<meta name="viewport" content="initial-scale=1">
+
+
+	<link rel="stylesheet" href="D%C3%A9p%C3%B4t%20de%20fichiers%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/normalize.css">
+	<link rel="stylesheet" href="D%C3%A9p%C3%B4t%20de%20fichiers%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/slides_alex.css">
+	<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png">
+
+	<!-- STYLES POUR DEMO -->
+	<style>
+.parcourir {
+	border: 1px solid black;
+	padding: 10px;
+	box-sizing: border-box;
+	text-align: center;
+}
+	</style></head>
+<body>
+<header class="title slide">
+	<h1>Dépôt de fichiers</h1>
+	<div class="auteur">Alexandre Niveau</div>
+	<div class="affiliation">GREYC — Université de Caen</div>
+	<div class="details">
+		En partie adapté du cours de Jean-Marc Lecarpentier
+	</div>	<div class="proj_switch"><button title="basculer entre mode normal et mode projection (raccourci clavier «&nbsp;m&nbsp;»)">Changer de mode</button></div>
+</header>
+
+<div id="contenu">
+<div id="presentation" class="hidenotes">
+
+
+<div class="slide note">
+durée&nbsp;: faisable en 20 minutes si besoin, mais ça peut prendre 40 minutes en faisant plus de démos
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Dépôt de fichiers ou <i>upload</i></h2>
+<p>Envoi d'un fichier local vers le serveur</p>
+<p>Faisable en HTTP avec un formulaire POST</p>
+<p>Standardisé en 1995 (<a href="http://tools.ietf.org/html/rfc1867">RFC 1867</a>)</p>
+<p>Utile pour de nombreuses applications, par exemple pour un webmail (attacher une pièce jointe)
+et pour l'immense majorité des sites web dits «&nbsp;2.0&nbsp;» (images, vidéos, son…)</p>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Le formulaire HTML</h2>
+<div class="p">Élément <code>input</code> de type <code>file</code>, donne un widget «&nbsp;Parcourir&nbsp;»&nbsp;:
+<div class="parcourir"><input type="file"></div>
+</div>
+<p>Ne marche qu'avec la méthode POST</p>
+<p>Il faut préciser dans l'élément <code>form</code> que le type MIME des données est <code>multipart/form-data</code>
+(par défaut, c'est <code>application/x-www-form-urlencoded</code>), sinon le serveur ne comprendra pas le contenu du formulaire</p>
+<div class="p">Exemple&nbsp;:
+<pre class="src">&lt;form <strong>enctype="multipart/form-data"</strong> action="traitement.php" 
+                                    method="<strong>POST</strong>"&gt;
+
+    &lt;input type="file" name="pj"&gt;
+    &lt;input type="file" name="avatar"&gt;
+
+    &lt;button type="submit"&gt;Valider&lt;/button&gt;
+
+&lt;/form&gt;
+</pre>
+</div>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Traitement du fichier en PHP</h2>
+<p>PHP stocke les informations des fichiers uploadés dans le tableau <code>$_FILES</code></p>
+<p>Chaque <code>input</code> de type <code>file</code> correspond à une case du tableau
+(indexée par le <code>name</code> de l'<code>input</code>)&nbsp;:
+<code>$_FILES['pj']</code>, <code>$_FILES['avatar']</code>…</p>
+<p>Chaque case du tableau est elle-même un tableau avec les informations
+ du fichier (nom d'origine, emplacement sur le serveur, taille, etc.)</p>
+<p>Le cours ne rentrera pas dans les détails, voir <a href="http://www.php.net/manual/fr/features.file-upload.php">le manuel</a> pour en savoir plus</p>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Les clés du tableau</h2>
+<ul>
+<li><code>$_FILES['pj']['name']</code>&nbsp;: nom du fichier sur la machine du client</li>
+<li><code>$_FILES['pj']['tmp_name']</code>&nbsp;: chemin complet du fichier uploadé sur le serveur (dans le répertoire <code>/tmp</code> par défaut)</li>
+<li><code>$_FILES['pj']['size']</code>&nbsp;: taille en octets du fichier envoyé</li>
+<li><code>$_FILES['pj']['type']</code>&nbsp;: type MIME du fichier, si transmis (par exemple <code>image/jpeg</code>)&nbsp;; non vérifié par PHP&nbsp;!</li>
+<li><code>$_FILES['pj']['error']</code>&nbsp;: code d'erreur associé à la transmission (PHP&gt;4.2.0)</li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Les codes d'erreur</h2>
+<ul>
+ <li><code>UPLOAD_ERR_OK</code> (valeur 0)&nbsp;: succès de l'upload</li>
+<li><code>UPLOAD_ERR_INI_SIZE</code> (valeur 1) taille du fichier supérieure à la valeur de l'option PHP <code>upload_max_filesize</code></li>
+<li><code>UPLOAD_ERR_FORM_SIZE</code> (valeur 2) taille du fichier supérieure à la valeur <code>MAX_FILE_SIZE</code> spécifiée dans le formulaire HTML (obsolète et non fiable)</li>
+<li><code>UPLOAD_ERR_PARTIAL</code> (valeur 3) fichier partiellement uploadé</li>
+<li><code>UPLOAD_ERR_NO_FILE</code> (valeur 4) aucun fichier uploadé </li>
+<li><code>UPLOAD_ERR_NO_TMP_DIR</code> (valeur 6) pas de répertoire temporaire (PHP&gt;5.0.3)</li>
+<li><code>UPLOAD_ERR_CANT_WRITE</code> (valeur 7) impossible d'écrire sur le disque du serveur (PHP&gt;5.1.0)</li>
+<li><code>UPLOAD_ERR_EXTENSION</code> (valeur 8) une extension PHP a arrêté l'envoi de fichier, mais on ne peut pas savoir laquelle… (PHP&gt;5.2.0) </li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Traitement du fichier</h2>
+<p>Le fichier uploadé est placé sur le serveur dans un répertoire temporaire (par défaut <code>/tmp</code>)
+sous un nom quelconque (par ex. <code>/tmp/php7Mhh3j</code>)</p>
+<p>Il faut déplacer le fichier vers le répertoire où on veut le conserver, et le renommer</p>
+<p>On peut utiliser la fonction <code>move_uploaded_file</code> (PHP&gt;4.0.3), qui vérifie que le fichier à déplacer résulte bien d'un upload
+(plus sécurisé qu'un simple <code>copy</code>)</p>
+<p>La fonction prend deux paramètres&nbsp;: le nom complet du fichier temporaire, et le nom complet du fichier de destination</p>
+<p>Renvoie <code>true</code> en cas de succès et <code>false</code> sinon (soit le fichier n'est pas un fichier uploadé valide, soit le déplacement a échoué)</p>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Exemple</h2>
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">move_uploaded_file</span><span style="color: #007700">(</span><span style="color: #0000BB">$_FILES</span><span style="color: #007700">[</span><span style="color: #DD0000">'pj'</span><span style="color: #007700">][</span><span style="color: #DD0000">'tmp_name'</span><span style="color: #007700">],&nbsp;</span><span style="color: #DD0000">"/users/16715771/toto/uploadedFile.txt"</span><span style="color: #007700">))&nbsp;{<br>&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Copie&nbsp;de&nbsp;fichier&nbsp;réussie"</span><span style="color: #007700">;<br>}&nbsp;else&nbsp;{<br>&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Problème&nbsp;de&nbsp;copie&nbsp;de&nbsp;fichier"</span><span style="color: #007700">;<br>}<br></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Le problème du dépôt de fichiers</h2>
+<p>Comme toujours, se méfier de ce qui vient du client&nbsp;!</p>
+<p>Si vous rendez accessible sur le web des fichiers déposés par les internautes,
+il faut être très prudent&nbsp;: par ex., si le fichier est un script PHP,
+l'internaute peut exécuter du code sur votre serveur…</p>
+<p class="conseq">les fichiers déposés doivent être dans un répertoire
+à part, configuré pour que les fichiers qu'il contient
+ne soient jamais exécutés</p>
+</div>
+
+<div class="slide">
+<h2>Application de la règle d'or</h2>
+
+<div class="p">Ne pas s'appuyer sur les informations données par le client&nbsp;:
+<ul>
+<li>l'extension du fichier et le type MIME indiqué peuvent être faux&nbsp;: il faut vérifier que le type du fichier est bien celui
+attendu. Pour une image, on utilisera par ex. la fonction PHP
+<a href="http://php.net/manual/fr/function.exif-imagetype.php"><code>exif_imagetype</code></a>, qui analyse le <em>contenu</em> du fichier pour détecter
+le format de l'image (et renvoie <code>false</code> si ce n'est pas une image).
+</li>
+<li>ne pas utiliser tel quel le nom original du fichier (<code>$_FILES['fichier']['name']</code>)&nbsp;: utiliser son propre schéma de nommage (à base d'identifiants aléatoires), et mettre l'extension qui correspond
+à ce qu'on a détecté. Si besoin, on peut toujours garder le nom original dans la base de données.
+</li>
+</ul>
+</div>
+</div>
+
+<div class="slide">
+<h2>Prudence&nbsp;!</h2>
+
+<figure class="sidecol" style="border: 1px solid grey;">
+<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/upload/hidden-php.jpg"><img src="D%C3%A9p%C3%B4t%20de%20fichiers%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/hidden-php.jpg" alt="Une image JPEG contenant du code PHP (mais ça ne se voit pas)"></a>
+<figcaption>Une image JPEG dont les métadonnées EXIF contiennent du PHP. Essayez de l'exécuter&nbsp;!</figcaption>
+</figure>
+<p><strong>Attention</strong>&nbsp;: il est possible de créer une image parfaitement valide qui exécute du code quand on la donne à l'interpréteur PHP&nbsp;!
+</p>
+<p class="conseq">si on a suivi tous les conseils précédents, ça ne pose pas de problème, mais si on veut
+être vraiment sûr, une possibilité est de recréer l'image (avec ImageMagick ou GD)
+pour éliminer les métadonnées (mais la qualité de l'image peut baisser)</p>
+<div class="p">
+Si vraiment vous tenez à ce que le fichier ait un nom proche de 
+l'original (déconseillé&nbsp;: il est très délicat de penser à toutes 
+les failles possibles…), le strict minimum est&nbsp;:
+<ul>
+<li>mettre la bonne extension</li>
+<li>tronquer le nom à une longueur raisonnable</li>
+<li>décider d'un ensemble de caractères autorisés, et éliminer tous les caractères non autorisés.
+Par exemple, on autorise <code>[A-Za-z0-9_]</code> (caractères alphanumériques ASCII + underscore)
+et on remplace  tout le reste par <code>_</code>.</li>
+</ul>
+</div>
+<p>Exemple&nbsp;: la <i>double extension attack</i> consiste à uploader un script PHP avec un nom comme <code>toto.php.jpg</code>. Le serveur web Apache
+était souvent configuré pour qu'un tel fichier soit exécuté comme du PHP.
+</p><p class="conseq">les vecteurs d'attaques peuvent être très 
+surprenants, on ne peut pas tout prévoir. Il faut laisser à l'internaute
+ le moins de contrôle possible sur le fichier uploadé.
+</p></div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Configuration de PHP</h2>
+<ul>
+<li>Pour que l'upload fonctionne correctement, plusieurs options à vérifier dans la configuration de PHP&nbsp;:
+<ul>
+
+<li><code>file_uploads</code> doit être à 1</li>
+<li><code>max_execution_time</code> (temps maximal d’exécution du script) et <code>max_input_time</code> (temps maximal de réception des données)&nbsp;: attention aux gros fichiers, aux fichiers multiples, et aux connexions lentes</li>
+<li><code>memory_limit</code> mémoire maximum allouée à un script</li>
+<li><code>post_max_size</code> taille maximum des données transmises par un formulaire</li>
+<li><code>upload_max_filesize</code> taille maximum pour un upload de fichier</li>
+<li><code>upload_tmp_dir</code> répertoire où sont placés les fichiers envoyés (<code>/tmp</code> par défaut)</li>
+
+</ul>
+</li>
+<li><strong>Attention</strong>&nbsp;: si le total des données POST est &gt; <code>post_max_size</code>, rien n'est transmis au serveur. Les tableaux <code>$_POST</code>
+et <code>$_FILES</code> sont <strong>vides</strong>, donc <code>$_FILES['pj']['error']</code> n'existe même pas&nbsp;!</li>
+</ul>
+<div class="handout">
+</div>
+</div>
+
+
+
+</div> <!-- fin #presentation -->
+
+<aside id="liens">
+<h3>Spécifications et normes</h3>
+<ul>
+<li><a href="http://tools.ietf.org/html/rfc1867">RFC&nbsp;1867&nbsp;— Form-based File Upload in HTML</a></li>
+</ul>
+<h3>Références et guides</h3>
+<ul>
+<li><a href="http://www.php.net/manual/fr/features.file-upload.php">Manuel PHP sur l'upload</a></li>
+</ul>
+
+</aside><!-- fin #liens -->
+</div> <!-- fin #contenu -->
+
+<footer class="license">
+	<a class="icone" rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+		<img alt="Licence Creative Commons CC-BY-NC-SA" style="border-width:0" src="D%C3%A9p%C3%B4t%20de%20fichiers%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/88x31.png">
+	</a>
+	<p class="texte">
+		Ce cours est mis à disposition selon les termes de la <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">licence Creative Commons Attribution — Pas d’utilisation commerciale — Partage dans les mêmes conditions 4.0 International</a>.
+	</p></footer>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+	function toggleProj() {
+		const currentParams = new URLSearchParams(window.location.search);
+		if (currentParams.get('mode') === 'proj') {
+			console.log('found proj');
+			document.documentElement.classList.remove('proj');
+			currentParams.delete('mode');
+		} else {
+			console.log('not found proj');
+			document.documentElement.classList.add('proj');
+			currentParams.set('mode', 'proj');
+		}
+		window.history.pushState({}, '', '?' + currentParams + window.location.hash);
+	};
+
+	var buttons = document.querySelectorAll('.proj_switch button'), i;
+	for (i = 0; i < buttons.length; ++i) {
+		buttons[i].addEventListener("click", toggleProj);
+	}
+
+	document.addEventListener("keypress", function(e) {
+		if (e.target == document.body && String.fromCharCode(e.keyCode || e.charCode) == "m") {
+			toggleProj();
+		}
+	});
+
+	/* ajout de liens aux titres qui ont un id */
+	let slidesWithId = document.querySelectorAll('.slide[id]');
+	for (const slide of slidesWithId) {
+		const link = document.createElement('a');
+		link.href = '#' + slide.id;
+		link.classList.add('slide-link');
+		link.title = 'Lien vers ce slide';
+		link.textContent = '#';
+		slide.insertAdjacentElement('afterbegin', link);
+	}
+
+
+});
+</script>
+
+
+</body></html>

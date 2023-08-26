@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr-FR"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <title>TP2 - L3 Langage et Compilation</title>
+      <link rel="stylesheet" href="TP2%20-%20L3%20Langage%20et%20Compilation_files/styletp.css" type="text/css" media="screen, print">
+  </head>
+  
+  <body>
+ 
+    <h1>TP2 -- L3 -- Langage et Compilation</h1>
+    <h1>Automate fini</h1>
+    Dans ce TP, on utilisera <a href="https://www.jflap.org/">JFLAP</a> (Java Formal Languages and Automata Package),
+    un logiciel qui permet de manipuler les notions de base de la théorie des automates et des langages formels.
+
+
+    <h2>Un premier automate déterministe</h2>
+
+    <p>On considère l'AFD <code>A</code> défini par <code>({a,b}, {0,1,2}, δ, 0, {2})</code>
+      où <code>δ</code>, la fonction de transition, est donnée par la table
+    </p>
+
+    <div style="margin:10px 0 10px 100px;">
+      <table class="deltaTable" border="1"> 
+	  <tbody><tr>
+	    <th></th><th style="background-color:#aaffaa;"> a</th><th style="background-color:#aaffaa;">b</th>
+	  </tr>
+	  <tr>
+	    <td style="background-color:#ffaaaa;">0</td>
+	    <td>1</td>
+	    <td>0</td>
+	  </tr>
+	  <tr>
+	    <td style="background-color:#ffaaaa;">1</td>
+	    <td>2</td>
+	    <td>1</td>
+	  </tr>
+	  <tr>
+	    <td style="background-color:#ffaaaa;">2</td>
+	    <td>&nbsp;</td>
+	    <td>2</td>
+	  </tr>
+      </tbody></table>
+    </div>
+    
+    <p>Pour définir un automate avec JFLAP, il faut :</p>
+    <ul>
+      <li>Lancer JFLAP en tapant simplement, sur une machine du département<sup><a href="#note1" id="appel1">1</a></sup>&nbsp;, la commande : <code>jflap</code>
+      </li><li>Choisir l'entrée <q>Finite Automaton</q> du menu initial</li>
+      <li>Dessiner le graphe de transition de l'automate :
+	<ul>
+	  <li>Créer les états (2<sup>e</sup> bouton de la barre d'outil)</li>
+	  <li>Spécifier l'état initial et les états d'acceptation
+	    (1<sup>er</sup> bouton de la barre d'outil et clic droit sur l'état voulu)</li>
+	  <li>Définir les transitions (3<sup>e</sup> bouton)</li>
+	</ul></li>
+    </ul>
+
+    <div class="question">
+      Construire le graphe de transition de l'AFD  <code>A</code>.</div>
+
+    <div class="question">
+      Effectuer le calcul de l'automate sur l'entrée <code> babab</code>
+      (sélectionner dans le menu <q>Input</q> l'option <q>Step by State</q>).
+    </div>
+      
+    <div class="question">
+      Trouver trois mots acceptés par l'automate et trois mots rejetés (sélectionner dans le menu <q>Input</q> l'option <q>Multiple Run</q>).</div>
+
+    <div class="question">
+      Décrire en français le langage reconnu par cet automate.
+      En donner une expression régulière.</div>
+
+
+    <!-- ********************************************************  -->
+    <h2>Un premier automate non déterministe</h2>
+    
+    <p>Récupérer le fichier <a href="https://terrier.users.greyc.fr/LangCompil/2023/TP2Files/afn1.jff">afn1.jff</a> qui décrit un AFN <code>A</code>. L'ouvrir avec JFLAP.</p>
+
+    <div class="question">
+      Pourquoi l'automate <code>A</code> n'est pas déterministe ?</div>
+
+    <div class="question">
+      Effectuer le calcul de l'automate sur l'entrée <code> aabb</code>.
+      Donner la trace des deux calculs acceptant de l'automate <code>A</code> sur cette entrée.</div>
+
+    <div class="question">
+      Donner tous les mots de longueur 2 qui sont rejetés par <code>A</code>.</div>
+
+    <h3>Déterminisation de l'automate</h3>
+    <p>À partir du graphe de transition de l'automate non déterministe</p>
+    <ul>
+      <li>Sélectionner dans le menu <q>Convert</q> l'option <q>Convert to DFA</q>.</li>
+      <li>Utiliser la commande <q>State Expandeur</q> (3ème bouton de la barre d'outil).</li>
+    </ul>  
+ 
+    <div class="question">
+      Construire un automate fini déterministe équivalent à l'automate <code>A</code>.</div>
+
+    <!-- ********************************************************   -->
+    <h2>D'automate fini vers expression régulière</h2>
+    <p>Récupérer le fichier <a href="https://terrier.users.greyc.fr/LangCompil/2023/TP2Files/er1.jff">er1.jff</a> qui définit un AFD <code>A</code>.</p>  
+ 
+    <div class="question">
+      Donner les six mots de longueur 8 qui sont acceptés par <code>A</code>.</div>
+
+    <p>On veut expliciter une expression régulière qui décrit le langage reconnu par l'automate <code>A</code>.</p>  
+    
+    <p>À partir du graphe de transition de l'automate</p>
+    <ul>
+      <li>Ajouter un état <code>source</code> avec une transition 
+étiquetée par le mot vide (avec JFLAP, c'est par défaut le symbole λ, 
+qu'on obtient en tapant immédiatement sur 'entrée' lors de l'ajout d'une
+ transition) sur l'état initial.</li>
+      <li>Ajouter un état <code>destination</code> avec des transitions étiquetées par le mot vide des états finaux vers cet état <code>destination</code>.</li>
+      <li> L'état <code>source</code> devient l'unique état initial et l'état 
+	<code>destination</code> l'unique état final.</li>
+    </ul>
+    <p>Puis</p>
+    <ul>
+      <li>Sélectionner dans le menu <q>InputConvert</q> l'option <q>Convert FA to RE</q>.</li>
+    </ul>
+
+    <div class="question">Donner une expression régulière qui décrit le langage reconnu par l'automate <code>A</code>.</div>
+     
+    <!-- ********************************************************  -->
+    <h2 id="er2af">D'expression régulière vers automate fini</h2>
+
+    <p> JFLAP permet de construire un automate avec <code>ε</code>-transitions
+ qui reconnaît le langage associé à une expression rationnelle donnée 
+(c'est l'algorithme de Thompson qui est appliqué) :</p>
+    <ul>
+      <li>Ouvrir une nouvelle fenêtre en choisissant l'entrée <q>Regular Expression</q> du menu initial.</li>
+      <li>Spécifier l'expression rationnelle voulue.</li>
+      <li>Convertir l'expression rationnelle en automate (option <q>Convert to NFA</q> puis utiliser la commande <q>Do Step</q> pour visualiser les différentes étapes de la construction).</li>
+    </ul>
+    
+    <div class="question">Donner une expression régulière qui décrit l'ensemble des mots qui ont pour suffixes : <code>a</code> ou <code>ab</code></div>
+
+    <div class="question">Construire un automate avec <code>ε</code>-transitions qui reconnaît le langage associé.</div>
+
+    <div class="question">Le déterminiser. Pour chacun des états de cet automate,
+caractériser les mots qui étiquettent les chemins menant à cet état. </div>
+
+    <!-- ********************************************************  -->
+    <h2>Propriété de clôture</h2>
+ 
+   
+    <h3>Clôture par union</h3>
+    <p>On considère sur l'alphabet <code>{a,b}</code>, le langage <code>L<sub>1</sub></code> formé de tous les mots contenant exactement deux <code>a</code>
+      et le langage <code>L<sub>2</sub></code> formé de tous les mots contenant exactement trois <code>b</code>.</p>
+
+    <div class="question">
+      Construire un AFD <code>A<sub>1</sub></code> qui reconnaît le langage <code>L<sub>1</sub></code> et un AFD <code>A<sub>2</sub></code> qui reconnaît le langage <code>L<sub>2</sub></code> .</div>
+
+    <div class="question">Combiner les deux automates <code>A<sub>1</sub></code> et <code>A<sub>2</sub></code> pour construire un automate <code>A<sub>∪</sub></code> avec <code>ε</code>-transitions qui reconnaît le langage <code>L<sub>1</sub> ∪ L<sub>2</sub></code> .</div>
+
+    <div class="question">Déterminiser l'automate <code>A<sub>∪</sub></code>
+ . Que mémorise chacun des états de cet automate ? Pouvez vous trouver 
+un automate déterministe reconnaissant le même langage avec moins 
+d'états ?</div>
+
+     
+
+    <h3>Clôture par étoile</h3>
+    <div class="question">
+      Construire un AFD  <code>A</code> (à 6 états) qui reconnaît le langage décrit par <code>101+001*</code>.</div>
+    
+    <div class="question">
+      À partir de l'automate <code>A</code> construire sans ajouter d'états un automate  avec <code>ε</code>-transitions qui reconnaît le langage décrit par <code>(101+001*)*</code>.</div>
+    
+    <div class="question">
+      Vérifier que les mots suivants sont bien reconnus : <code> 00100, 1010011, λ </code>. Et enregistrer votre automate dans le fichier <code>automateEtoile.jff</code>.</div>
+    
+    <p>On souhaite vérifier que l'automate construit reconnaît bien le langage décrit par <code>(101+001*)*</code>. 
+      L'idée est de construire un deuxième automate avec <code>ε</code>-transitions à partir de l'expression rationnelle <code>(101+001*)*</code> comme  <a href="#er2af">vu</a> précédemment. Puis de déterminer l'équivalence entre ces deux automates (sélection de l'option <q>Compare Equivalence</q> dans le menu <q>Test</q>).</p>
+
+    <div class="question">
+      Tester si l'automate <code>automateEtoile</code> reconnaît effectivement le langage décrit par <code>(101+001*)*</code>.</div>
+
+    <h3>Clôture par concaténation</h3>
+    <div class="question">
+      Construire un AFD  <code>A<sub>1</sub></code> (à 3 états) qui reconnaît le langage décrit par <code>01(11)*</code>
+      et  un AFD  <code>A<sub>2</sub></code> (à 2 états) qui reconnaît le langage décrit par <code>(00+10)*</code>.</div>
+
+ <div class="question">À partir de <code>A<sub>1</sub></code> et <code>A<sub>2</sub></code>, construire un automate <code>A<sub>⊗</sub></code> avec <code>ε</code>-transitions qui reconnaît le langage <code>L<sub>1</sub> ⋅ L<sub>2</sub></code> .</div>
+    <div class="question">Déterminiser l'automate <code>A<sub>⊗</sub></code> . </div>
+
+
+    <!-- ********************************************************  -->
+    <h2>Pump up the jam</h2>
+
+    JFLAP permet de jouer au lemme de la pompe (cliquez sur regular pumping lemma dans le menu principal).
+    Vous pouvez en particulier jouer au lemme de la pompe pour des exemples qu'on a vu au premier TD.
+
+    <div class="question">
+      Pompez avec JFLAP.
+    </div>
+
+    <!-- ********************************************************  -->
+<!--     <h2>Le centenaire de Turing était en 2012</h2> -->
+<!--     OK ça commence à faire un bail mais les machines de Mr T ne se démodent pas. -->
+<!--     JFLAP permet de jouer avec des machines de Turing (depuis le menu principal). -->
+    
+<!--     <div class="question"> -->
+<!--       Essayez de créer un programme qui lit l'entrée (des 0 et des 1  -->
+<!-- pour faire simple) de gauche à droite en remplaçant tout par des blancs  -->
+<!-- puis ramène la tète de lecture au début et s'arrête. Il faudra au  -->
+<!-- préalable regarder la définition / des exemples de machine de Turing sur -->
+<!--  la toile. -->
+<!--     </div> -->
+<!--     <div class="question"> -->
+<!--       Un peu moins trivial : reconnaître a^n b^n ou encore les palindromes. -->
+<!--     </div> -->
+    
+    <!-- ****************** bas de page ************************  -->
+<hr>    
+<p class="petit"><sup><a href="#appel1" id="note1">1</a></sup>
+La commande <code>jflap</code> est un simple script shell qui fait :
+</p><pre>#!/bin/sh
+exec java -jar /usr/local/jflap/JFLAP.jar "$@"
+</pre>
+Vous pouvez facilement disposer de cette commande en téléchargeant  <a href="https://terrier.users.greyc.fr/LangCompil/2023/TP2Files/JFLAP.jar">JFLAP.jar</a>.
+<p></p>
+
+  
+
+
+</body></html>

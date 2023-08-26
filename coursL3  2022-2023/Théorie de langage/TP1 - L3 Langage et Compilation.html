@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr-FR"><head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <title>TP1 - L3 Langage et Compilation</title>
+      <link rel="stylesheet" href="TP1%20-%20L3%20Langage%20et%20Compilation_files/styletp.css" type="text/css" media="screen, print">
+  </head>  
+       
+  <body>
+    <h1>TP1 -- L3 -- Langage et Compilation</h1>
+    <h2>Un automate reconnaissant le langage ab</h2>
+Voici un premier programme très simple qui met en œuvre un automate
+reconnaissant le langage <code>ab</code> (c'est-à-dire formé du seul mot <code>"ab"</code>).
+    <pre><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">Automate1</span> {
+    
+    <span class="keyword">public</span> <span class="type">Automate1</span>() {}
+    <span class="doc">/** État interne de l'automate */</span>
+    <span class="keyword">protected</span> <span class="type">int</span> <span class="variable-name">etat</span>;
+    <span class="doc">/** Positionne l'automate dans son état initial */</span>
+    <span class="keyword">protected</span> <span class="type">void</span> <span class="function-name">etatInitial</span>() { etat = 0; }
+    <span class="doc">/** L'état courant est-il acceptant ? */</span>
+    <span class="keyword">protected</span> <span class="type">boolean</span> <span class="function-name">etatCourantEstAcceptant</span>() { <span class="keyword">return</span> etat == 2; }
+
+    <span class="doc">/** Étant donné un caractère déclencher la transition */</span>
+    <span class="keyword">protected</span> <span class="type">void</span> <span class="function-name">etatSuivant</span>(<span class="type">int</span> <span class="variable-name">c</span>) {
+        <span class="keyword">switch</span> (etat) {
+        <span class="keyword">case</span> 0: 
+            <span class="keyword">if</span> (c == <span class="string">'a'</span>) 
+                etat = 1;
+            <span class="keyword">else</span> 
+                etat = 3;
+            <span class="keyword">break</span>;
+        <span class="keyword">case</span> 1:
+            <span class="keyword">if</span> (c == <span class="string">'b'</span>) 
+                etat = 2;
+            <span class="keyword">else</span>
+                etat = 3;
+            <span class="keyword">break</span>;
+        <span class="keyword">case</span> 2:
+            etat = 3;
+            <span class="keyword">break</span>;
+        }
+    }
+  
+    <span class="doc">/** Le mot est-il reconnu par l'automate ? */</span>
+    <span class="keyword">public</span> <span class="type">boolean</span> <span class="function-name">reconnait</span>(<span class="type">String</span> <span class="variable-name">mot</span>) {
+        etatInitial();
+        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable-name">i</span> = 0; i &lt; mot.length(); i++) {
+            <span class="type">char</span> <span class="variable-name">c</span> = mot.charAt(i);
+            <span class="type">System</span>.err.println(<span class="string">"État : "</span>+ etat + <span class="string">" entrée "</span> + c);
+            etatSuivant(c);
+        }
+        <span class="type">System</span>.err.println(<span class="string">" -&gt; état : "</span>+ etat);
+        <span class="keyword">return</span>  etatCourantEstAcceptant();
+    } 
+
+    <span class="doc">/** Main : les mots en arguments sont-ils reconnus ? */</span>
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">void</span> <span class="function-name">main</span>(<span class="type">String</span> <span class="variable-name">args</span>[]) {
+        <span class="type">Automate1</span> <span class="variable-name">automate</span> = <span class="keyword">new</span> <span class="type">Automate1</span>();
+        <span class="keyword">for</span> (<span class="type">String</span> <span class="variable-name">arg</span> : args) {
+            <span class="type">boolean</span> <span class="variable-name">r</span> = automate.reconnait(arg);
+            <span class="type">System</span>.out.println(<span class="string">"\n\""</span> + arg + <span class="string">"\""</span> + (r ? <span class="string">" est"</span> : <span class="string">" n'est pas"</span>) + <span class="string">" reconnu "</span>); 
+        }
+    }
+}
+</pre>
+
+<p>Note : les mauvaises langues pourraient dire que c'est bien compliqué pour
+faire <code>arg.equals("ab")</code>, mais on va faire encore pire…
+
+</p><h2>Une hiérarchie d'automates</h2>
+<p>Afin de partager de la fonction de reconnaissance<!--  et de pouvoir traiter des caractères Unicode -->, nous allons définir nos automates comme
+héritant de la classe abstraite <code>Automate</code> :
+    </p><pre><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="type">Automate</span> {
+    
+    <span class="keyword">public</span> <span class="type">Automate</span>() {}
+    <span class="doc">/** État interne de l'automate */</span>
+    <span class="keyword">protected</span> <span class="type">int</span> <span class="variable-name">etat</span>;
+    <span class="doc">/** Positionne l'automate dans son état initial */</span>
+    <span class="keyword">abstract</span> <span class="keyword">protected</span> <span class="type">void</span> <span class="function-name">etatInitial</span>();
+    <span class="doc">/** L'état courant est-il acceptant ? */</span>
+    <span class="keyword">abstract</span> <span class="keyword">protected</span> <span class="type">boolean</span> <span class="function-name">etatCourantEstAcceptant</span>();
+    <span class="doc">/** Étant donné un caractère (donné par son code unicode), déclencher la transition */</span>
+    <span class="keyword">abstract</span> <span class="keyword">protected</span> <span class="type">void</span> <span class="function-name">etatSuivant</span>(<span class="type">int</span> <span class="variable-name">charCode</span>);
+
+    <span class="doc">/** Méthode générale : le mot est-il reconnu par l'automate ? */</span>
+    <span class="keyword">public</span> <span class="type">boolean</span> <span class="function-name">reconnait</span>(<span class="type">String</span> <span class="variable-name">mot</span>) {
+        etatInitial();
+        <span class="type">CodePointIterator</span> <span class="variable-name">it</span> = <span class="keyword">new</span> <span class="type">CodePointIterator</span>(mot);
+        <span class="keyword">while</span> (it.hasNext()) {
+            <span class="type">int</span> <span class="variable-name">c</span> = it.next();
+            <span class="type">System</span>.out.println(<span class="string">"État : "</span>+ etat + <span class="string">" entrée "</span> + <span class="type">String</span>.format(<span class="string">"%c"</span>, c));
+            etatSuivant(c);
+        }
+        <span class="type">System</span>.out.println(<span class="string">"État : "</span>+ etat); 
+        <span class="keyword">return</span>  etatCourantEstAcceptant();
+    } 
+}
+
+
+<span class="doc">/** 
+ * Pour itérer sur les codePoint Unicode d'une chaîne.
+ * Si le codePoint correspond à 2 char, il faut avancer l'index 2 fois.
+ */</span>
+<span class="keyword">final</span> <span class="keyword">class</span> <span class="type">CodePointIterator</span> {
+  <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable-name">sequence</span>;
+  <span class="keyword">private</span> <span class="type">int</span> <span class="variable-name">index</span> = 0;
+
+  <span class="keyword">public</span> <span class="type">CodePointIterator</span>(<span class="type">String</span> <span class="variable-name">sequence</span>) {
+    <span class="keyword">this</span>.sequence = sequence;
+  }
+
+  <span class="keyword">public</span> <span class="type">boolean</span> <span class="function-name">hasNext</span>() {
+    <span class="keyword">return</span> index &lt; sequence.length();
+  }
+
+  <span class="keyword">public</span> <span class="type">int</span> <span class="function-name">next</span>() {
+    <span class="type">int</span> <span class="variable-name">codePoint</span> = sequence.codePointAt(index++);
+    <span class="keyword">if</span> (<span class="type">Character</span>.charCount(codePoint) == 2) {
+      index++;
+    }
+    <span class="keyword">return</span> codePoint;
+  }
+}
+</pre>
+
+<p>Pour partager le <code>main</code>, on peut utiliser la classe suivante qui
+utilise la réflexion pour créer dynamiquement une instance de classe avec juste le nom de la
+classe :
+    </p><pre><span class="doc">/**
+ * TestAutomate permet d'instancier un objet Automate étant donné le nom de sa classe.
+ * Il lance ensuite la reconnaissance des mots donnés ensuite en argument par l'automate.
+ */</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="type">TestAutomate</span> {
+
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">void</span> <span class="function-name">main</span>(<span class="type">String</span> <span class="variable-name">args</span>[]) {
+        <span class="keyword">if</span> (args.length &lt; 1) {
+            <span class="type">System</span>.err.println(<span class="string">"Usage : TestAutomate nom_classe_automate mots ..."</span>);
+            <span class="type">System</span>.exit(1);
+        }
+        <span class="keyword">try</span> {
+            <span class="type">Automate</span> <span class="variable-name">automate</span> =  (<span class="type">Automate</span>)<span class="type">Class</span>.forName(args[0]).newInstance();
+            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable-name">i</span> = 1; i &lt; args.length; i++) {
+                <span class="type">String</span> <span class="variable-name">arg</span> = args[i];
+                <span class="type">boolean</span> <span class="variable-name">r</span> = automate.reconnait(arg);
+                <span class="type">System</span>.out.println(<span class="string">"\""</span> + arg + <span class="string">"\""</span> + (r ? <span class="string">" est"</span> : <span class="string">" n'est pas"</span>) + <span class="string">" reconnu "</span>); 
+            }
+        } <span class="keyword">catch</span> (<span class="type">ClassNotFoundException</span> <span class="variable-name">e</span>) {
+            <span class="type">System</span>.err.println(<span class="string">"** Erreur : classe \""</span>+ args[0] + <span class="string">"\" non trouvée"</span>);
+        } <span class="keyword">catch</span> (<span class="type">InstantiationException</span> <span class="variable-name">e</span>) {
+            <span class="type">System</span>.err.println(<span class="string">"** Erreur instanciation classe \""</span>+ args[0] + <span class="string">"\""</span>);
+        } <span class="keyword">catch</span> (<span class="type">IllegalAccessException</span> <span class="variable-name">e</span>) {
+            <span class="type">System</span>.err.println(<span class="string">"** Erreur constructeur classe \""</span>+ args[0] + <span class="string">"\" non accessible"</span>);
+        }
+    }
+}
+</pre>
+
+On l'utilise simplement ainsi :
+    <pre><span class="comint-highlight-prompt"> $ </span><span class="comint-highlight-input"> java TestAutomate AutomateAB abb ab</span>
+État : 0 entrée a
+État : 1 entrée b
+État : 2 entrée b
+État : 3
+"abb" n'est pas reconnu 
+État : 0 entrée a
+État : 1 entrée b
+État : 2
+"ab" est reconnu 
+
+<span class="comint-highlight-prompt"> $ </span>
+</pre>
+
+
+<div class="question">Définir la classe <code>AutomateABB</code> dérivée de
+<code>Automate</code> qui reconnaisse le langage <code>abb</code>.
+</div>
+<div class="question">Même question pour le langage <code>ab*</code>.
+</div>
+
+<h2>Automates définis par une table de transition</h2>
+Nous allons maintenant définir les transitions d'un automate à l'aide d'une
+table. Cela donnera pour la fonction <code>etatSuivant</code> :
+<pre>    <span class="keyword">protected</span> <span class="type">void</span> <span class="function-name">etatSuivant</span>(<span class="type">int</span> <span class="variable-name">c</span>) {
+        etat = _tableTransitions[etat][c-<span class="string">'a'</span>];
+    }
+</pre>
+Note: en Java un char (ici <code>'a'</code>) a toujours la même valeur entière
+que son <code>codePoint</code> (ici <code>97</code>).
+
+<div class="question">Définir des automates reconnaissant respectivement les
+langage <code>ab</code>, <code>ab*</code>, <code>a*b*</code> et <code>(ab)*b*</code> utilisant une table.
+</div>
+
+<!--
+<h2>Mise en œuvre la plus compacte</h2>
+Nous avons donc le choix entre mise en œuvre par table ou mise en œuvre par
+aiguillage (<code>switch</code>).
+<div class="question">Pour les langages suivants, quelle mise en œuvre conduit
+à la représentation la plus compacte : <br>
+ab*ca*b*a
+</div>
+-->
+
+<h2>Transducteurs et automates à actions</h2>
+Les tranducteurs sont des automates qui produisent des mots en sortie. 
+Nous proposons ici une mise en œuvre plus générale, car nous allons associer à
+chaque transition une fonction à exécuter. Cette fonction sera un objet Java
+d'un type qui possède la méthode <code>run</code>
+
+<pre>    <span class="keyword">interface</span> <span class="type">Action</span> {
+        <span class="type">void</span> <span class="function-name">run</span>();
+    }
+
+</pre>
+
+L'automate à actions aura donc une table d'<code>Action</code>s :
+
+<pre>    <span class="keyword">private</span> <span class="type">Action</span>[][] _tableActions;
+</pre>
+
+<div class="question"> Modifier la méthode <code>etatSuivant</code> de façon à
+ce qu'elle exécute l'action associée à l'état courant et au caractère lu.
+</div>
+
+<div class="question">Définir le transducteur qui reconnaît le langage
+<code>(a|b)*b</code> et qui produit un <code>a</code> pour chaque <code>b</code> lu et un <code>b</code> pour
+chaque <code>a</code> lu.
+</div>
+ <div class="question">Définir un automate qui reconnaît le langage
+<code>(a|b)*b</code> et qui calcule le nombre de <code>b</code> dans la mot reconnu.
+</div>
+ 
+
+
+
+</body></html>

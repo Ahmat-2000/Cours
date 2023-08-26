@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<title>Cookies HTTP &amp; sessions PHP — Alexandre Niveau — Université de Caen Normandie</title>
+
+	<meta name="author" content="Alexandre Niveau">
+	<meta name="company" content="Université de Caen">
+	<meta name="viewport" content="initial-scale=1">
+
+
+	<link rel="stylesheet" href="Cookies%20HTTP%20&amp;%20sessions%20PHP%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/normalize.css">
+	<link rel="stylesheet" href="Cookies%20HTTP%20&amp;%20sessions%20PHP%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/slides_alex.css">
+	<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png">
+
+	<!-- STYLES POUR DEMO -->
+	<style>
+.slide li { margin: .2em 0; }
+	</style></head>
+<body>
+<header class="title slide">
+	<h1>Cookies HTTP &amp; sessions PHP</h1>
+	<div class="auteur">Alexandre Niveau</div>
+	<div class="affiliation">GREYC — Université de Caen</div>
+	<div class="details">
+		En partie adapté du cours de Jean-Marc Lecarpentier
+	</div>	<div class="proj_switch"><button title="basculer entre mode normal et mode projection (raccourci clavier «&nbsp;m&nbsp;»)">Changer de mode</button></div>
+</header>
+
+<div id="contenu">
+<div id="presentation" class="hidenotes">
+
+
+<div class="slide note">
+<pre>TODO:
+  * vraie démo cookie, en montrant outils FF  storage
+  * exemple cookie: dernière page visitée. avec deux scripts différents.
+  * idem avec session
+  * simplifier exemple session, pour ne pas confondre session php et session au sens général
+  * avec ces détails en plus le cours peut durer une heure 
+</pre>
+</div>
+
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Le problème d'HTTP</h2>
+<ul>
+<li>HTTP est un protocole <em>sans état</em>&nbsp;:
+<ul>
+<li> ne garde aucune trace des requêtes faites au serveur </li>
+<li> exécute chaque requête indépendamment des autres</li>
+</ul>
+</li><li> impossible de conserver le contexte en cours&nbsp;!</li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Conservation du contexte</h2>
+<ul>
+<li>Problème&nbsp;: entre deux pages d'un même site,
+on a souvent besoin de conserver le contexte,
+c'est-à-dire des informations sur l'internaute et ses actions
+</li>
+<li>Exemples&nbsp;:
+<ul>
+<li>identification de l'internaute</li>
+<li>statut de l'internaute (visiteur, administrateur, etc.)</li>
+<li>son parcours dans le site</li>
+<li>les choix effectués (panier d'achats, préférences, etc.)</li>
+</ul>
+</li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Les solutions</h2>
+<ul>
+<li>Utiliser les paramètres d'URL pour passer les informations&nbsp;: 
+limité en taille, pas très agréable pour l'internaute, valeurs visibles 
+dans la barre d'adresse, pas propre</li>
+<li>Utiliser des champs cachés de formulaire POST sur chaque page&nbsp;:
+ alourdit le code HTML (et donc le poids du fichier à transférer), et ne
+ marche pas si l'internaute quitte le site puis revient</li>
+<li>Ces problèmes sont réglés par l'utilisation de <em>cookies</em>&nbsp;: 
+<ul>
+<li>le serveur stocke des données chez le client dans un fichier appelé cookie</li>
+<li>à chaque requête vers ce serveur, le client transmet les données dans l'en-tête HTTP</li>
+<li>les cookies peuvent survivre à la déconnexion au site</li>
+</ul>
+</li>
+<li><strong>Attention</strong>&nbsp;: aucune de ces techniques n'empêche l'internaute de modifier les données envoyées au serveur&nbsp;!
+</li></ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Fonctionnement des cookies</h2>
+<ul>
+
+<li>Les cookies HTTP ont été créés en 1994, pour implémenter un panier d'achats</li>
+<li>Ajoutés officiellement à HTTP en 1997 (<a href="http://tools.ietf.org/html/rfc2109">RFC 2109</a>)</li>
+<li>Exemple de fonctionnement (<a href="http://en.wikipedia.org/wiki/HTTP_cookie#Implementation">adapté de Wikipédia</a>)&nbsp;: <br>
+
+Le client demande une page au serveur
+<pre>GET /index.html HTTP/1.1
+Host: www.example.org
+</pre></li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Réponse du serveur</h2>
+<ul>
+<li>Le serveur lui envoie la page, en demandant au navigateur de créer un cookie :
+<pre>HTTP/1.0 200 OK
+Content-type: text/html
+<mark>Set-Cookie: name=value
+Set-Cookie: name2=value2; Expires=Wed, 09 Jun 2021 10:18:14 GMT</mark>
+ 
+&lt;!DOCTYPE html&gt;
+&lt;html lang=fr&gt;
+(suite de la page…)
+</pre>
+</li>
+<li>Le navigateur stocke les informations dans un nouveau cookie,
+qui restera valable jusqu'à la date demandée</li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Nouvelle requête du client</h2>
+<ul>
+<li>Chaque nouvelle requête du client vers ce serveur sera accompagnée du contenu du cookie&nbsp;:
+<pre>GET /toto.html HTTP/1.1
+Host: www.example.org
+<mark>Cookie: name=value; name2=value2</mark>
+</pre></li>
+<li>Le serveur peut modifier une valeur, toujours avec <code>Set-Cookie</code></li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Diagramme de séquence</h2>
+<figure>
+<img src="Cookies%20HTTP%20&amp;%20sessions%20PHP%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/seq_cookies.svg" alt="Diagramme de séquence illustrant le fonctionnement des cookies">
+<figcaption>Fonctionnement des cookies
+<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/sessions/img/seq_cookies.svg">(lien vers l'image SVG)</a>
+<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/sessions/img/seq_cookies.png">(lien vers l'image PNG)</a>
+</figcaption>
+</figure>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Cookies avec PHP</h2>
+<ul>
+<li>PHP possède des fonctions permettant de manipuler les cookies</li>
+<li>Ces fonctions vont s'occuper de modifier les en-têtes HTTP des réponses pour ajouter <code>Set-Cookie</code>,
+et de lire les informations du champ <code>Cookie</code> dans les requêtes</li>
+<li>Pour créer un cookie : <a href="http://fr2.php.net/manual/fr/function.setcookie.php"><code>setcookie</code> (voir manuel)</a>
+<pre>setcookie('prenom', 'Toto', time() + (86400 * 7)); 
+</pre>
+crée un cookie valable 7 jours et contenant l'information <code>prenom=Toto</code>.
+</li>
+<li>Les cookies envoyés par le client sont accessibles dans le tableau <code>$_COOKIE</code> :
+<pre><code class="hl "><span style="color: #0000BB"></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">key_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">'prenom'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$_COOKIE</span><span style="color: #007700">))<br>&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Bienvenue,&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">htmlspecialchars</span><span style="color: #007700">(</span><span style="color: #0000BB">$_COOKIE</span><span style="color: #007700">[</span><span style="color: #DD0000">'prenom'</span><span style="color: #007700">])&nbsp;.&nbsp;</span><span style="color: #DD0000">"&nbsp;!"</span><span style="color: #007700">;</span></code></pre></li>
+<li>Ne jamais supposer qu'un cookie existe : les navigateurs peuvent les refuser, les clients peuvent les supprimer…</li>
+<li>Attention aux caractères interdits dans les noms de cookie&nbsp;:
+<strong>espaces</strong>, guillemets, virgule, point-virgule, et antislash.
+Peut générer des bugs difficiles à trouver.</li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Limites des cookies</h2>
+<ul>
+<li>Les cookies sont plus pratiques que l'utilisation de paramètres d'URL ou de champs cachés, mais pas si différents</li>
+<li>En particulier, l'internaute peut les modifier à loisir</li>
+<li>Solution&nbsp;: n'utiliser les cookies que pour <em>identifier</em> l'internaute (par exemple en lui associant un numéro),
+et ne stocker les informations que côté serveur</li>
+<li>Quel stockage côté serveur ? Utiliser une BD est lourd et peu 
+efficace si on veut simplement conserver quelques variables d'une page à
+ l'autre</li>
+<li class="conseq">PHP permet de faire ceci simplement et sans passer par une BD grâce aux <em>sessions</em></li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Principe d'une session PHP</h2>
+<ul>
+<li>L'utilisation d'une session revient à pouvoir garder des variables d'une page à l'autre, de manière transparente</li>
+<li>Lors de l'initialisation de la session&nbsp;: génération d'un 
+identifiant unique par le serveur, transmis au client par un cookie</li>
+<li>À chaque nouvelle requête du client, l'identifiant est transmis, et le serveur utilise les données liées à ce client</li> 
+<li>Les sessions ont une durée de vie limitée (configurable)&nbsp;: en 
+cas d'inactivité prolongée, les données sont effacées du serveur</li>
+</ul>
+<figure>
+<img src="Cookies%20HTTP%20&amp;%20sessions%20PHP%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/seq_session.svg" alt="Diagramme de séquence illustrant le fonctionnement d'une session PHP">
+<figcaption>Fonctionnement d'une session PHP
+<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/sessions/img/seq_session.svg">(lien vers l'image SVG)</a>
+<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/sessions/img/seq_session.png">(lien vers l'image PNG)</a>
+</figcaption>
+</figure>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Sessions sans cookies</h2>
+<ul>
+<li>L'identifiant de session est normalement stocké dans un cookie qui s'efface à la fermeture du navigateur</li>
+<li class="conseq">Ça ne peut pas marcher si le client refuse les cookies</li>
+<li>Dans ce cas le serveur utilise la technique dite des «&nbsp;URL 
+longues&nbsp;» : toutes les URL des liens locaux sont réécrites 
+automatiquement,
+pour y ajouter un paramètre contenant l'identifiant de session</li>
+<li>Moins sécurisé, car <a href="https://fr.wikipedia.org/wiki/Fixation_de_session">les attaques de type «&nbsp;<i>session fixation</i>&nbsp;»</a> sont plus faciles si l'identifiant est dans l'URL que dans un cookie
+</li><li class="conseq">On peut forcer l'utilisation de cookies avec l'option <code>session.use_only_cookies</code></li>
+<li><a href="http://fr2.php.net/session.configuration" class="newTab">Liste des options PHP pour les sessions</a></li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Utilisation des sessions PHP</h2>
+<ul>
+<li>Il faut explicitement demander l'utilisation d'une session : <code>session_start()</code> sur chaque page</li>
+<li>Si aucune session n'existe : génération d'un identifiant, création d'un fichier de données sur le serveur</li>
+<li>Si déjà une session : les variables enregistrées sont chargées en mémoire dans le tableau <code>$_SESSION</code></li>
+<li>À la fin du script, le contenu du tableau <code>$_SESSION</code> est sauvegardé sur le serveur</li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Exemple</h2>
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br>session_start</span><span style="color: #007700">();<br></span><span style="color: #FF8000">//&nbsp;teste&nbsp;si&nbsp;l’internaute&nbsp;est&nbsp;connu&nbsp;ou&nbsp;non<br></span><span style="color: #007700">if&nbsp;(!</span><span style="color: #0000BB">key_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">"nom"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$_SESSION</span><span style="color: #007700">)&nbsp;||<br>&nbsp;&nbsp;&nbsp;&nbsp;!</span><span style="color: #0000BB">key_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">"prenom"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$_SESSION</span><span style="color: #007700">)&nbsp;||<br>&nbsp;&nbsp;&nbsp;&nbsp;!</span><span style="color: #0000BB">key_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">"date"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$_SESSION</span><span style="color: #007700">))&nbsp;{<br>&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Vous&nbsp;n’êtes&nbsp;pas&nbsp;identifié·e&nbsp;sur&nbsp;le&nbsp;site"</span><span style="color: #007700">;<br>}&nbsp;else&nbsp;{<br>&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"&lt;p&gt;Bienvenue&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$_SESSION</span><span style="color: #007700">[</span><span style="color: #DD0000">"prenom"</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"&nbsp;"&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$_SESSION</span><span style="color: #007700">[</span><span style="color: #DD0000">"nom"</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"&lt;/p&gt;"</span><span style="color: #007700">;<br>&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"&lt;p&gt;Dernier&nbsp;accès&nbsp;:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;&nbsp;</span><span style="color: #0000BB">$_SESSION</span><span style="color: #007700">[</span><span style="color: #DD0000">"date"</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"&lt;/p&gt;"</span><span style="color: #007700">;<br>&nbsp;&nbsp;</span><span style="color: #0000BB">$_SESSION</span><span style="color: #007700">[</span><span style="color: #DD0000">"date"</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">"Y-m-d&nbsp;H:i:s"</span><span style="color: #007700">);<br>}<br></span><span style="color: #FF8000">//&nbsp;...&nbsp;suite&nbsp;du&nbsp;script<br></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Sessions PHP ≠ session utilisateur</h2>
+<p>Les sessions PHP sont typiquement utilisées pour implémenter des
+sessions utilisateur
+</p><p>On demande à l'internaute de s'authentifier, et une fois que c'est fait,
+on stocke ses données dans le tableau <code>$_SESSION</code>
+</p><p>Cependant, on peut parfaitement utiliser <code>$_SESSION</code>
+sans implémenter d'authentification, et on peut faire en sorte que la session soit
+valable pendant des mois, indépendamment de la fermeture de la page (en changeant le <i>lifetime</i>
+du cookie de session via <a href="http://fr2.php.net/manual/fr/function.session-set-cookie-params.php"><code>session_set_cookie_params</code></a>)
+</p><p class="conseq">les sessions PHP sont simplement un mécanisme offert par PHP
+pour simplifier et sécuriser l'utilisation de cookies
+</p></div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Sessions et objets</h2>
+<ul>
+<li>Les variables de session peuvent être de tout type</li>
+<li>Elles sont <em>sérialisées</em> à la fin du script, de manière à pouvoir être enregistrées
+dans le fichier de session du serveur sous forme de texte</li>
+<li>Lors du chargement des données de session, elles sont donc désérialisées</li>
+<li>Problème pour les instances de classe : PHP ne sait pas les désérialiser si
+la classe n'a pas été déclarée avant</li>
+<li><strong>Toujours inclure les déclarations des classes utilisées <em>avant</em> l'appel
+à <code>session_start()</code></strong></li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Compléments</h2>
+<ul>
+<li>Pour supprimer une variable de session&nbsp;: <code>unset</code>
+(comme pour une variable normale)</li>
+<li>Pour effacer toutes les variables de session du serveur&nbsp;: <code>session_destroy()</code> (attention, l'effet ne sera visible qu'à la fin du script)</li>
+<li>Il est possible de sérialiser soi-même les variables de session sous forme de chaîne,
+par exemple pour les stocker dans une BD : <code>session_encode()</code>, <code>session_decode()</code></li>
+</ul>
+</div>
+
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Remarques</h2>
+<ul>
+<li>Par défaut, le cookie de session s'appelle <code>PHPSESSID</code></li>
+<li>Il est recommandé de changer ce nom pour une application réelle</li>
+<li>Ceci se fait avec <code>session_name("monsiteID");</code>, obligatoirement
+avant le <code>session_start();</code>. Attention&nbsp;: caractères alphanumériques seulement</li>
+<li>Lecture/écriture de cookies : se fait dans l'en-tête HTTP. Donc comme pour la fonction <code>header</code>, 
+<code>setcookie</code> et <code>session_start</code> doivent être appelées <strong>avant tout envoi
+de contenu</strong> (même une espace ou un saut de ligne&nbsp;!)</li>
+<li>En cas d'erreur ou de warning avec <q>headers already sent</q>, chercher de ce côté-là</li>
+</ul>
+</div>
+<!-- ####################################################### -->
+<!-- ####################################################### -->
+
+<div class="slide">
+<h2>Sécurité des sessions PHP</h2>
+<ul>
+<li>Les paramètres par défaut des sessions PHP ne sont pas toujours les plus recommandés
+en termes de sécurité
+</li><li><a href="https://www.php.net/manual/en/session.security.ini.php">voir les recommandations du manuel PHP</a>,
+les réglages les plus importants étant au début
+</li><li>d'autres recommandations raisonnables, un peu plus détaillées/justifiées, dans <a href="https://stackoverflow.com/a/5081453">cette réponse sur StackOverflow</a> <span class="note">changer le session_name paraît vraiment inutile ?</span>
+</li><li>voir aussi <a href="https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html">un résumé de toutes les attaques possibles sur les sessions</a> (très bonne source, mais pas spécifique à PHP)
+</li></ul>
+
+</div>
+<li>
+
+
+
+
+
+</li></div> <!-- fin #presentation -->
+
+<aside id="liens">
+<h3>Spécifications et normes</h3>
+<ul>
+<li><a href="http://tools.ietf.org/html/rfc6265">RFC&nbsp;6265&nbsp;— HTTP State Management Mechanism</a> (référence sur les cookies HTTP)</li>
+</ul>
+<h3>Références et guides</h3>
+<ul>
+<li><a href="http://fr2.php.net/manual/fr/features.cookies.php">Manuel PHP sur les cookies</a></li>
+<li><a href="http://fr2.php.net/manual/fr/intro.session.php">Manuel PHP sur les sessions</a></li>
+</ul>
+<h3>Lectures complémentaires</h3>
+<ul>
+<li><a href="http://en.wikipedia.org/wiki/HTTP_cookie">HTTP cookie</a> sur en.wikipedia</li>
+<li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html">OWASP Session management cheat sheet</a></li>
+</ul>
+
+</aside><!-- fin #liens -->
+</div> <!-- fin #contenu -->
+
+<footer class="license">
+	<a class="icone" rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+		<img alt="Licence Creative Commons CC-BY-NC-SA" style="border-width:0" src="Cookies%20HTTP%20&amp;%20sessions%20PHP%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/88x31.png">
+	</a>
+	<p class="texte">
+		Ce cours est mis à disposition selon les termes de la <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">licence Creative Commons Attribution — Pas d’utilisation commerciale — Partage dans les mêmes conditions 4.0 International</a>.
+	</p></footer>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+	function toggleProj() {
+		const currentParams = new URLSearchParams(window.location.search);
+		if (currentParams.get('mode') === 'proj') {
+			console.log('found proj');
+			document.documentElement.classList.remove('proj');
+			currentParams.delete('mode');
+		} else {
+			console.log('not found proj');
+			document.documentElement.classList.add('proj');
+			currentParams.set('mode', 'proj');
+		}
+		window.history.pushState({}, '', '?' + currentParams + window.location.hash);
+	};
+
+	var buttons = document.querySelectorAll('.proj_switch button'), i;
+	for (i = 0; i < buttons.length; ++i) {
+		buttons[i].addEventListener("click", toggleProj);
+	}
+
+	document.addEventListener("keypress", function(e) {
+		if (e.target == document.body && String.fromCharCode(e.keyCode || e.charCode) == "m") {
+			toggleProj();
+		}
+	});
+
+	/* ajout de liens aux titres qui ont un id */
+	let slidesWithId = document.querySelectorAll('.slide[id]');
+	for (const slide of slidesWithId) {
+		const link = document.createElement('a');
+		link.href = '#' + slide.id;
+		link.classList.add('slide-link');
+		link.title = 'Lien vers ce slide';
+		link.textContent = '#';
+		slide.insertAdjacentElement('afterbegin', link);
+	}
+
+
+});
+</script>
+
+
+</body></html>

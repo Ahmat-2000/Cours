@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>Web, HTTP, PHP côté serveur</title>
+<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png"> 
+<link rel="stylesheet" href="Web,%20HTTP,%20PHP%20c%C3%B4t%C3%A9%20serveur_files/normalize.css">
+<link rel="stylesheet" type="text/css" href="Web,%20HTTP,%20PHP%20c%C3%B4t%C3%A9%20serveur_files/fiche_alex.css">
+</head>
+<body>
+<div id="wrapper">
+
+<header id="tetiere">
+	<div class="logo">
+	<a href="https://ensweb.users.info.unicaen.fr/TW4B/" title="Technologies du Web — Université de Caen" class="logo"><span class="accessibilite">Logo de l'université de Caen</span></a>
+	</div>
+	<div class="titreCours">
+			<h1>Web, HTTP, PHP côté serveur</h1>
+						<p class="diplome">Licence Informatique 3ème année</p>
+			<p class="enseignants">Alexandre Niveau — Jean-Marc Lecarpentier</p>
+	</div>
+	<section class="contexte">
+	<h2><a href="https://ensweb.users.info.unicaen.fr/TW4B/">Enseignement des technologies du Web</a></h2>
+		<ul>
+			<li>Module&nbsp;: <a href="https://ensweb.users.info.unicaen.fr/TW4B/">TW4B : Programmation d’applications web avancées</a></li>
+		<li><a href="http://www.unicaen.fr/">Université de Caen</a>, année&nbsp;2022-2023</li>
+		</ul>
+	</section><!-- fin de contexte -->
+		<div class="clearer">&nbsp;</div>
+</header><!-- fin de tetiere -->
+
+<main id="majeur">
+
+
+
+<!--  ##########  introduction  ########  -->
+
+<section class="bloc"><h2>Web, HTTP, PHP côté serveur</h2>
+<h3>Notes de cours</h3>
+<ul>
+<li><a class="titrePres" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/www/">Le web, c’est quoi et comment ça marche&nbsp;?</a>
+<ul>
+</ul></li>
+<li><a class="titrePres" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/http/">PHP côté serveur</a>
+<ul>
+</ul></li>
+</ul>
+</section><!-- fin de l'introduction -->
+<section class="bloc">
+<h2>Travail personnel</h2><section>
+<h3>Objectifs</h3>
+<p>Prendre en main le serveur web fourni par l'université, et expérimenter avec l'exécution de PHP côté serveur.</p>
+</section>
+	<section class="exo-among-others exercice" id="exo-01">
+		<h3>Exercice&nbsp;1&nbsp;— Mise en place de l’environnement de travail&nbsp;: <i lang="en">Hello world</i>	<a href="#exo-01" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+		<div class="info">
+Cet exercice a déjà été fait dans le cadre du cours «&nbsp;Technologies 
+web 1&nbsp;» en L1. Il est principalement destiné à celles et ceux qui 
+ne l'ont pas suivi. Pour les autres, il ne s'agit que de se rafraîchir 
+la mémoire : n'y passez pas 10 minutes&nbsp;!</div>
+
+
+<h4>Questions</h4>
+<ol>
+<li>Le département met à votre disposition un espace personnel sur le web.
+Son fonctionnement est expliqué sur
+<a href="https://faq.info.unicaen.fr/espaceweb">cette page</a> de la FAQ
+ du département.
+Si vous n'avez pas encore lu cette page, faites-le (pas la peine de lire
+ les «&nbsp;Informations complémentaires pour les plus 
+avancé·es&nbsp;»).
+</li><li>Accédez au répertoire <code>www-dev</code> de votre espace personnel sur le serveur et créez-y un fichier <code>index.html</code> (s'il n'y en a pas déjà un).</li>
+<li>Ouvrez-le avec votre éditeur favori (si vous ne savez pas lequel choisir, prenez Geany, simple et <em>relativement</em> complet et léger).</li>
+<li>Écrivez n'importe quoi dedans, par exemple <a href="https://fr.wikipedia.org/wiki/Hello_world"><i lang="en">Hello world</i></a>. Enregistrez.</li>
+<li>Ouvrez Firefox (on n'utilisera que Firefox dans ce module) et rendez vous à l'URL <code>https://dev-<i>LOGIN</i>.users.info.unicaen.fr/</code>,
+où <code><i>LOGIN</i></code> est votre login de connexion (par exemple <code>dupont227</code>). 
+
+ Vous devriez voir ce que vous avez écrit dans le fichier. Si ce n'est pas le cas, demandez de l'aide.</li>
+<li>Retournez dans l'éditeur et essayez d'utiliser des balises HTML dans <code>index.html</code>, comme <code>h1</code>, <code>em</code>, <code>strong</code>, <code>p</code>, etc. (<a href="https://developer.mozilla.org/fr/docs/Web/HTML/Element">liste de tous les éléments HTML5</a>) et regardez le résultat.</li>
+<li>Dans Firefox, expérimentez le raccourci «&nbsp;Control-u&nbsp;» pour
+ afficher le code source de la page. Essayez sur d'autres pages du web. 
+Cette fonction est également accessible dans le menu contextuel (clic 
+droit).</li>
+<li>Renommez le fichier <code>index.html</code> en <code>hello.html</code> et actualisez la page dans le navigateur&nbsp;: que se passe-t-il et pourquoi&nbsp;?</li>
+<li>Créez un répertoire <code>test</code> dans <code>www-dev</code>. Vous devriez le voir apparaître dans le listing si vous actualisez la page <code>https://dev-<i>LOGIN</i>.users.info.unicaen.fr/</code> dans le navigateur.
+Observez bien comment la barre d'adresse du navigateur est modifiée si vous cliquez sur <code>test</code>, ou sur le fichier <code>hello.html</code>. Assurez-vous d'avoir compris que le serveur <strong>sert le contenu de <code>www-dev</code>
+à la racine de votre site <code>https://dev-<i>LOGIN</i>.users.info.unicaen.fr</code></strong>&nbsp;: n'hésitez pas à demander des explications à votre chargé·e de TP si ce n'est pas clair pour vous&nbsp;!
+</li></ol>
+
+<p>Attention à bien organiser votre serveur web,
+et attention aussi à ne pas y mettre tous vos fichiers, mais seulement ceux qui ont des raisons d'y être&nbsp;!</p>
+	</section>
+
+<!-- ********************************************************************** -->
+
+	<section class="exo-among-others exercice" id="exo-02">
+		<h3>Exercice&nbsp;2&nbsp;— Premiers pas avec PHP côté serveur	<a href="#exo-02" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+		<p>Cet exercice vise à vous familiariser avec les pages dynamiques
+et le fonctionnement de PHP. Pour rappel, une page PHP est un script, qu'il faut exécuter pour en voir le résultat. C'est <strong>le serveur</strong> qui exécute le script quand un client
+y accède <i>via</i> HTTP&nbsp;:
+si vous essayez d'ouvrir une page PHP locale avec votre navigateur, ça ne fonctionnera pas
+(le navigateur vous proposera probablement de la télécharger).</p>
+
+<h4>Exécution d'un script par le serveur</h4>
+<ol>
+<li>Créez un script PHP <code>hello.php</code> contenant le code suivant&nbsp;:
+<pre class="src">&lt;?php
+echo "Hello\n";
+echo "&lt;strong&gt;\n";
+echo "World!\n";
+</pre>
+Exécutez-le dans un terminal&nbsp;: trois lignes doivent s'afficher.
+</li><li>Copiez le script à la racine de votre <code>www-dev</code>, et allez à l'URL <code class="nowrap">https://dev-<i>LOGIN</i>.users.info.unicaen.fr/hello.php</code>. Qu'est-ce qui s'affiche&nbsp;? Quelles sont les différences par rapport au terminal, et pourquoi&nbsp;?
+</li><li>Affichez la source de la page (dans Firefox, clic-droit puis «&nbsp;Afficher la source&nbsp;», ou Ctrl-U). Que voyez-vous&nbsp;:
+<ul><li>le contenu du fichier PHP, ou bien
+</li><li>les trois lignes qu'affichait le terminal&nbsp;?</li></ul>
+⇒ Que signifie le terme «&nbsp;source&nbsp;» ici&nbsp;? 
+</li><li>Le navigateur peut-il savoir que la page a été générée par un script PHP ?</li>
+<li>Que se passe-t-il si vous faites une erreur dans le script&nbsp;?
+</li><li>Que se passe-t-il si vous écrivez quelque chose (par exemple <code>TEST</code>) <em>avant</em>
+le <code>&lt;?php</code>&nbsp;? (Enlevez-le après avoir testé, sinon la suite ne marchera pas&nbsp;!)
+</li></ol>
+
+<h4>Accès au contexte HTTP depuis le script</h4>
+<p>Le serveur ne se contente pas d'exécuter le script PHP&nbsp;: il lui 
+fournit diverses informations sur la requête HTTP, effectuée par le 
+client, qui a conduit à cette exécution. D'autre part, le script ne se 
+contente pas d'écrire le <em>corps</em>
+de la réponse HTTP&nbsp;: il peut demander au serveur de renvoyer tel champ d'en-tête, ou même tel code de statut.
+</p><ol>
+<li>Ajoutez la ligne suivante juste avant le premier <code>echo</code>&nbsp;:
+<pre class="src">http_response_code(404);</pre>. Elle permet de changer le code de statut de la réponse HTTP.
+</li><li>Actualisez la page&nbsp;: vous ne devriez voir aucune 
+différence&nbsp;! En revanche, si vous actualisez après avoir ouvert 
+l'onglet «&nbsp;Réseau&nbsp;» des outils développeur (raccourci 
+Ctrl-Shift-E), vous devriez constater que la réponse envoyée est bien 
+une 404.
+</li><li>Ajoutez la ligne suivante juste en-dessous de l'autre&nbsp;:
+<pre class="src">header("Content-Type: text/plain");</pre>
+et actualisez la page. Que se passe-t-il, et pourquoi&nbsp;? Cliquez sur
+ la réponse HTTP dans l'onglet «&nbsp;Réseau&nbsp;», pour voir les 
+en-têtes de la réponse&nbsp;: voyez-vous la différence avec ou sans 
+cette ligne&nbsp;?
+</li><li>PHP refuse de modifier l'en-tête de la réponse HTTP après avoir commencé à en écrire le corps. Vérifiez cela
+en lui faisant afficher quelque chose avant l'appel à <code>http_response_code</code> (et enlevez-le après avoir testé).
+</li><li>Avec une fonction de debug type <code>var_export</code>, affichez le résultat de <a href="https://www.php.net/manual/fr/function.getallheaders.php">la fonction
+<code>getallheaders()</code></a>, et comparez à ce que vous voyez dans l'onglet «&nbsp;Réseau&nbsp;». 
+</li><li>Avec une fonction de debug type <code>var_export</code>, affichez le contenu de la variable <code>$_GET</code>
+ (attention à l'underscore)&nbsp;: il devrait être vide. Que se 
+passe-t-il si vous modifiez la barre d'adresse afin d'aller à l'URL 
+<code class="nowrap">https://dev-<i>LOGIN</i>.users.info.unicaen.fr/hello.php?toto=12&amp;blabla=truc</code>&nbsp;?
+</li><li><strong>Optionnel&nbsp;:</strong> faire en sorte que la page s'affiche «&nbsp;en mode texte&nbsp;» si on passe dans l'URL la valeur <code>texte</code> au paramètre <code>mode</code>, et en «&nbsp;mode visuel&nbsp;» (HTML interprété) sinon.
+	</li></ol></section>
+
+<!-- ********************************************************************** -->
+
+	<section class="exo-among-others exercice" id="exo-03">
+		<h3>Exercice&nbsp;3&nbsp;— Manipulation de fichiers, inclusion et redirection	<a href="#exo-03" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+			<p>Téléchargez <a href="https://ensweb.users.info.unicaen.fr/TW4B/tp/fichiers-inclusion-redirection-PHP/fragments.zip">l'archive de l'exercice</a>,
+qui contient un fragment de HTML et un fragment de PHP, ainsi qu'un script <code>inclusion.php</code> qui utilise ces fragments.</p>
+
+<h4>Inclusion avec <code>include</code>/<code>require</code></h4>
+<ol>
+<li>Placez le contenu de l'archive sur votre serveur, regardez bien le 
+contenu des scripts, observez le résultat. Assurez-vous de bien 
+comprendre ce qui se passe.</li>
+<li>Remplacez les trois <code>include</code> par des <code>require</code>, et regardez à nouveau le résultat. Quelle est la différence&nbsp;?</li>
+<li>Enlevez l'inclusion du fragment inexistant et vérifiez que cette fois la conclusion s'affiche bien.</li>
+<li>Dupliquez le contenu du <code>body</code> (copiez le contenu, du 
+début jusqu'à la conclusion, et collez-le après la conclusion). Chaque 
+inclusion aura donc lieu deux fois. Que se passe-t-il, et 
+pourquoi&nbsp;?</li>
+<li>Remplacez les quatre <code>require</code> par des <code>require_once</code>, et expliquez le résultat.</li>
+</ol>
+
+<p>Il existe aussi <code>include_once</code>, mais il est moins utile. À moins d'avoir une bonne raison, il vous est recommandé d'utiliser <code>include</code> pour inclure un fragment de contenu (HTML ou PHP), et <code>require_once</code> pour inclure un fichier PHP contenant des déclarations (constantes, fonctions, classes…).</p>
+
+
+<h4>Récupération du contenu d'un fichier dans une variable</h4>
+<p>Les instructions <code>include</code> et <code>require</code> exécutent
+immédiatement le code&nbsp;: elles sont en quelque sorte remplacées par le résultat
+de l'exécution. Il est souvent utile de récupérer ce résultat avant affichage,
+pour le modifier ou pour le passer à une fonction.</p>
+<ol>
+<li>Dans un nouveau script PHP, récupérez avec la fonction <code>file_get_contents</code> le contenu du fragment HTML dans une variable
+<code>$frg</code> et l'afficher.</li>
+<li>Faites de même avec le fragment PHP. Que se passe-t-il, et pourquoi&nbsp;?</li>
+<li>Pour récupérer le résultat de l'exécution du fragment PHP, il
+faut utiliser un <code>include/require</code> en activant l'<i lang="en">output buffering</i> (<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres//http/#output-buffering">voir cours</a>). Faites-le.</li>
+</ol>
+
+
+
+<h4>Redirection et <code>header</code></h4>
+<p>La fonction PHP <code>header</code> permet de manipuler les en-têtes HTTP de la réponse envoyée par le serveur.</p>
+<ol>
+<li>Dans une nouvelle page PHP, mettez le contenu suivant&nbsp;:
+<pre class="src">&lt;?php
+header('X-Mon-Entete-Perso: lorem ipsum dolor sit amet');
+?&gt;
+</pre>
+Ouvrez l'onglet «&nbsp;Réseau&nbsp;» des outils développeur de Firefox 
+(raccourci&nbsp;: control-shift-E), accédez à la page, et vérifiez que 
+l'en-tête custom a bien été transmis. <small>La spec de HTTP autorise tous les en-têtes commençant par <code>X-</code>
+ — elle garantit qu'ils ne seront jamais utilisés dans une future 
+version. Cela permet d'étendre HTTP pour des usages spécifiques à une 
+application sans s'exposer à de futures incompatibilités.</small>
+</li>
+<li>La fonction <code>header</code> ajoute (ou modifie) des en-têtes HTTP, mais dans certains cas très particuliers elle va un peu plus loin.
+<p>Mettez le contenu suivant dans une nouvelle page PHP&nbsp;:
+</p><pre class="src">&lt;?php
+header('Location: https://fr.wikipedia.org/wiki/Chien');
+?&gt;
+&lt;p&gt;Voilà du &lt;strong&gt;HTML&lt;/strong&gt; qu'on n'aura pas le temps de voir&nbsp;!&lt;/p&gt;
+
+</pre>
+Comprenez-vous ce qui se passe&nbsp;? Observez le déroulement avec l'outil «&nbsp;Réseau&nbsp;» de Firefox, et vérifiez que <code>header</code> n'a pas simplement ajouté un en-tête, mais a aussi modifié le code de statut de la réponse HTTP.</li>
+<ol>
+
+
+	</ol></ol></section>
+
+<!-- ********************************************************************** -->
+
+	<section class="exo-among-others exercice" id="exo-04">
+		<h3>Exercice&nbsp;4 (optionnel)&nbsp;— Table de multiplication	<a href="#exo-04" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+		<div class="info">
+Cet exercice n’est pas optionnel s’il vous reste du temps avant la fin du TP&nbsp;!</div>
+
+
+<h4>Construction de la table</h4>
+<ol>
+<li><p>Écrire une page <code>multiplication.php</code> qui affiche une table de multiplication comme sur la figure suivante.
+<small>Le rendu de la figure est obtenu avec un <em>tableau HTML</em> (élément <code>table</code>), mais il n'est pas spécialement
+pertinent de construire un <em>tableau PHP</em> (<code>array</code>) pour le faire&nbsp;!</small></p>
+<p>
+<strong>Les couleurs sont facultatives</strong>, sauf pour les plus à l'aise, qui s'efforceront d'obtenir ce rendu en pur CSS,
+sans utiliser les attributs <code>class</code>, <code>id</code> ou <code>style</code>.</p>
+<a class="figlink" href="https://ensweb.users.info.unicaen.fr/TW4B/tp/mult/modele.png"><figure><img src="Web,%20HTTP,%20PHP%20c%C3%B4t%C3%A9%20serveur_files/modele.png" alt="La table de multiplication de 1 à 15"></figure></a>
+</li>
+<li>Modifier le code pour que l'affichage de la table soit géré par une fonction,
+qui prend en argument la borne supérieure de la table (15 dans le modèle)&nbsp;;
+par exemple, si on lui passe 20, elle affiche la table de 1 à 20.</li>
+<li>Modifier à nouveau le code, pour que la borne supérieure de la table soit contrôlée par
+un paramètre <code>borne</code> dans l'URL&nbsp;: ainsi,
+la page <code>multiplication.php?borne=20</code> affichera la table de 1 à 20.
+</li>
+<li>On va mettre en place une vérification de l'entrée. NB: les éléments
+des tableaux <code>$_GET</code> et <code>$_POST</code> sont <em>toujours</em>
+des chaînes de caractères.
+<ol>
+<li>Faire en sorte que la page choisisse une borne par défaut si l'URL ne
+comporte pas de paramètre <code>borne</code>.
+</li><li>Faire en sorte que la page affiche «&nbsp;Erreur&nbsp;: borne nulle&nbsp;» s'il reçoit 0 comme paramètre <code>borne</code>. Cela doit marcher également pour <code>00</code> ou <code>0.0</code>.
+</li><li>Faire en sorte que la page affiche «&nbsp;Erreur&nbsp;: borne vide&nbsp;» si le paramètre reçu est vide (<code>multiplication.php?borne=</code>). <small>Attention, la comparaison faible peut vous jouer des tours…</small>
+</li><li>Si la borne est trop grande, le script met trop longtemps à générer la page,
+et le serveur le tue avant qu'il ait terminé.
+Vérifier que la borne fournie dans l'URL est entre 1 et 100&nbsp;; si elle n'y est pas,
+afficher un message d'erreur, ou choisir une borne par défaut.</li>
+</ol>
+Après avoir fini ces quatre points, et avant de passer à la question suivante, <strong>testez à nouveau que les quatre vérifications sont fonctionnelles&nbsp;!</strong></li>
+<li>Ajouter sur la page un lien vers la «&nbsp;page&nbsp;» affichant la plus petite table
+et un autre vers la «&nbsp;page&nbsp;» affichant la plus grande table.</li>
+</ol>
+
+	</section>
+
+<!-- ********************************************************************** -->
+
+</section><!-- fin de travail -->
+</main><!-- fin de majeur -->
+
+
+</div> <!-- fermeture du wrapper -->
+
+
+</body></html>

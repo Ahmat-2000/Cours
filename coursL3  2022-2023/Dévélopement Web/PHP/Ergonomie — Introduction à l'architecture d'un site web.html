@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>Ergonomie — Introduction à l'architecture d'un site web</title>
+<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png"> 
+<link rel="stylesheet" href="Ergonomie%20%E2%80%94%20Introduction%20%C3%A0%20l'architecture%20d'un%20site%20web_files/normalize.css">
+<link rel="stylesheet" type="text/css" href="Ergonomie%20%E2%80%94%20Introduction%20%C3%A0%20l'architecture%20d'un%20site%20web_files/fiche_alex.css">
+</head>
+<body>
+<div id="wrapper">
+
+<header id="tetiere">
+	<div class="logo">
+	<a href="https://ensweb.users.info.unicaen.fr/TW4B/" title="Technologies du Web — Université de Caen" class="logo"><span class="accessibilite">Logo de l'université de Caen</span></a>
+	</div>
+	<div class="titreCours">
+			<h1>Ergonomie — Introduction à l'architecture d'un site web</h1>
+						<p class="diplome">Licence Informatique 3ème année</p>
+			<p class="enseignants">Alexandre Niveau — Jean-Marc Lecarpentier</p>
+	</div>
+	<section class="contexte">
+	<h2><a href="https://ensweb.users.info.unicaen.fr/TW4B/">Enseignement des technologies du Web</a></h2>
+		<ul>
+			<li>Module&nbsp;: <a href="https://ensweb.users.info.unicaen.fr/TW4B/">TW4B : Programmation d’applications web avancées</a></li>
+		<li><a href="http://www.unicaen.fr/">Université de Caen</a>, année&nbsp;2022-2023</li>
+		</ul>
+	</section><!-- fin de contexte -->
+		<div class="clearer">&nbsp;</div>
+</header><!-- fin de tetiere -->
+
+<main id="majeur">
+
+
+
+<!--  ##########  introduction  ########  -->
+
+<section class="bloc"><h2>Ergonomie — Introduction à l'architecture d'un site web</h2>
+<h3>Notes de cours</h3>
+<ul>
+<li><a class="titrePres" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/ergo/">Sensibilisation à l’ergonomie des sites web</a>
+<ul>
+<li>Introduction à l’ergonomie</li>
+<li>Fondements de l’ergonomie</li>
+<li>Règles de base de l’ergonomie web</li>
+</ul></li>
+</ul>
+</section><!-- fin de l'introduction -->
+<section class="bloc">
+<h2>Travail personnel</h2><section>
+<h3>Objectifs</h3>
+<p>Ce TP n'a pas de rapport avec le CM&nbsp;: il s'agit d'une introduction à l'architecture d'un site web, qui permet d'introduire
+les problématiques qui seront abordées ensuite en cours.
+</p>
+</section>
+	<section class="exo-among-others exercice" id="exo-01">
+		<h3>Exercice&nbsp;1&nbsp;— Architecture d’un site simple	<a href="#exo-01" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+		<div class="info">
+Attention, ceci n’est pas tout à fait l’exo 3 de la semaine 
+dernière&nbsp;: il y a deux parties ajoutées avant l’ancienne troisième 
+partie (qui est donc devenue la cinquième). À part ça rien n’a changé.</div>
+	<p>Récupérer <a href="https://ensweb.users.info.unicaen.fr/TW4B/tp/poemes/poemes.zip">cette archive</a>. Elle contient un répertoire <code>poemes</code>, qui lui-même contient</p>
+<ul>
+	<li>un répertoire <code>textes</code>, avec les textes de quatre poèmes</li>
+	<li>un répertoire <code>images</code>, avec les images des poètes</li>
+	<li>un fichier <code>donnees.php</code>, qui déclare un tableau contenant des informations sur les poèmes (auteur, titre, image correspondante)</li>
+</ul>
+<p>Le but de l'exercice est de réaliser un site présentant ces quatre 
+poèmes. Un site plus conséquent utiliserait évidemment une base de 
+données&nbsp;;
+un des objectifs est de vous faire manipuler les tableaux PHP, et de 
+vous faire travailler sur l'architecture d'un site indépendamment des
+problèmes spécifiques aux BD (connexion, erreurs de requêtes, etc.).</p>
+<p>Une version naïve du site consisterait à créer un script PHP par page
+ (donc un pour chaque poème + la page d'accueil). C'est une très 
+mauvaise idée&nbsp;: il
+y a énormément de redondances entre les scripts, et si on veut rajouter 
+un poème à la liste, c'est compliqué.</p>
+<p>Une meilleure solution est de faire en sorte que le site ne soit généré que par <em>un seul et même script principal</em>, qui va choisir quoi afficher en fonction de l'URL.
+</p><p>Pour simplifier l'énoncé et l'exercice, on va utiliser un <em>paramètre</em> d'URL pour choisir le poème à afficher. Ce choix vous semble-t-il pertinent&nbsp;?</p>
+
+<h4>Première partie&nbsp;: un site fonctionnel</h4>
+<ol>
+<li>Placer le répertoire <code>poemes</code> sur le serveur, et créer un fichier <code>index.php</code> dans le répertoire.
+Mettre un modèle de page HTML de base dans le fichier <code>index.php</code>. Dans toute cette partie,
+on ne modifiera <strong>que</strong> ce fichier <code>index.php</code>&nbsp;: notre site va contenir plusieurs pages, mais toutes seront générées par cet unique script.</li>
+<li>Inclure le fichier <code>donnees.php</code> depuis le fichier <code>index.php</code>. On va ainsi pouvoir accéder aux informations sur les poèmes.</li>
+<li>Afficher une liste des titres des poèmes (en utilisant le tableau, bien sûr !).</li>
+<li>Récupérer le paramètre <code>poeme</code> dans l'URL, et si sa valeur correspond à l'une des quatre clefs (<code>boheme</code>, <code>correspondances</code>,
+<code>bois</code>, <code>automne</code>), alors on va afficher la page 
+du poème correspondant&nbsp;: pour l'instant, afficher le titre du poème
+ comme titre principal de la page
+(<code>h1</code>) et dans l'élément <code>title</code> de l'en-tête HTML.</li>
+<li>Ajouter à la page le texte du poème correspondant, et le nom de l'auteur en-dessous.</li>
+<li>Ajouter l'image correspondante, avec comme texte alternatif le nom de l'auteur.</li>
+<li>Transformer la liste des titres de poèmes en une liste de 
+liens&nbsp;: un clic sur un poème mène à la «&nbsp;page&nbsp;» 
+correspondante.</li>
+<li>Faire en sorte que s'il n'y pas de paramètre <code>poeme</code> dans l'URL, un message d'accueil soit affiché.</li>
+<li>Faire en sorte que si la valeur du paramètre <code>poeme</code> dans l'URL est erronée, un message d'erreur soit affiché.</li>
+</ol>
+
+<h4>Deuxième partie&nbsp;: une meilleure architecture</h4>
+<p>À ce niveau-là, le mini-site doit fonctionner correctement. Il n'est 
+cependant pas très propre, car on a mélangé la logique et l'affichage.
+Pour bien faire, il faut séparer notre fichier en deux morceaux.</p>
+<ul>
+<li><code>index.php</code> va être le contrôleur, il ne s'occupera que 
+d'analyser l'URL pour déterminer le poème désiré et récupérer les 
+informations correspondantes dans les données. Il ne devra rien afficher
+ lui-même&nbsp;:
+une fois son travail terminé, il se contentera d'inclure l'autre 
+fichier.</li>
+<li>On va créer un fichier <code>squelette.php</code>, qui au contraire ne s'occupera que de l'affichage. Il contiendra une page HTML «&nbsp;à trous&nbsp;» (on parle de <i>template</i>)&nbsp;:
+on n'utilisera PHP que pour afficher des variables. Les variables seront remplies au préalable par le contrôleur.</li>
+</ul>
+<p>Créer un squelette pour les pages affichant un poème, et modifier <code>index.php</code> pour qu'il se comporte comme un contrôleur tel que décrit ci-dessus.</p> 
+<p>Créer un squelette pour les autres pages (accueil et erreur) si nécessaire, et adapter <code>index.php</code>. <strong>Remarque</strong>&nbsp;: si vous estimez que vos squelettes partagent trop de code HTML,
+n'hésitez pas 
+à extraire des fragments communs, qui seront inclus depuis plusieurs squelettes
+(l'exemple typique est le pied de page).</p>
+
+<h4>Troisième partie&nbsp;: un peu d'objet</h4>
+<p>Le code est mieux structuré avec cette séparation contrôleur/squelette, mais la partie <em>modèle</em>
+ est un peu pauvre avec son simple tableau de tableaux. Si on veut la 
+faire évoluer — par exemple en associant plusieurs images à chaque 
+poème, ou des commentaires, ou en ajoutant des pages pour les auteurs — 
+cela va vite devenir du bricolage difficile à maintenir. On va essayer 
+d'anticiper cela en encapsulant mieux les données dans des objets.
+</p><ol>
+<li>Créer un fichier <code>Poem.php</code> et y définir une classe <code>Poem</code>, avec notamment les getters suivants (qui renvoient tous des chaînes de caractères)&nbsp;:
+<ul>
+<li><code>getTitle()</code>, qui renvoie le titre du poème
+</li><li><code>getAuthor()</code>, qui renvoie le nom de l'auteur
+</li><li><code>getImageUrl()</code>, qui renvoie une URL (relative) vers l'image associée au poème
+</li><li><code>getHtmlText()</code>, qui renvoie le texte du poème en HTML
+</li></ul>
+<strong>Remarque importante</strong>: les instances de <code>Poem</code>
+ donnent des informations plus riches que les sous-tableaux (regarder 
+les deux derniers getters). En effet, il n'est pas logique que ce soient
+ le contrôleur ou le squelette qui connaissent
+les chemins vers les images ou la façon de récupérer le texte des 
+poèmes. Ce sont des détails qui concernent le stockage des données. 
+Comme on est en train de faire un <i>refactoring</i>, on va en profiter pour rendre cela plus propre.
+</li><li>Inclure ce fichier <code>Poem.php</code> au début de <code>donnees.php</code>. Ensuite, toujours dans <code>donnees.php</code>, utiliser le tableau <code>$donnees</code> pour construire un nouveau tableau <code>$donnees_obj</code> avec les mêmes clefs, mais avec pour valeurs des instances de <code>Poem</code> (au lieu d'un sous-tableau). (N'oubliez pas la «&nbsp;remarque importante&nbsp;» plus haut.)
+</li><li>À la fin du fichier, mettre <code>unset($donnees);</code> (pour pouvoir vérifier qu'on ne l'utilise plus), et modifier <code>index.php</code> et <code>squelette.php</code> pour qu'ils utilisent les instances de <code>Poem</code> stockées dans <code>$donnees_obj</code> (en n'oubliant pas la «&nbsp;remarque importante&nbsp;»).
+</li></ol>
+
+<h4>Quatrième partie&nbsp;: transparence du stockage</h4>
+<p>Maintenant qu'on a traité les petits sous-tableaux, on va 
+s'intéresser au grand tableau. Ça ne pose aucun problème d'utiliser un 
+tableau comme «&nbsp;base de données&nbsp;» pour ce minuscule site, mais
+ il n'est pas très satisfaisant que le reste du code dépende de ce choix
+ d'implémentation. Si le site est amené à évoluer, notamment pour 
+présenter un contenu plus dynamique, il risque de nécessiter l'emploi 
+d'une vraie base de données — auquel cas il faudra aller modifier toutes
+ les utilisations de <code>$donnees_obj</code>.
+</p><p>On va donc encapsuler notre tableau dans un objet, qui aura 
+l'avantage de présenter une interface homogène quel que soit le choix 
+concret d'implémentation du stockage. Les clefs de notre tableau (<code>boheme</code>, <code>bois</code>…) vont maintenant être considérés comme des <em>identifiants</em>.
+</p><ol>
+<li>Créer un fichier <code>PoemStore.php</code> et y définir une classe <code>PoemStore</code>, possédant un attribut privé <code>data</code> que le constructeur initialise avec le tableau vide.
+</li><li>Ajouter les méthodes suivantes&nbsp;:
+<ul>
+<li><code>createPoem(string $id, Poem $poem)</code>, qui ajoute un poème à la clef <code>$id</code> de l'attribut <code>data</code>&nbsp;;
+</li><li><code>readPoem(string $id)</code>, qui renvoie le poème associé à la clef <code>$id</code> de l'attribut <code>data</code> si la clef existe, et <code>null</code> sinon (ce choix d'API est en cohérence avec la façon dont on utilise une base de données)&nbsp;;
+</li><li><code>readAllPoems()</code>, qui renvoie un tableau associatif identifiant ⇒ poème — c'est-à-dire le contenu de l'attribut <code>data</code>.
+</li></ul>
+</li><li>Inclure le fichier au début de <code>donnees.php</code>. À la fin, créer une instance <code>$store</code> de <code>PoemStore</code> et utiliser le tableau <code>$donnees_obj</code> pour remplir <code>$store</code>.
+</li><li>Supprimer la variable <code>$donnees_obj</code> (comme fait précédemment pour <code>$donnees</code>) et modifier le reste du code pour qu'il utilise <code>$store</code> et ses méthodes à la place.
+</li></ol>
+<p>À présent, notre code est plus robuste à un changement d'implémentation du stockage&nbsp;: il suffira de changer le contenu de <code>PoemStore.php</code>. Le changement sera transparent pour tout le reste de l'architecture.
+
+
+
+</p><h4>Cinquième partie&nbsp;: recherche dans les poèmes</h4>
+<p>Faire en sorte que le site reconnaisse un paramètre <code>recherche</code>
+ dans l'URL, qui permet de chercher une chaîne de caractères dans le 
+texte des poèmes. Le site doit effectuer une liste de liens vers les 
+poèmes correspondants, ou bien un message du type «&nbsp;Aucun poème ne 
+correspond à votre recherche&nbsp;». (Si nécessaire, la page des 
+résultats de recherche pourra bien sûr faire l'objet d'un squelette 
+spécifique.)
+</p><p>Ajouter un formulaire de recherche sur toutes les pages du site, qui va permettre d'exploiter le paramètre <code>recherche</code>.
+</p><p>Le script <code>index.php</code> commence (un peu…) à grossir&nbsp;: de fait, il est chargé de deux missions orthogonales, à savoir le <em>choix</em> de l'action à effectuer (afficher un poème, la page d'accueil, ou la page des résultats de recherche) et
+l'<em>implémentation</em> de cette action (remplir les trous du 
+squelette, faire la recherche). La première mission est plutôt un 
+travail de «&nbsp;routage&nbsp;» ou d'«&nbsp;aiguillage&nbsp;». Essayez 
+de séparer du contrôleur cette mission de routage.
+</p><p><strong>Pour les rapides</strong>&nbsp;: une façon de vérifier la
+ bonne séparation des responsabilités dans votre architecture est de 
+faire en sorte que le programme principal puisse être appelé soit via 
+HTTP, soit en ligne de commande. <!-- (NB : on avait déjà fait un travail de ce type dans un précédent TP, pour l'automate cellulaire élémentaire). -->
+</p><ul><li>Dans un premier temps, si on se contente de récupérer du 
+HTML dans les deux cas, seul la partie «&nbsp;routage&nbsp;» devrait 
+changer.
+</li><li>A priori on préférerait ne pas avoir de HTML dans le 
+terminal&nbsp;; on ne peut donc pas se contenter de faire inclure des 
+squelettes au contrôleur. Implémenter un système de <code>Displayer</code>s (comme cela a été fait dans de précédents TP) pour gérer les deux situations de manière propre.
+	</li></ul></section>
+
+<!-- ********************************************************************** -->
+
+</section><!-- fin de travail -->
+</main><!-- fin de majeur -->
+
+
+</div> <!-- fermeture du wrapper -->
+
+
+</body></html>

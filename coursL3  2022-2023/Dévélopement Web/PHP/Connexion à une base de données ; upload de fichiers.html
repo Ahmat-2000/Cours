@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>Connexion à une base de données&nbsp;; upload de fichiers</title>
+<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png"> 
+<link rel="stylesheet" href="Connexion%20%C3%A0%20une%20base%20de%20donn%C3%A9es%20;%20upload%20de%20fichiers_files/normalize.css">
+<link rel="stylesheet" type="text/css" href="Connexion%20%C3%A0%20une%20base%20de%20donn%C3%A9es%20;%20upload%20de%20fichiers_files/fiche_alex.css">
+    <style>
+.object {
+  font-style: italic;
+  font-weight: bold;
+  color: #39b583;
+}    </style> 
+</head>
+<body>
+<div id="wrapper">
+
+<header id="tetiere">
+	<div class="logo">
+	<a href="https://ensweb.users.info.unicaen.fr/TW4B/" title="Technologies du Web — Université de Caen" class="logo"><span class="accessibilite">Logo de l'université de Caen</span></a>
+	</div>
+	<div class="titreCours">
+			<h1>Connexion à une base de données&nbsp;; upload de fichiers</h1>
+						<p class="diplome">Licence Informatique 3ème année</p>
+			<p class="enseignants">Alexandre Niveau — Jean-Marc Lecarpentier</p>
+	</div>
+	<section class="contexte">
+	<h2><a href="https://ensweb.users.info.unicaen.fr/TW4B/">Enseignement des technologies du Web</a></h2>
+		<ul>
+			<li>Module&nbsp;: <a href="https://ensweb.users.info.unicaen.fr/TW4B/">TW4B : Programmation d’applications web avancées</a></li>
+		<li><a href="http://www.unicaen.fr/">Université de Caen</a>, année&nbsp;2022-2023</li>
+		</ul>
+	</section><!-- fin de contexte -->
+		<div class="clearer">&nbsp;</div>
+</header><!-- fin de tetiere -->
+
+<main id="majeur">
+
+
+
+<!--  ##########  introduction  ########  -->
+
+<section class="bloc"><h2>Connexion à une base de données&nbsp;; upload de fichiers</h2>
+<h3>Notes de cours</h3>
+<ul>
+<li><a class="titrePres" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/pdo/">Interaction PHP-SGBD avec PDO</a>
+<ul>
+</ul></li>
+<li><a class="titrePres" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/upload/">Upload de fichiers</a>
+<ul>
+</ul></li>
+</ul>
+</section><!-- fin de l'introduction -->
+<section class="bloc">
+<h2>Travail personnel</h2><section>
+<h3>Objectifs</h3>
+<p>
+Le premier exercice vous guide dans l'utilisation d'une base de données dans
+le cadre de l'architecture MVCR. Le deuxième, optionnel, est une application directe de l'upload de fichiers.
+<!-- 
+<ul>
+<li>Manipuler une base de données en lecture depuis un script PHP avec PDO. 
+<li>Se confronter à l'écriture de scripts pour un site de plusieurs pages.
+</ul>
+-->
+<!--
+<p>Le premier exercice de ce TP porte purement sur PDO,
+sans souci architectural. Le second, qui a déjà été proposé comme
+exercice optionnel dans un précédent TP,
+est une introduction à l'architecture d'un site web.
+Il est <strong>vivement conseillé</strong> de l'avoir terminé avant les
+cours de la semaine prochaine, qui introduiront l'architecture
+de manière plus formelle.
+</p>
+-->
+</p></section>
+	<section class="exo-among-others exercice" id="exo-01">
+		<h3>Exercice&nbsp;1&nbsp;— Utilisation d’une base de données dans MVCR	<a href="#exo-01" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+		<p>Dans cet exercice, on implémente simplement
+l'interface <code>AnimalStorage</code> <small>(ou celle correspondant à vos <i class="object">objets</i>)</small>
+en utilisant une vraie base de données MySQL.
+J'en profite pour préciser quelques détails annexes,
+mais sur le fond il n'y a pas de surprise, c'est assez direct.</p>
+<ol>
+<li>Pour commencer, si ce n'est déjà fait, faire en sorte
+que l'instance de <code>AnimalStorage</code>
+manipulée par le contrôleur soit créée par <code>animaux.php</code>
+et passée comme argument au <code>main</code> du routeur, qui l'utilisera
+pour construire le contrôleur.
+L'idée est que la décision du type de stockage utilisé doit être
+prise par <code>animaux.php</code>, c'est-à-dire
+le véritable point d'entrée de l'application, pas quelque part au milieu du code.</li>
+<li>Créer une table dans une de vos bases de données MySQL qui contiendra
+les animaux/<i class="object">objets</i>. Voir <a href="https://faq.info.unicaen.fr/bdd">cette page de la FAQ du département</a> pour savoir comment accéder à vos bases. À noter en particulier, votre mot de passe initial pour MySQL
+est dans le répertoire <code>Protected</code> de
+votre répertoire par défaut (<code>/home/etudiants/LOGIN/Protected/mysql.txt</code>).
+Vous pouvez utiliser (ou adapter)
+<a href="https://ensweb.users.info.unicaen.fr/TW4B/tp/mvcr/animals.sql">ce fichier</a>, qui contient le code SQL
+permettant de créer une table <code>animals</code> avec les trois animaux de départ. 
+<strong>Le plus simple</strong> pour ajouter la table à votre BD est d'utiliser la fonction d'import sur l'application phpMyAdmin, accessible à
+<code>https://dev-<i>LOGIN</i>.users.info.unicaen.fr/phpmyadmin</code>. Attention, il faudra a priori créer une base, et tous les noms ne sont pas autorisés&nbsp;!
+</li>
+<li>Créer une classe <code>AnimalStorageMySQL</code> dans <code>src/model</code>
+qui implémente <code>AnimalStorage</code>. Pour commencer, on construira l'instance
+de PDO dans le constructeur, et toutes les méthodes
+enverront une exception avec un message du genre «&nbsp;not yet implemented&nbsp;».
+</li><li>Remplacer l'instance de <code>AnimalStorageFile</code> que manipule le contrôleur
+par une instance de <code>AnimalStorageMySQL</code>&nbsp;; normalement, 
+il doit suffire de modifier <code>animaux.php</code>.
+Aller sur la page affichant la liste des animaux/<i class="object">objets</i>&nbsp;:
+vous devez voir votre exception «&nbsp;not yet&nbsp;implemented&nbsp;».
+</li><li>On va implémenter <code>readAll()</code> en premier&nbsp;; mais
+ avant d'écrire la vraie requête,
+écrire une requête syntactiquement fausse, par exemple <code>SELECTE ETOILE;</code>.
+Retourner sur la page affichant la liste des animaux/<i class="object">objets</i>&nbsp;:
+vous devez toujours avoir une exception, mais cette fois due à une erreur de syntaxe SQL.
+Si ce n'est pas le cas, c'est que vous n'avez pas <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/pdo/#gestion-des-erreurs">activé le bon mode de gestion des erreurs</a>&nbsp;! Faites-le avant de continuer&nbsp;!
+</li>
+<li>À présent, écrire la requête correcte dans <code>readAll()</code> pour récupérer tous les animaux/<i class="object">objets</i> de la base.
+Attention, il ne suffira pas de renvoyer le résultat&nbsp;: <code>readAll()</code> est supposée renvoyer un tableau d'instance de la classe <code>Animal</code>. C'est à vous de créer ce tableau, à partir des données «&nbsp;brutes&nbsp;» renvoyées par PDO.
+</li><li>Retourner sur la page affichant la liste des animaux/<i class="object">objets</i>&nbsp;:
+ elle doit maintenant fonctionner comme avant. Évidemment, si vous 
+cliquez sur l'un deux, la page individuelle ne fonctionnera pas puisque 
+la méthode <code>read($id)</code> n'est pas encore implémentée. Pas d'urgence&nbsp;: continuez d'abord l'exercice.
+</li><li>Il n'est pas propre de construire l'instance de PDO dans <code>AnimalStorageMySQL</code>&nbsp;:
+si on a plusieurs classes de ce type, on va construire plusieurs instances de PDO et donc ouvrir
+plusieurs connexions à la BD, ce qui est inefficace.
+Modifier le code pour que l'instance de PDO soit créée dans <code>animaux.php</code>
+et passée en argument au constructeur de <code>AnimalStorageMySQL</code>.
+</li><li>Pour l'instant, on a mis les paramètres
+de connexion à la BD dans <code>animaux.php</code>, notamment le mot de passe.
+C'est embêtant si on veut montrer notre code ou le mettre sur un dépôt.
+Créer un fichier <code>mysql_config.php</code> dans <strong>le répertoire <code>private</code>
+qui se trouve à la racine de votre compte web</strong> (à côté de <code>www-prod</code> et
+<code>www-dev</code>).
+Y déclarer des constantes <code>MYSQL_HOST</code>, <code>MYSQL_PORT</code>,
+<code>MYSQL_DB</code>, <code>MYSQL_USER</code> et <code>MYSQL_PASSWORD</code>.</li>
+<li>Dans <code>animaux.php</code>, ajouter <code>require_once('/users/<i>LOGIN</i>/private/mysql_config.php');</code> et utiliser les constantes pour construire l'instance de PDO.
+L'intérêt est que le fichier <code>mysql_config.php</code> est inaccessible depuis le web, ce qui garantit une bonne sécurité pour vos identifiants.
+Vos scripts PHP y ont accès car ils sont sur la même machine.
+</li>
+<li>Vérifier que la page avec la liste fonctionne toujours, puis implémenter la méthode <code>read($id)</code>
+de <code>AnimalStorageMySQL</code>.
+</li><li>Vérifier que les pages <code>animaux.php?id=1</code>, 
+<code>animaux.php?id=2</code> et
+<code>animaux.php?id=3</code> (ou équivalentes) fonctionnent à nouveau.</li>
+<li>Que se passe-t-il si vous utilisez l'URL <code>animaux.php?id=bla'bla</code> (avec une apostrophe au milieu)&nbsp;? Normalement, votre site devrait vous dire que l'animal/<i class="object">objet</i> n'existe pas. S'il y a une erreur SQL,
+c'est très probablement que votre code est vulnérable aux injections SQL. Modifier le code de <code>read($id)</code> pour <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/pdo/#requetes-preparees-principe">utiliser des requêtes préparées</a>.
+</li><li>Implémenter ensuite les autres 
+méthodes de
+<code>AnimalStorageMySQL</code>, toujours en prenant soin d'utiliser des requêtes préparées.</li>
+</ol>
+
+	</section>
+
+<!-- ********************************************************************** -->
+
+	<section class="exo-among-others exercice" id="exo-02">
+		<h3>Exercice&nbsp;2 (optionnel)&nbsp;— Dépôt de fichiers	<a href="#exo-02" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+		<div class="info">
+Si vous êtes en difficulté et/ou êtes en retard sur le TP MVCR, laissez tomber cet exercice. <br><strong>NB:</strong> l’upload de fichiers ne sera pas au programme du TP noté.</div>
+<p>Créer un script affichant un formulaire permettant de déposer une image sur le serveur.
+Après le dépôt, la page devra montrer l'image déposée
+ pendant
+toute la session de l'internaute <small>(on parle bien de session au sens PHP&nbsp;: pas d'authentification ici&nbsp;!)</small>.</p>
+<p>Attention, chaque internaute devra avoir sa propre image&nbsp;: vous 
+pouvez tester facilement en utilisant deux navigateurs différents.
+En particulier, que se passe-t-il si deux internautes déposent une image
+ de même nom&nbsp;?</p>
+	</section>
+
+<!-- ********************************************************************** -->
+
+</section><!-- fin de travail -->
+</main><!-- fin de majeur -->
+
+
+</div> <!-- fermeture du wrapper -->
+
+
+</body></html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<title>Le web, c'est quoi et comment ça marche&nbsp;? — Alexandre Niveau — Université de Caen Normandie</title>
+
+	<meta name="author" content="Alexandre Niveau">
+	<meta name="company" content="Université de Caen">
+	<meta name="viewport" content="initial-scale=1">
+
+
+	<link rel="stylesheet" href="Le%20web,%20c'est%20quoi%20et%20comment%20%C3%A7a%20marche%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/normalize.css">
+	<link rel="stylesheet" href="Le%20web,%20c'est%20quoi%20et%20comment%20%C3%A7a%20marche%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/slides_alex.css">
+	<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png">
+
+</head>
+<body>
+<header class="title slide">
+	<h1>Le web, c'est quoi et comment ça marche&nbsp;?</h1>
+	<div class="auteur">Alexandre Niveau</div>
+	<div class="affiliation">GREYC — Université de Caen</div>
+	<div class="proj_switch"><button title="basculer entre mode normal et mode projection (raccourci clavier «&nbsp;m&nbsp;»)">Changer de mode</button></div>
+</header>
+
+<div id="contenu">
+<div id="presentation" class="hidenotes">
+
+
+
+<section class="slide">
+<h2>Généralités sur Internet</h2>
+<figure class="sidecol">
+<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/www/img/internet.jpg">
+<img src="Le%20web,%20c'est%20quoi%20et%20comment%20%C3%A7a%20marche%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/internet_thumb.jpg" alt="Carte partielle d'Internet en 2005">
+</a>
+<figcaption>
+Carte partielle d'Internet en 2005.
+<br>
+<small>Source&nbsp;: <a href="https://commons.wikimedia.org/w/index.php?curid=1538544">Wikimedia</a>, <a title="Creative Commons Attribution 2.5" href="http://creativecommons.org/licenses/by/2.5">CC BY 2.5</a>.</small>
+</figcaption>
+</figure>
+<p>Internet est un réseau de réseaux informatiques</p>
+<p>Une machine connectée à un de ces réseaux est «&nbsp;sur Internet&nbsp;»</p>
+<p>Elle est identifiée par une <em>adresse IP</em>,
+comme <code>212.65.87.234</code></p>
+<p>Elle peut communiquer avec n'importe quelle autre machine connectée
+si elle connaît son adresse IP</p>
+<p>Il y a un «&nbsp;annuaire&nbsp;» d'adresses IP, le DNS, qui permet de donner un <em>nom de domaine</em> aux machines
+(comme <code>google.com</code> ou <code>www.unicaen.fr</code>)</p>
+<small>Attention, ces généralités sont outrageusement simplifiées&nbsp;!</small>
+</section>
+
+<section class="slide">
+<h2>Internet ≠ Web</h2>
+<div class="p">Dans le langage courant, termes plus ou moins synonymes…
+Mais la distinction est importante&nbsp;:
+	<ul>
+	<li>Internet est en quelque sorte une infrastructure</li>
+	<li>Le web est une application qui fonctionne grâce à Internet</li>
+	<li>Les jeux vidéo massivement multijoueurs en sont d'autres</li>
+	</ul>
+</div>
+<p>Distinction floue pour le grand public, car les applications sur 
+Internet clairement séparées du web sont de plus en plus rares (exemple 
+du courrier électronique)</p>
+</section>
+
+<section class="slide">
+<h2>World Wide Web</h2>
+<p>Définition&nbsp;: un système de documents hypertextes (liés entre eux) fonctionnant sur l'Internet de façon décentralisée</p>
+<p>Mis au point par Tim Berners-Lee (CERN) entre 1989 et 1991</p>
+<div class="p">Constitué de trois éléments fondamentaux&nbsp;:
+	<ul>
+	<li>un système d'identificateurs uniques pour les documents (URL)</li>
+	<li>un langage de balisage pour les documents (HTML)</li>
+	<li>un protocole de transfert de documents (HTTP)</li>
+	</ul>
+</div>
+</section>
+
+<section class="slide">
+<h2>Comment ça marche (en gros)</h2>
+<p>Jean-Marcel est sur le web. Il clique sur un lien vers le blog de Toto.</p>
+<p>Le navigateur voit que le lien mène à l'URL <code>http://www.toto.fr/blog/posts/243.html</code>. Il va donc essayer de télécharger la page correspondante.</p>
+<p>Le navigateur analyse l'URL et voit que la machine qui connaît le contenu de cette page (le <em>serveur web</em>) s'appelle <code>www.toto.fr</code>. Il demande l'adresse IP de cette machine à un serveur DNS, qui lui répond <code>213.186.33.4</code>.</p>
+<p>Il envoie un message HTTP à cette machine pour lui demander le contenu de la page <code>/blog/posts/243.html</code></p>
+<p>La machine lui envoie un message HTTP en réponse, qui contient le contenu de la page. Ce contenu est écrit dans le langage HTML.</p>
+<p>Le navigateur de Jean-Marcel analyse le HTML pour mettre la page en forme, et affiche le résultat.</p>
+</section>
+
+<section class="slide">
+<h2>Principes de base du web</h2>
+Plus formellement&nbsp;: le web est une application <em>client-serveur</em>.
+<div class="p">
+N'importe quelle machine connectée à Internet peut être un serveur web&nbsp;:
+	<ul>
+	<li>elle écoute sur son port 80</li>
+	<li>elle interprète les requêtes HTTP reçues</li>
+	<li>elle renvoie les réponses HTTP, contenant du HTML, au demandeur</li>
+	</ul>
+</div>
+<div class="p">Un client est un navigateur web (comme Firefox ou Chrome)&nbsp;:
+	<ul>
+	<li>il envoie des requêtes HTTP aux serveurs</li>
+	<li>il interprète le HTML reçu en réponse et met en forme le document</li>
+	</ul>
+</div>
+<p>Les pages HTML contiennent des <strong>liens unidirectionnels</strong> vers d'autres pages,
+pas forcément sur le même serveur,
+identifiées par une URL</p>
+<p>Lors d'un clic sur un lien, le navigateur web effectue la requête HTTP
+correspondant à l'URL</p>
+</section>
+
+<section class="slide">
+<h2>HTTP</h2>
+<p><i lang="en">HyperText Transfer Protocol</i>&nbsp;; c'est le langage que parlent le serveur web et le navigateur web pour se communiquer les pages</p>
+<p>Élément le plus fondamental du web, et aussi le plus caché pour le grand public</p>
+<div class="p">Pas complètement cependant&nbsp;:
+	<ul>
+	<li>son nom apparaît au début des URL (mais les navigateurs actuels ne l'affichent plus)</li>
+	<li>les célèbres <i>cookies</i> sont un élément du protocole</li>
+	<li>certains codes de statut sont bien connus… <span class="clicktosee">(erreur 404)</span></li>
+	</ul>
+</div>
+<p>HTTPS est la version sécurisée de HTTP&nbsp;: les messages sont 
+chiffrés, et donc illisibles pour quiconque les intercepterait entre le 
+client et le serveur <span class="note">ex: wifi public</span></p>
+</section>
+
+<section class="slide">
+<h2>Requête HTTP</h2>
+<div class="p">Structure d'une requête HTTP&nbsp;:
+	<ul>
+	<li>Une ligne de requête avec une commande (<i>request method</i>),
+	un chemin et la version du protocole</li>
+	<li>Plusieurs lignes de champs d'en-tête</li>
+	<li>Une ligne vide</li>
+	<li>Le corps du message (optionnel)</li>
+	</ul>
+</div>
+<p>Commandes&nbsp;: GET, POST, HEAD, PUT, DELETE…</p>
+<p>Champs d'en-tête&nbsp;: Host, User-Agent, Accept… seul Host est obligatoire</p>
+<pre class="src "><code>GET /blog/posts/243.html HTTP/1.1
+Host: www.toto.fr
+Accept: text/html
+Accept-Charset: utf-8
+Connection: keep-alive
+</code></pre>
+</section>
+
+<section class="slide">
+<h2>Réponse HTTP</h2>
+<div class="p">Structure d'une réponse HTTP&nbsp;:
+	<ul>
+	<li>Une ligne de statut avec le <i>status code</i> et un petit message explicatif</li>
+	<li>Plusieurs lignes de champs de réponse</li>
+	<li>Une ligne vide</li>
+	<li>Le corps du message (optionnel), typiquement le code HTML de la page</li>
+	</ul>
+</div>
+<p>Codes&nbsp;: 200 (OK), 404 (not found), 500 (internal server error)…</p>
+<p>Champs de réponse&nbsp;: Content-type, Last-Modified, Location…</p>
+
+<pre class="src "><code>HTTP/1.1 200 OK
+Date: Mon, 05 Jan 2015 12:12:12 GMT
+Last-Modified: Wed, 02 Jan 2013 18:18:18 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Length: 323
+Connection: close
+
+<span class="html-tag">&lt;html&gt;</span>
+  <span class="html-tag">&lt;head&gt;</span> <span class="html-tag">&lt;title&gt;</span>Le blog de Toto<span class="html-tag">&lt;/title&gt;</span> <span class="html-tag">&lt;/head&gt;</span>
+  <span class="html-tag">&lt;body&gt;</span> <span class="html-tag">&lt;p&gt;</span>Bienvenue sur mon blog !<span class="html-tag">&lt;/p&gt;</span> <span class="html-tag">&lt;/body&gt;</span>
+<span class="html-tag">&lt;/html&gt;</span></code></pre>
+
+<div class="note">
+ faire une démo avec netcat&nbsp;:
+<code>netcat example.com 80 &lt;demo/requete.txt</code>
+ça devrait donner qqch comme <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/www/demo/reponse.txt"><code>demo/reponse.txt</code></a>
+</div>
+
+</section>
+
+
+
+<section class="slide">
+<h2>URL</h2>
+<p><i lang="en">Uniform Resource Locator</i>&nbsp;: adresse d'une <em>ressource</em>. Sur le web, c'est généralement une page.</p>
+
+<!--
+<code>urn:isbn:0-486-27557-4</code> identifie sans ambiguïté une édition spécifique de <em>Roméo et Juliette</em>
+</li>
+
+<li><b>U</b>niform <b>R</b>esource <b>L</b>ocator : la <em>ressource</em> est localisée
+<br><code>file:///home/username/books/RomeoAndJuliet.pdf</code> identifie le livre électronique enregistré sur le disque dur local
+</li>
+-->
+
+<div class="p">Une URL contient toutes les informations nécessaires
+pour récupérer la ressource. Exemple&nbsp;: 
+	<code>https://ensweb.users.info.unicaen.fr/cours/HTML/fiche.php</code>
+	<ul>
+		<li>le protocole (<code>http://</code> ou <code>https://</code> pour
+	des pages web, <code>file://</code> pour un fichier local…)</li>
+  	<li>le nom de domaine du serveur (ici <code>ensweb.users.info.unicaen.fr</code>&nbsp;:
+c'est la «&nbsp;machine&nbsp;» <code>ensweb</code> du domaine <code>users.info.unicaen.fr</code>.
+<small>Les serveurs web s'appellent souvent <code>www</code> pour des raisons historiques</small>)</li>
+  	<li>le chemin vers le fichier auquel on accède (ici <code>/cours/HTML/fiche.php</code>)</li>
+	</ul>
+</div>
+<!-- J'enlève car la distinction semble vraiment floue de nos jours
+<p>URI <i lang="en">(uniform resource identifier)</i> est une généralisation d'URL, qui permet d'identifier des ressources sans indiquer comment y accéder</p>
+-->
+</section>
+
+
+
+<section class="slide">
+<h2>HTML</h2>
+<p><i lang="en">HyperText Markup Language</i>, «&nbsp;langage de balisage hypertexte&nbsp;»&nbsp;: c'est le langage dans lequel les pages web sont écrites</p>
+<div class="p">Simplement du texte avec des <em>balises</em>&nbsp;: des caractères spéciaux qui indiquent la <em>sémantique</em> (le sens) des éléments du contenu,
+	<ul>
+	<li>structure de la page&nbsp;: blocs, titres…</li>
+	<li>forme du texte&nbsp;: mots importants, paragraphes, listes…</li>
+	<li>contenu non textuel&nbsp;: liens, images…</li>
+	</ul>
+</div>
+<p>Le HTML est interprété différemment suivant le type de client <i lang="en">(user agent)</i></p>
+</section>
+
+<section class="slide">
+<h2>Web et <i>User Agent</i></h2>
+<div class="p">Un des principes de base du web est son accessibilité&nbsp;:
+l'information peut être récupérée de nombreuses façons
+<ul>
+	<li><em>navigateurs visuels</em>&nbsp;: Firefox, Chrome, IE, Opera…</li>
+  <li><em>navigateurs en mode texte</em>&nbsp;: Lynx, Links, w3m… Affichent uniquement le texte de la page, avec une mise en forme minimale</li>
+  <li><em>navigateurs audio</em>&nbsp;: pour les mal-voyants ou les 
+situations hors écran. Lisent le texte et donnent des informations sur 
+la structure, les images, etc.</li>
+  <li><em>robots</em>&nbsp;: extraient de l'information à partir du contenu des documents. Moteurs de recherche, analyseurs linguistiques, etc.</li>
+</ul>
+</div>
+</section>
+
+<section class="slide note">
+démo : montrer comment on se connecte sur sandbox.info.unicaen.fr,
+bidouiller la page
+</section>
+
+<section class="slide">
+<h2>Autres constituants du web</h2>
+<p>Le HTML représente le contenu d'une page et sa sémantique&nbsp;; pour
+ contrôler son apparence visuelle, un autre langage est utilisé, <em>CSS</em></p>
+<div class="p">Langages de programmation côté serveur&nbsp;:
+	<ul>
+	<li>Aux débuts du web, le contenu des sites étaient statiques&nbsp;: l'auteur écrivait des pages HTML et les gens les lisaient.</li>
+	<li>Très rapidement sont apparus les sites <em>dynamiques</em>, permettant aux internautes de modifier leur contenu.</li>
+	<li>Pour cela, le serveur web doit utiliser une <em>base de données</em> pour stocker les informations qui changent…</li>
+	<li>… et il doit sans cesse générer des pages mises à jour avec les nouvelles informations.</li>
+	<li>Cela nécessite un «&nbsp;langage de programmation côté 
+serveur&nbsp;». Le plus connu est PHP, mais il est aussi possible 
+d'utiliser Java (J2EE), Python (Django), Ruby (Ruby on Rails), Node…</li>
+	</ul>
+</div>
+<p>Une page HTML-CSS est très peu interactive. Même si le site est 
+dynamique, le contenu n'est pas directement manipulable (par ex., Google
+ Maps ne pourrait pas exister uniquement en HTML-CSS). Le langage 
+utilisé pour rendre les pages interactives s'appelle <em>JavaScript</em></p>
+</section>
+
+<section class="slide">
+<h2>Normalisation</h2>
+<div class="p">W3C World Wide Web Consortium <a href="http://w3.org/">w3.org</a>
+<ul>
+  <li>Créé par Tim Berners-Lee, l'inventeur du web
+  </li><li>Processus de normalisation des technologies du web</li>
+</ul>
+</div>
+<div class="p">WHATWG Web Hypertext Application Technology Working Group <a href="http://www.whatwg.org/">whatwg.org</a>
+  <ul><li>Créé par les fabricants de navigateurs</li>
+  <li>Pour se libérer du W3C, dont le processus est jugé trop lent</li></ul>
+</div>
+<p>Juillet 2012 : scission des travaux sur HTML5 entre le W3C et WHATWG
+(articles <a href="http://techcrunch.com/2012/07/22/html5-work-splits-into-living-and-snapshot-standards-developers-need-not-standard/">Techcrunch</a>, <a href="http://www.lemonde.fr/technologies/article/2012/07/24/le-html5-menace-par-un-schisme_1737757_651865.html">Le Monde</a>)
+</p>
+<p>Les standards du W3C sont plutôt <em>prescriptifs</em> (ils décrivent comment les choses doivent être),
+tandis que ceux du WHATWG (<i>living standard</i>) sont plutôt <em>descriptifs</em>
+(ils décrivent comment les choses sont)</p>
+</section>
+
+
+
+</div> <!-- fin #presentation -->
+
+<aside id="liens">
+<h3>Spécifications et normes</h3>
+<ul>
+<li><a href="https://tools.ietf.org/html/rfc7230">RFC&nbsp;7230</a> et suivantes&nbsp;: Hypertext Transfer Protocol (HTTP/1.1)</li>
+<li><a href="https://tools.ietf.org/html/rfc3986">RFC&nbsp;3986</a> Uniform Resource Identifier (URI): Generic Syntax</li>
+</ul>
+<h3>Sites</h3>
+<ul>
+<li><a href="http://w3c.org/">Site du W3C</a> World Wide Web Consortium</li>
+</ul>
+<h3>Tutoriels</h3>
+<ul>
+<li><a href="https://howdns.works/">How DNS works</a> (en bande dessinée)</li>
+</ul>
+<h3>Lectures complémentaires</h3>
+<ul>
+<li><a href="http://www.ted.com/talks/lang/fr/tim_berners_lee_on_the_next_web.html">Vidéo TED, Tim Berners-Lee sur le futur web</a></li>
+</ul>
+
+</aside><!-- fin #liens -->
+</div> <!-- fin #contenu -->
+
+<footer class="license">
+	<a class="icone" rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+		<img alt="Licence Creative Commons CC-BY" style="border-width:0" src="Le%20web,%20c'est%20quoi%20et%20comment%20%C3%A7a%20marche%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/88x31.png">
+	</a>
+	<p class="texte">
+		Ce cours est mis à disposition selon les termes de la <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">licence Creative Commons Attribution 4.0 International</a>.
+	</p></footer>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+	function toggleProj() {
+		const currentParams = new URLSearchParams(window.location.search);
+		if (currentParams.get('mode') === 'proj') {
+			console.log('found proj');
+			document.documentElement.classList.remove('proj');
+			currentParams.delete('mode');
+		} else {
+			console.log('not found proj');
+			document.documentElement.classList.add('proj');
+			currentParams.set('mode', 'proj');
+		}
+		window.history.pushState({}, '', '?' + currentParams + window.location.hash);
+	};
+
+	var buttons = document.querySelectorAll('.proj_switch button'), i;
+	for (i = 0; i < buttons.length; ++i) {
+		buttons[i].addEventListener("click", toggleProj);
+	}
+
+	document.addEventListener("keypress", function(e) {
+		if (e.target == document.body && String.fromCharCode(e.keyCode || e.charCode) == "m") {
+			toggleProj();
+		}
+	});
+
+	/* ajout de liens aux titres qui ont un id */
+	let slidesWithId = document.querySelectorAll('.slide[id]');
+	for (const slide of slidesWithId) {
+		const link = document.createElement('a');
+		link.href = '#' + slide.id;
+		link.classList.add('slide-link');
+		link.title = 'Lien vers ce slide';
+		link.textContent = '#';
+		slide.insertAdjacentElement('afterbegin', link);
+	}
+
+
+});
+</script>
+
+
+</body></html>

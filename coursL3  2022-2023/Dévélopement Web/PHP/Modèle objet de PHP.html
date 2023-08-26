@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>Modèle objet de PHP</title>
+<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png"> 
+<link rel="stylesheet" href="Mod%C3%A8le%20objet%20de%20PHP_files/normalize.css">
+<link rel="stylesheet" type="text/css" href="Mod%C3%A8le%20objet%20de%20PHP_files/fiche_alex.css">
+</head>
+<body>
+<div id="wrapper">
+
+<header id="tetiere">
+	<div class="logo">
+	<a href="https://ensweb.users.info.unicaen.fr/TW4B/" title="Technologies du Web — Université de Caen" class="logo"><span class="accessibilite">Logo de l'université de Caen</span></a>
+	</div>
+	<div class="titreCours">
+			<h1>Modèle objet de PHP</h1>
+						<p class="diplome">Licence Informatique 3ème année</p>
+			<p class="enseignants">Alexandre Niveau — Jean-Marc Lecarpentier</p>
+	</div>
+	<section class="contexte">
+	<h2><a href="https://ensweb.users.info.unicaen.fr/TW4B/">Enseignement des technologies du Web</a></h2>
+		<ul>
+			<li>Module&nbsp;: <a href="https://ensweb.users.info.unicaen.fr/TW4B/">TW4B : Programmation d’applications web avancées</a></li>
+		<li><a href="http://www.unicaen.fr/">Université de Caen</a>, année&nbsp;2022-2023</li>
+		</ul>
+	</section><!-- fin de contexte -->
+		<div class="clearer">&nbsp;</div>
+</header><!-- fin de tetiere -->
+
+<main id="majeur">
+
+
+
+<!--  ##########  introduction  ########  -->
+
+<section class="bloc"><h2>Modèle objet de PHP</h2>
+<h3>Notes de cours</h3>
+<ul>
+<li><a class="titrePres" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/php/complements.php">Introduction à PHP&nbsp;: compléments</a>
+<ul>
+<li>Divers détails spécifiques au langage</li>
+<li>Lecture d’un fichier</li>
+</ul></li>
+<li><a class="titrePres" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/oophp">Programmation objet avec PHP</a>
+<ul>
+</ul></li>
+</ul>
+</section><!-- fin de l'introduction -->
+<section class="bloc">
+<h2>Travail personnel</h2><section>
+<h3>Objectifs</h3>
+<p>
+On continue à manipuler PHP et on aborde les aspects objets.
+</p></section>
+	<section class="exo-among-others exercice" id="exo-01">
+		<h3>Exercice&nbsp;1&nbsp;— Analyse d’un fichier CSV	<a href="#exo-01" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+		<div class="info">
+
+<strong>Attention</strong>, ne perdez pas trop de temps en TP sur ce 
+premier exercice. Si vous y avez passé plus de 45 minutes, passez au 
+suivant (rien ne vous empêche de revenir sur le premier en-dehors du 
+TP).</div>
+<p>Dans cet exercice on va manipuler un fichier CSV avec des données sur
+ les prénoms donnés en France. Ce fichier est mis à disposition sur <a href="https://www.data.gouv.fr/fr/datasets/ficher-des-prenoms-de-1900-a-2018/">le portail des données ouvertes du gouvernement</a>.
+</p><ol>
+<li>Télécharger <a href="https://ensweb.users.info.unicaen.fr/TW4B/tp/php-csv/dpt2018_csv.zip">le fichier des données par département de naissance</a> <small>(au cas où, je mets le <a href="https://www.data.gouv.fr/fr/datasets/r/cf9bbc69-07f1-4246-b643-3477c76794d1">lien du fichier sur le portail</a>)</small>. Décompressez l'archive et placez le fichier CSV quelque part.
+</li><li>Regarder un peu le contenu du fichier (attention, il fait 75 Mo : vous pouvez utiliser par exemple <code>less</code> en ligne de commande pour que ça reste fluide),
+et comprendre le contenu. Par exemple, la ligne <code>1;AARON;2005;14;4</code> signifie qu'en 2005, dans le Calvados, sont nés quatre bébés assignés garçons qui ont été prénommés Aaron.
+Voir aussi <a href="https://www.insee.fr/fr/statistiques/2540004#documentation">la doc sur le site</a>.
+</li><li>On va manipuler ces données depuis un script PHP, en convertissant le fichier CSV en un tableau de tableaux. Chaque
+élément du tableau correspondra à une ligne du fichier, et sera un tableau associatif avec comme clefs <code>sexe, prenom, annee, departement, nombre</code>.
+
+<p>
+Créer un script <code>prenoms.php</code>&nbsp;; si vous êtes vraiment à 
+l'aise, vous pouvez essayer d'écrire le code pour lire le fichier et
+construire le tableau de données décrit au paragraphe précédent, mais ce
+ n'est pas la priorité du TP. Pour gagner du temps vous pouvez 
+simplement copier le code suivant&nbsp;:
+</p><pre class="src" style="font-size: .7em">// ouvrir le fichier en lecture
+$fp = fopen('dpt2018.csv', 'r');
+
+// initialiser un tableau pour y mettre les données extraites du fichier
+$data = array();
+
+// ATTENTION la 1ère ligne du fichier contient les entêtes:
+// sexe;preusuel;annais;dpt;nombre
+// Il ne faut pas l'ajouter au tableau de données.
+// Pour cela, on lit 1 ligne avant de commencer la boucle.
+$line = fgets($fp);
+
+// lire ligne à ligne
+while (($line = fgets($fp)) !== false) {
+    // enlever le caractère de fin de ligne
+    $line = trim($line);
+
+    // extraire les infos (séparateur «;»)
+    // $infos est donc un tableau avec sexe, prénom, année, département, nombre
+    $infos = explode(";", $line);
+    // ajouter un élément au tableau $data
+    // les champs sexe, annee et nombre sont convertis en int,
+    // mais pas departement (par ex Corse a 2 départements 2A et 2B...)
+    $data[] = [
+        "sexe" =&gt; (int) $infos[0],
+        "prenom" =&gt; $infos[1],
+        "annee" =&gt; (int) $infos[2],
+        "departement" =&gt; $infos[3],
+        "nombre" =&gt; (int) $infos[4],
+    ];
+}
+// fermer le fichier
+fclose($fp);
+</pre>
+</li><li>Regarder le contenu du tableau résultant <code>$data</code> (avec <code>var_export</code> ou une autre fonction d'affichage debug) et s'assurer de bien en comprendre la structure. 
+</li><li>Utiliser ce tableau pour répondre aux questions suivantes.
+<ol>
+<li>Combien d'enfants sont nés (en France) sur la période&nbsp;?
+</li><li>Combien d'enfants sont nés dans le Calvados (14) sur la période&nbsp;?
+</li><li>Combien d'enfants ont été appelés David sur la période&nbsp;?
+<!-- <li>Combien d'enfants ont été appelés Zeinab en 2012 ? -->
+</li><li>Quel était le prénom féminin le plus fréquent dans la Manche (50) en 1978&nbsp;?
+</li><li>Combien de prénoms différents le fichier contient-il&nbsp;?
+<!--
+<li>Quel était le prénom féminin le plus fréquent dans toute la France en 1996 ?
+-->
+</li><li>Quel prénom a été le plus donné sur la période&nbsp;?
+</li><li><strong>Optionnel:</strong> Combien d'enfants ont eu un nom 
+commençant par un ou plusieurs «&nbsp;A&nbsp;» et se terminant par un ou
+ plusieurs «&nbsp;Z&nbsp;»&nbsp;?
+</li><li><strong>Optionnel:</strong> Combien y a-t-il eu de naissances à la Guadeloupe (971) sur la période&nbsp;? <small>NB:
+ les données ne permettent de répondre qu'approximativement à cette 
+question, car les prénoms donnés moins de 3 fois dans une année sont 
+rassemblés dans l'année spéciale XXXX</small>
+</li><li><strong>Optionnel:</strong> Quel département a la plus grande 
+diversité de prénoms (ratio du nombre de prénoms distincts donnés sur la
+ période et du nombre de naissances)&nbsp;?
+</li></ol>
+</li></ol>
+
+
+
+
+
+
+
+
+	</section>
+
+<!-- ********************************************************************** -->
+
+	<section class="exo-among-others exercice" id="exo-02">
+		<h3>Exercice&nbsp;2&nbsp;— Rule 110, un automate cellulaire élémentaire	<a href="#exo-02" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+		<div class="info">
+L’énoncé de cet exercice est long, mais c’est parce qu’il est très guidé&nbsp;!</div>
+
+<p>Dans cet exercice on va programmer <a href="https://en.wikipedia.org/wiki/Rule_110">l'<em>automate cellulaire élémentaire</em> appelé «&nbsp;rule 110&nbsp;»</a> <small>(un des systèmes les plus simples
+qui soit <em>Turing-universel</em>, c'est-à-dire capable de simuler n'importe quel calcul)</small>.
+
+</p><h4>Contexte</h4>
+<h5>Automate cellulaire élémentaire</h5>
+<p>On peut voir un automate cellulaire élémentaire comme la simulation d'un monde très simple.
+Ce monde est constitué de <em>cellules</em>, qui n'ont que deux états 
+possibles, blanc ou noir (ou morte/vivante, ou vide/pleine, ou 
+fausse/vraie… comme vous voulez).
+Elles sont organisées sur une ligne (le monde n'a donc qu'une seule 
+dimension). En général on considère que les deux extrémités de la ligne 
+se rejoignent — il s'agit donc plutôt d'un cercle, mais ce n'est pas 
+très important ici.
+</p><p>À chaque pas de temps (ou à chaque «&nbsp;génération&nbsp;»), les
+ cellules évoluent : une cellule blanche peut devenir noire et 
+inversement, et ce, en fonction de son état et de l'état de ses deux 
+cellules voisines,
+suivant une <em>règle</em> établie au départ. Un exemple de règle&nbsp;:
+ une cellule se retrouve noire si, au pas de temps précédent, parmi elle
+ et ses deux voisines il y avait un nombre impair de cellules noires 
+(cette règle est appelée «&nbsp;rule 150&nbsp;»). En fonction de la 
+règle d'évolution, l'automate se comporte de manière drastiquement 
+différente&nbsp;; certaines règles donnent des résultats très 
+répétitifs, d'autres complètement chaotiques.
+
+</p><h5>Rule 110</h5>
+
+<figure>
+<img src="Mod%C3%A8le%20objet%20de%20PHP_files/One-d-cellular-automaton-rule-110.gif" alt="illustration animée du fonctionnement de la règle 110">
+<figcaption>Illustration animée du fonctionnement de la règle 110. En 
+haut, l'état du monde&nbsp;; au milieu, la règle d'évolution&nbsp;; en 
+bas, la génération suivante.
+<small>Source&nbsp;: <a href="https://commons.wikimedia.org/wiki/File:One-d-cellular-automaton-rule-110.gif">Wikimedia Commons</a>, CC-BY-SA</small></figcaption>
+</figure>
+<p>La règle 110 n'est pas très compliquée : une cellule ne peut se retrouver blanche que dans trois cas
+</p><ul>
+<li>si elle et ses voisines étaient toutes trois blanches
+</li><li>si elle et ses voisines étaient toutes trois noires
+</li><li>si sa voisine de gauche était noire, mais elle-même et sa voisine de droite étaient blanches
+</li></ul>
+<p>Cette règle donne des résultats très intéressants, car à la fois 
+réguliers et chaotiques : de fait, l'automate correspondant est capable 
+de simuler l'exécution
+de n'importe quel programme (en encodant le programme comme un état 
+initial du monde, et en lisant le résultat dans un état considéré comme 
+final).
+
+
+
+</p><h4>Implémentation</h4>
+<p>Après ces éléments de contexte, passons à l'implémentation. On va écrire un script <code>rule-110.php</code>.</p>
+
+<p>Remarque&nbsp;: il est conseillé de mettre des types au paramètres et
+ valeurs de retour des fonctions et méthodes, dans la mesure du 
+possible. Il est également conseillé d'utiliser la vérification stricte 
+des types. Voir cours.
+
+
+
+</p><h5>Représentation du monde</h5>
+<p>On va créer une classe <code>WorldState</code>, qui représentera un état courant du monde.
+En interne, le monde sera représenté par un tableau de booléens, <code>true</code> représentant une cellule noire (vivante, présente) et <code>false</code>
+ une cellule blanche (morte, absente).
+Depuis l'extérieur de la classe, on ne pourra pas accéder au tableau 
+lui-même&nbsp;: on pourra seulement vérifier si une cellule à une 
+position donnée est vivante ou non.
+En particulier, on ne pourra pas modifier l'état des cellules — les 
+instances de <code>WorldState</code> sont dites <em>immutables</em>.
+</p><ol>
+<li>Créer une classe <code>WorldState</code> dans le script.
+</li><li>Lui déclarer une propriété <code>$cells</code>, de visibilité privée.
+</li><li>Le constructeur de la classe doit prendre un paramètre <code>$nbCells</code>, le nombre de cellules du monde (par défaut 100), et créer dans sa propriété <code>$cells</code> un tableau de booléens
+représentant les cellules, qui doivent toutes être mortes. <small>Remarque&nbsp;: vous pouvez stocker <code>$nbCells</code> dans une propriété de la classe si vous voulez, mais ce n'est pas obligatoire, puisque l'on a accès à la longueur du tableau.</small>
+</li><li><strong>Tester</strong>&nbsp;: créer une <em>petite</em> instance de <code>WorldState</code>
+et l'afficher avec <code>var_export</code> ou <code>var_dump</code>. A-t-elle bien les propriétés attendues&nbsp;?</li>
+<li>Ajouter une méthode statique <code>buildFixedWorld($nbCells)</code>, qui va construire une instance de <code>WorldState</code>, rendre vivantes uniquement
+la deuxième et l'avant-dernière des cellules du tableau,
+et renvoyer cette instance. (Remarque&nbsp;: les méthodes de ce genre s'appellent des <i>factory methods</i>. On en ajoutera une autre plus tard.) Tester cette méthode de construction (de la même façon que précédemment).
+</li><li>Ajouter une méthode <code>isCellAliveAtPosition</code>. Elle doit attendre un entier <code>$position</code> en paramètre, et renvoyer <code>true</code>
+ si et seulement si la
+cellule à la position indiquée est vivante (c'est-à-dire noire). NB: la 
+position correspond à l'indice dans le tableau. Si la position demandée 
+n'existe pas, lever une exception. Tester sur des cellules censées être 
+mortes, sur des cellules censées être vivantes, et pour des positions 
+trop grandes ou trop petites&nbsp;: assurez-vous dans tous ces cas que 
+le comportement obtenu est le bon.
+</li><li>On veut pouvoir afficher le monde comme une chaîne de 
+caractères, en utilisant des espaces pour les cellules blanches et un 
+autre caractère pour les cellules noires (on pourra utiliser un <code>#</code>, ou le caractère unicode «&nbsp;FULL BLOCK, █&nbsp;»).
+Implémenter la méthode <code>__toString</code> afin de remplir cet objectif,
+et vérifier que l'affichage d'une instance construite par <code>buildFixedWorld</code> est bien cohérent.
+</li></ol>
+
+
+<h5>Évolution</h5>
+Pour implémenter l'évolution, on commence par une version simple mais peu flexible, qu'on rendra plus générale dans la suite.
+<ol>
+<li>Écrire une <em>fonction</em> <code>compute_next_state_rule110($leftAlive, $selfAlive, $rightAlive)</code>, qui 
+renvoie l'état d'une cellule à la prochaine génération, en fonction de son propre état (paramètre <code>$selfAlive</code>) et de celui de ses deux voisines (<code>$leftAlive</code>
+et <code>$rightAlive</code>).
+</li><li>Ajouter une méthode <code>computeNextGeneration()</code> à la classe <code>WorldState</code>, qui renvoie une nouvelle instance de <code>WorldState</code> représentant le prochain état du monde, après application de la règle d'évolution (grâce à <code>compute_next_state_rule110</code>).
+Pour simplifier, on ignorera les cellules aux extrémités du tableau (on considère que le monde est une ligne, et pas un cercle).
+</li><li>Écrire une classe <code>Simulator</code>, qui a comme propriété une instance de <code>WorldState</code> (passée à son constructeur), et comme méthode 
+<code>displayEvolution($nbGenerations)</code>, qui affiche <code>$nbGenerations</code> successives du monde.
+</li></ol>
+Pour tester le programme, construire un monde et un simulateur, et lui 
+faire afficher 50 générations. Vérifiez que ça marche&nbsp;! (La règle 
+est-elle bien respectée à vue de nez ? Est-ce que ça ressemble aux 
+dessins sur Wikipédia&nbsp;?)
+
+
+
+
+
+<div class="info">
+Le TP étant très long, nous ne nous attendons pas à ce que cet exercice 
+soit traité en intégralité par tou·tes les étudiant·es. Il est néanmoins
+ vivement conseillé, dans la mesure du possible, de s'attaquer à la 
+suite de l'exercice, qui aborde divers aspects de conception objet qui 
+sont notamment pertinents dans le contexte du web (mais pas que). Si 
+vous êtes assez à l'aise, vous devriez aller vite&nbsp;; si vous n'êtes 
+pas à l'aise, il est d'autant plus intéressant d'aller aussi loin que 
+possible&nbsp;!
+</div>
+
+
+<h4>Architecture pour les règles d'évolution</h4>
+<p>
+La façon dont la règle 110 a été implémentée dans le programme
+ n'est pas très satisfaisante&nbsp;: il faut modifier le code de <code>WorldState</code> si on veut utiliser une autre règle. Pour éviter ça, une possibilité pourrait être de rendre <code>WorldState</code> abstraite
+et de lui ajouter une méthode abstraite <code>computeNextStateCell</code>, qui serait définie dans des sous-classes <code>WorldStateRule110</code>, <code>WorldStateRule150</code>, etc.
+</p><p>Cette solution est cependant un peu lourde, et limite la flexibilité du code. Une meilleure idée est d'utiliser la <em>composition</em>&nbsp;: <code>WorldState</code>
+ va faire appel à un objet tiers pour le calcul de l'état suivant, et 
+cet objet tiers pourra avoir diverses implémentations (un par règle). 
+Ainsi la classe <code>WorldState</code> reste indépendante du changement de règle, et elle peut être elle-même modifiée sans risque d'impacter des sous-classes.
+
+</p><ol>
+<li>Créer une interface <code>EvolutionRule</code>, qui doit définir
+une seule méthode <code>computeNextStateCell($leftAlive, $selfAlive, $rightAlive)</code>.
+</li><li>Créer une classe <code>Rule110</code> qui implémente l'interface,
+et supprimer la fonction <code>compute_next_state_rule110</code>.
+</li><li>Modifier la méthode <code>computeNextGeneration</code> de <code>WorldState</code>&nbsp;:
+elle doit prendre en paramètre une instance de <code>EvolutionRule</code>,
+et utiliser sa méthode pour le calcul de la génération suivante. NB: vous devez <em>forcer</em> le paramètre à avoir le type <code>EvolutionRule</code>.
+</li><li>L'instance de <code>EvolutionRule</code> va donc devoir être donnée par notre <code>Simulator</code>. A priori, c'est à la construction du <code>Simulator</code> que la règle va être choisie. Par conséquent, ajouter une propriété <code>$evolutionRule</code>
+à la classe <code>Simulator</code>, propriété qui doit être initialisée via un paramètre du constructeur. Modifier ensuite l'appel à <code>computeNextState</code>.
+</li><li>Tester, en donnant au simulateur une instance de <code>Rule110</code>&nbsp;: le programme doit fonctionner comme avant.
+</li></ol>
+
+<p>À présent, pour utiliser une autre règle, il suffit de créer une implémentation différente de <code>EvolutionRule</code>.</p>
+<ol><li> <strong>Optionnel&nbsp;: </strong>Implémenter une autre règle, par exemple <a href="https://en.wikipedia.org/wiki/Rule_184">la règle 184</a>, et tester.
+<a href="https://en.wikipedia.org/wiki/Elementary_cellular_automaton#Random_initial_state">Voir ici des dessins d'un bon nombre d'autres règles.</a>
+</li></ol>
+
+<h4>Architecture pour l'affichage</h4>
+
+<p>L'utilisation d'une méthode <code>__toString</code> pour la partie «&nbsp;affichage&nbsp;» 
+du programme est pratique, mais pas très robuste&nbsp;: on est dépendant de l'implémentation de <code>__toString</code> (on ne peut pas décider de changer les caractères, ou la taille des cellules,
+depuis l'extérieur de la classe), et réciproquement, on ne peut pas faire évoluer <code>__toString</code>
+n'importe comment. Cette partie vise à vous montrer ça.
+
+</p><h5>Modification du <code>__toString</code>, et impact sur le programme</h5>
+<ol>
+<li>On va ajouter une propriété <code>age</code> à <code>WorldState</code>,
+qui sera initialisée à 0 dans le constructeur, et incrémentée dans <code>computeNextGeneration</code>
+ comme il se doit. Elle aura bien sûr la visibilité privée, et on lui 
+ajoutera un accesseur (mais pas de mutateur — on veut toujours que <code>WorldState</code> soit immutable).
+</li><li>Modifier le <code>__toString</code> pour que l'âge du monde apparaisse entre parenthèses au début de la chaîne. Relancer le programme pour voir le résultat.
+</li></ol>
+<p>Notre nouvelle méthode <code>__toString</code> est pratique pour faire des tests sur le programme,
+mais elle impacte l'affichage des simulations&nbsp;: ce n'est pas (forcément) ce qu'on veut. 
+</p><p>De manière générale il est une bonne idée de séparer le <em>modèle</em>,
+ ou <em>logique métier</em>, du programme, et l'affichage, qui peut avoir besoin
+de varier en fonction des contextes. Nous allons nous y employer.
+
+</p><h5>Séparation modèle et vue</h5>
+<ol>
+<li>Créer une interface <code>Displayer</code> avec une seule méthode,
+<code>displayWorld</code>, qui doit prendre en paramètre une instance de <code>WorldState</code>.
+</li><li>Modifier <code>Simulator</code> pour qu'il utilise une instance de <code>Displayer</code>
+pour afficher le monde, plutôt que de faire un <code>echo</code>.
+</li><li>Créer <code>TerminalDisplayer</code>, l'implémentation de <code>Displayer</code>
+qui correspond à l'affichage qu'on avait auparavant (sans l'âge). NB: on peut passer en paramètre
+du constructeur de <code>TerminalDisplayer</code> les caractères à utiliser pour les
+cellules blanches et noires ! Ce n'était pas vraiment possible de le faire quand on utilisait le <code>__toString</code> de <code>WorldState</code> sans alourdir futilement l'API de la classe.
+</li><li>Passer une instance de <code>TerminalDisplayer</code> au simulateur, et tester que le programme fonctionne bien comme avant.
+</li></ol>
+
+<h5>Contrôle plus fin de la vitesse des itérations</h5>
+
+<p>Notre programme affiche l'évolution du monde, mais si on veut afficher un grand nombre
+d'itérations, le défilement peut être très rapide. On voudrait pouvoir le gérer
+plus finement&nbsp;: soit en faisant une petite pause après chaque affichage, soit
+en attendant que l'utilisateurtrice appuie sur Entrée avant de passer à la génération
+suivante.
+</p><ol>
+<li>Ajouter une méthode <em>abstraite</em> <code>iterationControl()</code>
+à <code>TerminalDisplayer</code> (qui va donc devoir être une classe abstraite). Cette méthode doit être appelée à la fin de <code>displayWorld</code>.
+</li><li>Créer une sous-classe <code>InteractiveTerminalDisplayer</code> qui
+implémente <code>iterationControl</code> en attendant l'appui sur Entrée (rappelez-vous de la fonction <code>readline</code> vue au premier TP), et tester le résultat.
+</li><li>Créer une autre sous-classe, <code>PausingTerminalDisplayer</code>,
+qui implémente <code>iterationControl</code> en attendant un certain nombre de microsecondes (éventuellement paramétrable) (voir <a href="https://www.php.net/manual/en/function.usleep.php">la fonction usleep</a> — qui ne marche pas forcément sous windows). Tester le résultat.
+</li><li><strong>Optionnel</strong>&nbsp;: créer une classe <code>AnimatedTerminalDisplayer</code> qui <strong>étend <code>PausingTerminalDisplayer</code></strong>. Elle doit
+appeler le <code>iterationControl</code> de sa parente,
+puis afficher la chaîne suivante&nbsp;: <code>"\e[2J\e[1;1H"</code>. Il s'agit de <a href="https://en.wikipedia.org/wiki/ANSI_escape_code">séquences d'échappement</a> qui effacent le contenu du terminal <small>(pour
+ les terminaux compatibles&nbsp;— ça devrait toujours marcher sous 
+Linux, sans doute aussi sous OSX et BSD, et pour Windows ça dépend des 
+versions)</small>. Ce <i>displayer</i> permet donc de voir l'évolution 
+du monde de façon animée (ça marche mieux si les itérations ne sont pas 
+trop rapides, typiquement 3-5 FPS). Tester le résultat.
+</li></ol>
+
+<h5>Un affichage différent</h5>
+
+<ol>
+<li>
+Créer une classe <code>StatsDisplayer</code>, qui implémente <code>Displayer</code>
+en montrant non pas l'état du monde, mais des statistiques dessus&nbsp;: âge et nombre de cellules noires/blanches. Tester.
+</li><li>Comment faire pour avoir l'affichage des statistiques avec un 
+défilement lent / interactif, comme on l'a fait dans la section 
+précédente ? Les choix d'architecture pour le contrôle de la vitesse des
+ itérations étaient-ils bons ? Comment aurait-on pu faire ?
+</li></ol>
+
+
+
+
+
+
+
+
+
+
+
+
+	</section>
+
+<!-- ********************************************************************** -->
+
+</section><!-- fin de travail -->
+</main><!-- fin de majeur -->
+
+
+</div> <!-- fermeture du wrapper -->
+
+
+</body></html>

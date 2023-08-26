@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<title>Architecture d'un site web&nbsp;: manipulation avancée des données — Alexandre Niveau — Université de Caen Normandie</title>
+
+	<meta name="author" content="Alexandre Niveau">
+	<meta name="company" content="Université de Caen">
+	<meta name="viewport" content="initial-scale=1">
+
+
+	<link rel="stylesheet" href="Architecture%20d'un%20site%20web%20manipulation%20avanc%C3%A9e%20des%20donn%C3%A9es%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/normalize.css">
+	<link rel="stylesheet" href="Architecture%20d'un%20site%20web%20manipulation%20avanc%C3%A9e%20des%20donn%C3%A9es%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/slides_alex.css">
+	<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png">
+
+	<!-- STYLES POUR DEMO -->
+	<style>
+.horiz {
+  display: flex;
+  flex-flow: row wrap;
+}
+.horiz h4 {
+  text-align: center;
+	margin: .2em auto;
+}
+	</style></head>
+<body>
+<header class="title slide">
+	<h1>Architecture d'un site web&nbsp;: manipulation avancée des données</h1>
+	<div class="auteur">Alexandre Niveau</div>
+	<div class="affiliation">GREYC — Université de Caen</div>
+	<div class="proj_switch"><button title="basculer entre mode normal et mode projection (raccourci clavier «&nbsp;m&nbsp;»)">Changer de mode</button></div>
+</header>
+
+<div id="contenu">
+<div id="presentation" class="hidenotes">
+
+<div class="note">
+TODO:
+<ul>
+<li>le coup de la vue qui appelle une méthode POSTredirect du routeur 
+c'est vraiment pas top. Réfléchir aux différents cas d'utilisation et 
+faire un truc correct.
+A priori depuis l'extérieur de la vue on ne doit pas savoir ce qui est 
+renvoyé (page ou redirection). Le PRG est spécifique au web.
+</li><li>c'est pas propre que le contrôleur enregistre les builders en 
+session. il vaudrait mieux que le routeur enregistre les données POST 
+qqpart jusqu'à ce que la validation passe ?
+</li></ul>
+</div>
+
+<div class="slide">
+<h2>Rappels</h2>
+<p>Le fonctionnement de l'architecture est expliqué dans  les cours précédents
+(<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/archi/">architecture de base</a>&nbsp;; <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/crud/">manipulation des données</a>)</p>
+<div class="p">On repart de l'exemple des couleurs&nbsp;:
+<pre>couleurs/
+|-- skin/
+|   `-- screen.css
+|-- src/
+|   |-- ctl/
+|   |   `-- Controller.php
+|   |-- lib/
+|   |   `-- ObjectFileDB.php
+|   |-- model/
+|   |   |-- ColorBuilder.php
+|   |   |-- Color.php
+|   |   |-- ColorStorageFile.php
+|   |   `-- ColorStorage.php
+|   |-- view/
+|   |   `-- MainView.php
+|   `-- Router.php
+`-- index.php
+</pre>
+</div>
+<p>Le résultat de notre CRUD basique est <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/crud/couleurs/">visible ici</a>,
+et le code est disponible dans <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/crud/couleurs.zip">cette archive</a>.</p>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Limites de notre approche basique</h2>
+<p>Notre site fonctionne, mais il n'est pas très robuste.
+On va voir à présent comment on peut améliorer son confort d'utilisation.</p>
+<div class="p">Considérer les exemples suivants&nbsp;:
+<ul>
+<li>Tout content d'avoir créé/modifié sa couleur, Jean-Michel la met dans ses marque-page
+ou envoie le lien à un ami. Que se passe-t-il&nbsp;?</li>
+<li>Dominique crée une couleur puis actualise régulièrement la page,
+pour vérifier que personne ne la modifie. Que se passe-t-il&nbsp;?</li>
+<li>Martine bidouille l'URL de la page de suppression définitive en modifiant
+l'identifiant&nbsp;: que se passe-t-il&nbsp;? (Elle peut aussi générer un lien et l'envoyer
+à quelqu'un.)</li>
+</ul></div>
+<p>Solution&nbsp;: <em>POST-redirect-GET</em></p>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>POST-redirect-GET</h2>
+<p>Les pages destinées à être accédées en POST
+ne doivent pas être visibles directement par
+les internautes.</p>
+<p>Il faut les rediriger immédiatement vers une page normale.
+</p><p>La logique est que les utilisateurs
+ont l'habitude de GET, qui est <em>idempotente</em>&nbsp;: la même requête donne
+toujours le même résultat.</p>
+<p>En redirigeant systématiquement après un POST, on donne à chaque méthode
+son rôle de base tel que défini par HTTP&nbsp;: POST modifie les données,
+GET affiche les données.</p>
+<div class="p">La redirection doit utiliser le code de statut <code>303 See Other</code>&nbsp;;
+on peut utiliser une option de la fonction PHP <code>header</code>&nbsp;:
+<pre><code class="hl "><span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;header</span><span style="color: #007700">(</span><span style="color: #DD0000">"Location:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$url</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">303</span><span style="color: #007700">);</span></code></pre></div>
+<div class="note">démo: redirection après création et modif, si succès.
+TODO: c'est la vue qui doit s'occuper de la redirection</div>
+</div>
+
+<!-- ########################################################################### -->
+
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2><i>Feedback</i></h2>
+<p>Le POST-redirect-GET marche bien pour la création et la modification (sans
+erreur), car on redirige vers la page de la couleur</p>
+<p>Pour la suppression, on voudrait pouvoir rediriger vers la galerie
+avec un <i>feedback</i> du type «&nbsp;La couleur a bien été supprimée&nbsp;»</p>
+<p>Nécessite de se souvenir de ce qui s'est passé à la requête
+précédente&nbsp;: il faut utiliser les variables de session</p>
+<div class="p">Principe&nbsp;: <ul>
+<li>Une variable <code>$_SESSION["feedback"]</code> contient
+le <i>feedback</i> de la requête précédente.
+</li><li>Au début du traitement, le routeur récupère son contenu et la vide.
+Ce qui a été récupéré est passé à la vue.
+</li><li>Il peut ensuite y mettre toutes les informations utiles, qui seront affichées
+à la prochaine requête.
+</li></ul>
+</div>
+<div class="note">démo: ajout gestion feedback dans le routeur; utilisation dans la vue.
+modif fonction redirection pour prendre feedback.
+redirection vers galerie après suppression.</div>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>POST-redirect-GET, le retour</h2>
+<div class="p">On a géré les cas sans erreur, mais pas les cas où le formulaire envoyé
+est invalide
+<ul>
+<li>l'internaute voit les URL «&nbsp;POST-only&nbsp;»</li>
+<li>actualiser génère un message pour renvoyer les données&nbsp;; le fonctionnement
+de l'historique est altéré («&nbsp;document expiré&nbsp;»)</li>
+
+<li>risque de perte de données pour l'internaute si appui sur entrée
+dans la barre d'adresse</li>
+</ul></div>
+<p>On va donc appliquer le POST-redirect-GET jusqu'au bout&nbsp;: si données invalides,
+on redirige vers la page de formulaire initiale</p>
+<p class="conseq">il faut donc enregistrer en session les données reçues et les erreurs à afficher.</p>
+<p>Il suffit de stocker l'instance de <code>ColorBuilder</code> dans une variable
+comme <code>$_SESSION['currentColorBuilder']</code></p>
+<p>Lors de l'accès en <code>GET</code> à une page de formulaire,
+le contrôleur donne à la vue le ColorBuilder qui est dans cette variable.</p>
+<div class="note">démo: ajout de cette variable de session et redirection après toute
+tentative de création.</div>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Persistance des formulaires</h2>
+<p>On ne peut pas modifier une couleur existante
+si on a un ColorBuilder non validé en cours&nbsp;!</p>
+<div class="p">La meilleure solution est d'enregistrer en session plusieurs
+instances de ColorBuilder&nbsp;:
+<ul>
+<li>une pour les nouvelles couleurs</li>
+<li>une pour chaque couleur existante en cours de modification</li>
+</ul>
+</div>
+<p>Pour le deuxième point, il suffit d'avoir une
+variable de session <code>$_SESSION['modifiedColors']</code> qui contient
+un <em>tableau</em> d'instances de <code>ColorBuilder</code>,
+indexés par leur identifiant.</p>
+<p>Grâce à cette modification, on a aussi amélioré
+l'utilisabilité de notre site, car les formulaires sont maintenant
+<em>persistants</em>&nbsp;: si un formulaire invalide a été soumis,
+il n'est pas perdu, même si on change de page.</p>
+<p>En particulier, on peut éditer plusieurs couleurs en même temps
+sans risque que les différents formulaires s'écrasent entre eux.</p>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Implémentation des améliorations</h2>
+
+<p>Le résultat de toutes nos améliorations est <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/crud++/couleurs/">visible ici</a>,
+et le code est disponible dans <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/crud++/couleurs.zip">cette archive</a>.</p>
+<p>On présente maintenant encore d'autres améliorations, pas forcément
+complexes à implémenter mais un peu moins fondamentales. On ne les abordera pas toutes en TP, mais
+elles sont recommandées sur un véritable site.</p>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Identifiants temporaires</h2>
+<ul>
+<li>On a pris soin de différencier en session les données et erreurs pour chaque
+couleur, pour que l'utilisateur puisse les modifier indépendamment</li>
+<li>Il faudrait faire de même pour les nouvelles couleurs&nbsp;:
+<ul><li>pour l'instant,
+si l'internaute abandonne la nouvelle couleur en cours,
+ et qu'il/elle essaie d'en créer une nouvelle, il/elle retombe sur la précédente</li>
+<li> Pas grave dans notre cas, mais pour un formulaire plus conséquent ça peut
+être très désagréable.</li>
+<li>Solution&nbsp;: attribuer des identifiants temporaires aux couleurs en cours de création.
+Permet aussi de manipuler sans risque plusieurs formulaires de création en parallèle.
+</li></ul></li>
+</ul>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>URL</h2>
+<p>On a utilisé des URL particulières pour les POST,
+mais on n'en a pas besoin&nbsp;:
+on peut réutiliser <code>action=creerCouleur</code>, <code>action=modifier</code>
+et <code>action=supprimer</code>, et vérifier si la page a été accédée
+avec GET ou avec POST (on peut le voir dans <code>$_SERVER["REQUEST_METHOD"]</code></p>
+<p>Au lieu d'utiliser des paramètres GET pour les actions et les identifiants, 
+ce qui n'est pas propre, on peut exploiter la possibilité de mettre un chemin <em>après</em> le nom du script PHP dans l'URL, par ex <code>index.php/couleurs/45</code>.
+Ce <em>chemin virtuel</em> est récupérable grâce à la variable
+<code>$_SERVER["PATH_INFO"]</code> (attention, elle n'est pas présente s'il n'y a rien
+après le nom du script)</p>
+<p>Dans tous les cas, les URL vues par les internautes peuvent être différentes
+des «&nbsp;vrais&nbsp;»  chemins sur le serveur, grace à la <em>réécriture d'URL</em>.
+Avec Apache, on utilise le module <code>mod_rewrite</code>,
+utilisable dans les <code>.htaccess</code>.
+Principe&nbsp;: le client demande l'URL <code>/couleurs/08/modifier</code>,
+mais le serveur appelle en fait le script avec
+<code>/couleurs/index.php?id=08&amp;action=modifier</code>
+ou <code>/couleurs/index.php/08/modifier</code>
+(en fonction de la technique utilisée dans votre architecture)</p>
+<p>La syntaxe de <code>mod_rewrite</code> est notoirement <em>abominable</em>&nbsp;:
+moins vous l'utiliserez, mieux vous vous porterez.</p>
+</div>
+
+<div class="slide">
+<h2>Finitions</h2>
+<p>Implémenter un retour à zéro pour les formulaires de modification (les
+champs sont réinitialisés à la valeur présente dans la BD)</p>
+<p>Sur les pages accédées en POST, on peut vérifier que l'internaute est bien
+passé·e par notre formulaire, par exemple en mettant une sorte de
+jeton en session ⇒ empêche les
+attaques de type <i>cross-site request forgery</i> (CSRF)</p>
+</div>
+
+<div class="slide note">
+<h2>Frameworks</h2>
+<div class="p">Des frameworks à comparer:
+<ul>
+<li>cake</li>
+<li>symfony</li>
+<li>laravel</li>
+<li>slim framework</li>
+</ul>
+le dernier est très léger, sans doute d'un niveau proche de notre archi.
+à noter, simplification pour la déclaration des routes (mail de Arnaud Courdille du 16 mars 2017) :
+<pre class="src "><code>Votre méthode :
+
+case 'home':
+    $this-&gt;view-&gt;makeHomePage($person);
+break;
+
+public function getHomeURL() {
+    return $this-&gt;baseURL . "/home";
+}
+
+
+Slim Framework :
+
+$app-&gt;get('/home', \App\controllers\ViewsController::class . ':home')-&gt;setName('home');
+
+La méthode setName permettant de définir un nom qui sera utilisé dans les 
+href et submit. Ainsi on peu changer l'URL sans changer les liens dans chaque 
+fichiers.
+\App\controllers\ViewsController::class   permet de d'indiquer le namespace du 
+controller à utiliser et ':home' la méthode à utiliser. </code></pre>
+
+</div>
+
+</div>
+
+<!-- ########################################################################### -->
+
+
+</div> <!-- fin #presentation -->
+
+<aside id="liens">
+<h3>Spécifications et normes</h3>
+<ul>
+<li><a href="http://tools.ietf.org/html/rfc7231">RFC&nbsp;7231</a> &nbsp;— HTTP/1.1: Semantics and content</li>
+<li><a href="http://tools.ietf.org/html/rfc3875">RFC&nbsp;3875</a> &nbsp;— The Common Gateway Interface (CGI) Version 1.1</li>
+</ul>
+<h3>Tutoriels</h3>
+<ul>
+<li><a href="http://code.tutsplus.com/tutorials/an-in-depth-guide-to-mod_rewrite-for-apache--net-6708">An in-depth guide to <code>mod_rewrite</code> for Apache</a></li>
+</ul>
+<h3>Lectures complémentaires</h3>
+<ul>
+<li><a href="http://www.theserverside.com/news/1365146/Redirect-After-Post">Redirect after Post</a></li>
+</ul>
+
+</aside><!-- fin #liens -->
+</div> <!-- fin #contenu -->
+
+<footer class="license">
+	<a class="icone" rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+		<img alt="Licence Creative Commons CC-BY" style="border-width:0" src="Architecture%20d'un%20site%20web%20manipulation%20avanc%C3%A9e%20des%20donn%C3%A9es%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/88x31.png">
+	</a>
+	<p class="texte">
+		Ce cours est mis à disposition selon les termes de la <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">licence Creative Commons Attribution 4.0 International</a>.
+	</p></footer>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+	function toggleProj() {
+		const currentParams = new URLSearchParams(window.location.search);
+		if (currentParams.get('mode') === 'proj') {
+			console.log('found proj');
+			document.documentElement.classList.remove('proj');
+			currentParams.delete('mode');
+		} else {
+			console.log('not found proj');
+			document.documentElement.classList.add('proj');
+			currentParams.set('mode', 'proj');
+		}
+		window.history.pushState({}, '', '?' + currentParams + window.location.hash);
+	};
+
+	var buttons = document.querySelectorAll('.proj_switch button'), i;
+	for (i = 0; i < buttons.length; ++i) {
+		buttons[i].addEventListener("click", toggleProj);
+	}
+
+	document.addEventListener("keypress", function(e) {
+		if (e.target == document.body && String.fromCharCode(e.keyCode || e.charCode) == "m") {
+			toggleProj();
+		}
+	});
+
+	/* ajout de liens aux titres qui ont un id */
+	let slidesWithId = document.querySelectorAll('.slide[id]');
+	for (const slide of slidesWithId) {
+		const link = document.createElement('a');
+		link.href = '#' + slide.id;
+		link.classList.add('slide-link');
+		link.title = 'Lien vers ce slide';
+		link.textContent = '#';
+		slide.insertAdjacentElement('afterbegin', link);
+	}
+
+
+});
+</script>
+
+
+</body></html>

@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<title>HTTP, serveurs web, et pages dynamiques — Alexandre Niveau — Université de Caen Normandie</title>
+
+	<meta name="author" content="Alexandre Niveau">
+	<meta name="company" content="Université de Caen">
+	<meta name="viewport" content="initial-scale=1">
+
+
+	<link rel="stylesheet" href="HTTP,%20serveurs%20web,%20et%20pages%20dynamiques%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/normalize.css">
+	<link rel="stylesheet" href="HTTP,%20serveurs%20web,%20et%20pages%20dynamiques%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/slides_alex.css">
+	<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png">
+
+</head>
+<body>
+<header class="title slide">
+	<h1>HTTP, serveurs web, et pages dynamiques</h1>
+	<div class="auteur">Alexandre Niveau</div>
+	<div class="affiliation">GREYC — Université de Caen</div>
+	<div class="proj_switch"><button title="basculer entre mode normal et mode projection (raccourci clavier «&nbsp;m&nbsp;»)">Changer de mode</button></div>
+</header>
+
+<div id="contenu">
+<div id="presentation" class="hidenotes">
+
+
+<section class="slide note">
+<pre>Cours sur HTTP
+
+* url : https://en.wikipedia.org/wiki/Uniform_Resource_Identifier  avec des exemples. query, fragment. chemin : pas forcément un vrai chemin.
+
+* header fields https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
+
+* stateless
+* safe methods
+* idempotent methods
+* cacheable
+
+
+* status code &amp; reason phrase   https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+
+* cache : forward/reverse ; browser/machine/proxy/ISP   https://en.wikipedia.org/wiki/Web_cache
+* compression https://en.wikipedia.org/wiki/HTTP_compression
+* auth
+* HTTPS https://en.wikipedia.org/wiki/HTTPS
+
+serveurs web : 
+un programme qui sait répondre à une requête HTTP par une réponse HTTP.
+exemples : apache, nginx.
+
+
+
+
+</pre>
+</section>
+
+<section class="slide">
+<h2>Application client-serveur</h2>
+<figure class="sidecol">
+<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/http/img/client-serveur.png">
+<img src="HTTP,%20serveurs%20web,%20et%20pages%20dynamiques%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/client-serveur.png" alt="Illustration d'une application client-serveur">
+</a>
+<figcaption>
+Exemple d'architecture client–serveur : deux clients font leurs requêtes à un serveur via Internet.
+<br>
+<small>Source&nbsp;: <a href="https://commons.wikimedia.org/wiki/File:Mod%C3%A8le-client-serveur.svg">Wikimedia</a> (LGPL 2.1).</small>
+</figcaption>
+</figure>
+<div class="p">Application client-serveur&nbsp;:
+<ul><li>application en réseau
+</li><li>le programme «&nbsp;principal&nbsp;», appelé <em>serveur</em>, tourne en continu sur une machine (généralement distante)
+</li><li>pour accéder à l'application depuis sa machine, il faut lancer un programme <em>client</em>,
+qui va se connecter au serveur et échanger des messages avec lui suivant un protocole bien défini
+</li></ul>
+</div>
+</section>
+<section class="slide">
+<h2>Le web, une application client-serveur</h2>
+<div class="p">Dans le cadre du web:
+<ul>
+<li>Le protocole d'échange de messages s'appelle HTTP
+</li><li>Toute machine connectée à internet
+peut faire tourner un serveur web
+	<ul>
+	<li>elle écoute sur son port 80</li>
+	<li>elle interprète les requêtes HTTP reçues</li>
+	<li>elle renvoie les réponses HTTP (qui contiennent typiquement du HTML) au demandeur</li>
+	</ul>
+</li><li>Il y a de nombreux programmes clients, les plus courants
+étant les navigateurs web visuels (comme Firefox ou Chrome)&nbsp;:
+	<ul>
+	<li>ils envoient des requêtes HTTP aux serveurs</li>
+	<li>ils interprètent la réponse HTTP (typiquement, ils mettent en forme le HTML)</li>
+	</ul>
+</li></ul></div>
+</section>
+
+<section class="slide">
+<h2>HTTP</h2>
+<p><i lang="en">HyperText Transfer Protocol</i>&nbsp;; c'est le langage que parlent le serveur web et le navigateur web pour se communiquer les pages</p>
+<p>Élément le plus fondamental du web, et aussi le plus caché pour le grand public</p>
+<div class="p">Pas complètement cependant&nbsp;:
+	<ul>
+	<li>son nom apparaît au début des URL (mais les navigateurs actuels ne l'affichent plus)</li>
+	<li>les célèbres <i>cookies</i> sont un élément du protocole</li>
+	<li>certains codes de statut sont bien connus… <span class="clicktosee">(erreur 404)</span></li>
+	</ul>
+</div>
+<p>HTTPS est la version sécurisée de HTTP&nbsp;: les messages sont 
+chiffrés, et donc illisibles pour quiconque les intercepterait entre le 
+client et le serveur <span class="note">ex: wifi public</span></p>
+</section>
+
+<section class="slide">
+<h2>URL</h2>
+<p>Le web est un ensemble de ressources (documents — ou autre !), liées entre elles
+</p><p>Chaque ressource a une <em>adresse</em> (ce qui permet de la récupérer, et de la lier à d'autres ressources)
+</p><p>Les adresses sont appelées URL (ou plus généralement URI)
+</p><p>La syntaxe des URL a été créée pour le web, mais est utilisée dans de nombreux autres contextes
+</p><pre style="font-family: monospace">            userinfo          host        port
+        ┌───────┴───────┐ ┌────┴────────┐ ┌┴┐
+ http://john.doe:password@www.example.com:123/forum/questions/?tag=networking&amp;order=newest#top
+ └─┬─┘  └───────────┬───────────────────────┘└─┬─────────────┘└────────┬─────────────────┘└┬─┘
+ scheme         authority                      path                  query              fragment
+
+</pre>
+<p>La partie «&nbsp;scheme&nbsp;» indique le protocole à utiliser pour récupérer la ressource
+</p><p>La partie «&nbsp;authority&nbsp;» indique à qui il faut s'adresser pour récupérer la ressource
+</p><p>La partie «&nbsp;path&nbsp;» indique le chemin vers la ressource sur le serveur
+</p><p>La partie «&nbsp;query&nbsp;» permet d'indiquer des paramètres (pour filtrer ou mettre en forme la ressource)
+</p><p>La partie «&nbsp;fragment&nbsp;» identifie une sous-partie de la ressource (par exemple une section d'une page HTML)
+</p><p><a href="https://en.wikipedia.org/wiki/Uniform_Resource_Identifier#Examples">Autres exemples de la syntaxe URI</a>
+</p></section>
+
+
+<section class="slide">
+<h2>Requête HTTP</h2>
+<div class="p">Structure d'une requête HTTP&nbsp;:
+	<ul>
+	<li>Une ligne de requête avec une commande (<i>request method</i>),
+	un chemin et la version du protocole</li>
+	<li>Plusieurs lignes de champs d'en-tête</li>
+	<li>Une ligne vide</li>
+	<li>Le corps du message (optionnel)</li>
+	</ul>
+</div>
+<p>Commandes&nbsp;: GET, POST, HEAD, PUT, DELETE…</p>
+<p>Champs d'en-tête&nbsp;: Host, User-Agent, Accept… seul Host est obligatoire</p>
+<p>Exemple, le client veut accéder à la ressource
+<code>http://www.toto.fr/blog/posts/243.html?order=newest#top</code>
+</p><pre class="src "><code>GET /blog/posts/243.html?order=newest HTTP/1.1
+Host: www.toto.fr
+Accept: text/html
+Accept-Charset: utf-8
+Connection: keep-alive
+</code></pre>
+<p>NB: le fragment n'est pas transmis, il est géré uniquement par le client
+</p></section>
+
+<section class="slide">
+<h2>Réponse HTTP</h2>
+<div class="p">Structure d'une réponse HTTP&nbsp;:
+	<ul>
+	<li>Une ligne de statut avec le <i>status code</i> et un petit message explicatif</li>
+	<li>Plusieurs lignes de champs de réponse</li>
+	<li>Une ligne vide</li>
+	<li>Le corps du message (optionnel), typiquement le code HTML de la page</li>
+	</ul>
+</div>
+<p>Codes&nbsp;: 200 (OK), 404 (not found), 500 (internal server error)…</p>
+<p>Champs de réponse&nbsp;: Content-type, Last-Modified, Location…</p>
+
+<pre class="src "><code>HTTP/1.1 200 OK
+Date: Mon, 05 Jan 2015 12:12:12 GMT
+Last-Modified: Wed, 02 Jan 2013 18:18:18 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Length: 323
+Connection: close
+
+<span class="html-tag">&lt;html&gt;</span>
+  <span class="html-tag">&lt;head&gt;</span> <span class="html-tag">&lt;title&gt;</span>Le blog de Toto<span class="html-tag">&lt;/title&gt;</span> <span class="html-tag">&lt;/head&gt;</span>
+  <span class="html-tag">&lt;body&gt;</span> <span class="html-tag">&lt;p&gt;</span>Bienvenue sur mon blog !<span class="html-tag">&lt;/p&gt;</span> <span class="html-tag">&lt;/body&gt;</span>
+<span class="html-tag">&lt;/html&gt;</span></code></pre>
+
+<div class="note">
+ faire une démo avec netcat&nbsp;:
+<code>netcat example.com 80 &lt;demo/requete.txt</code>
+ça devrait donner qqch comme <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/http/demo/reponse.txt"><code>demo/reponse.txt</code></a>
+</div>
+
+</section>
+
+
+<section class="slide">
+<h2>Serveurs web</h2>
+
+<p>Il existe de nombreux serveurs web (au sens logiciel), les plus utilisés étant Apache et nginx
+</p><p>Rôle du programme serveur&nbsp;: reçoit des requêtes HTTP et renvoie des réponses HTTP (qui peuvent contenir n'importe quoi)
+</p><p>En pratique, on a souvent besoin que les URL correspondent à des <em>fichiers</em>
+</p><p class="conseq">un des rôles principaux du programme serveur est
+d'interpréter le <em>chemin</em> demandé dans la requête comme un chemin dans le système de fichiers
+</p><p>Interprétation pas directe&nbsp;! On ne veut pas que tout le système de fichiers de la machine soit accessible sur le web…
+</p><p class="conseq">le chemin demandé est «&nbsp;traduit&nbsp;»
+</p><p>Typiquement, le serveur considère que la racine de l'URL (chemin <code>/</code>)
+correspond à un répertoire fixé — typiquement <code>/var/www/html</code> — appelé «&nbsp;<strong>web root</strong>&nbsp;» ou «&nbsp;document root&nbsp;»
+</p><p class="conseq">la «&nbsp;traduction&nbsp;» est plus ou moins une simple concaténation des chemins&nbsp;:
+l'URL<br>
+<code>http://www.toto.fr<span style="color:#FF2222;">/bidule/truc/machin.html</span></code><br>
+sera interprétée comme correspondant au fichier<br>
+<code>/var/www/html<span style="color:#FF2222;">/bidule/truc/machin.html</span></code><br>
+sur le serveur
+</p><p>On dit que le serveur web «&nbsp;<em>sert</em>&nbsp;» le contenu du répertoire <code>/var/www/html</code>
+à la racine du site
+</p></section>
+
+<section class="slide">
+<h2>Servir un fichier / un répertoire</h2>
+<p>Si le chemin traduit de l'URL correspond à un fichier (HTML, ou image, PDF, audio…), c'est lui que le serveur
+envoie en réponse.
+</p><p>Si le chemin traduit ne correspond à rien, le serveur enverra une erreur 404 (on peut configurer ce comportement)
+</p><p>Si le chemin correspond à un répertoire le serveur regarde s'il contient un fichier <code>index.html</code>
+</p><p class="conseq">si oui, c'est ce fichier qu'il sert
+</p><p class="conseq">sinon, ça dépend de la configuration&nbsp;: il 
+peut renvoyer une 404, une 403, ou générer une page pour montrer le 
+contenu du répertoire
+</p></section>
+
+<section class="slide">
+<h2>Pages dynamiques</h2>
+<p>Si besoin que le contenu d'un site soit <em>dynamique</em>,
+par exemple dépende d'une base de données, il faut que le serveur génère du HTML
+</p><p>Il va déléguer cette tâche à d'autres programmes, typiquement à l'interpréteur PHP
+</p><p>Utilisation de Common Gateway Interface, ou bien exécution en fonction de l'extension du fichier
+</p></section>
+
+<!--
+directory index https://en.wikipedia.org/wiki/Webserver_directory_index
+.htaccess ? https://en.wikipedia.org/wiki/.htaccess
+
+CGI https://en.wikipedia.org/wiki/Common_Gateway_Interface
+
+/cgi-bin/
+lancer script shell avec env|sort et date (ou java !)
+historiquement ça marchait comme ça
+autre technique : serveur exécute en fonction de l'extension du fichier
+-&amp; php
+-->
+
+<section class="slide">
+<h2>PHP sur le web</h2>
+<p>PHP a été conçu au départ pour mettre des bouts de programme
+<em>au milieu d'une page HTML</em>
+
+</p><div class="src hl "><code><span style="color: #000000">
+&lt;!DOCTYPE&nbsp;html&gt;<br>&lt;html&gt;<br>&lt;head&gt;&lt;title&gt;Ma&nbsp;page&lt;/title&gt;&lt;meta&nbsp;charset="UTF-8"&nbsp;/&gt;&lt;/head&gt;<br>&lt;body&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;h2&gt;Les&nbsp;nombres&lt;/h2&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Voici&nbsp;les&nbsp;nombres&nbsp;de&nbsp;1&nbsp;à&nbsp;10000&nbsp;:<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #0000BB">&lt;?php<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">for&nbsp;(</span><span style="color: #0000BB">$i&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">$i&nbsp;</span><span style="color: #007700">&lt;=&nbsp;</span><span style="color: #0000BB">10000</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">$i</span><span style="color: #007700">++)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"</span><span style="color: #0000BB">$i</span><span style="color: #DD0000">,&nbsp;"</span><span style="color: #007700">;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">?&gt;<br></span><br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/p&gt;<br>&lt;/body&gt;<br>&lt;/html&gt;<br></span>
+</code></div>
+<a class="demo" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/http/demo/nombres.php">Résultat</a>
+<p>C'est une page HTML avec des blocs d'instructions encadrées
+par <code>&lt;?php</code> et <code>?&gt;</code></p>
+
+<ul class="note">
+<li><code>&lt;?</code> <code>?&gt;</code> permettent de définir des PI (« processing
+instruction ») ;</li>
+<li> <code>php</code> indique que ces instructions sont du PHP.</li>
+<li><small>(Cette syntaxe permet qu'un fichier contenant du HTML et du PHP puisse être du XML valide.)</small></li>
+<li>on note qu'il y a des points-virgules à la fin de chaque ligne&nbsp;:
+ils sont obligatoires</li>
+</ul>
+
+<p>Ce qui est en dehors de ces blocs est affiché tel quel</p>
+<p>Les blocs sont remplacés par le résultat de l'exécution des instructions</p>
+<p>Regarder le code source de
+la page&nbsp;: noter bien qu'il ne subsiste aucune trace du code PHP&nbsp;!</p>
+</section>
+
+
+<!-- ###################################################################### -->
+<section class="slide">
+<h2>Que s'est-il passé&nbsp;?</h2>
+<div class="p">Déroulement&nbsp;:
+<ul>
+<li>Le navigateur demande au serveur la page <code>nombres.php</code></li>
+<li>Le serveur voit qu'il s'agit d'un script PHP&nbsp;:
+il appelle l'<em>interpréteur PHP</em> sur le script <code>nombres.php</code></li>
+<li>L'interpréteur exécute le script, ce qui génère une page HTML
+	<ul>
+		<li>Ce qui est en dehors des blocs PHP est reproduit tel quel</li>
+		<li>Les blocs sont remplacés par le résultat de l'exécution des instructions</li>
+	</ul>
+</li>
+<li>La page HTML générée est renvoyée au navigateur</li>
+</ul></div>
+<p>Le navigateur <strong>ne voit jamais le code PHP</strong>&nbsp;: il ne récupère que de l'HTML&nbsp;!</p>
+<p><small>Les navigateurs ne savent d'ailleurs pas interpréter un fichier PHP. Si vous essayez d'en ouvrir un en local
+avec Firefox, il devrait vous proposer de le télécharger, comme pour tout type de fichier qu'il ne connaît pas.</small></p>
+</section>
+
+
+
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Intégration avec HTML</h2>
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br></span><span style="color: #FF8000">//&nbsp;variables&nbsp;et&nbsp;calculs<br></span><span style="color: #0000BB">$titre&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"Page&nbsp;démo"</span><span style="color: #007700">;<br></span><span style="color: #0000BB">$contenu&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"Le&nbsp;contenu&nbsp;sera&nbsp;généré&nbsp;par&nbsp;mon&nbsp;programme"</span><span style="color: #007700">;<br></span><span style="color: #0000BB">?&gt;<br></span>&lt;!DOCTYPE&nbsp;html&gt;<br>&lt;html&nbsp;lang="fr"&gt;<br>&lt;head&gt;<br>&lt;title&gt;<span style="color: #0000BB">&lt;?php&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$titre</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">?&gt;</span>&lt;/title&gt;<br>&lt;/head&gt;<br>&lt;body&gt;<br>&lt;h1&gt;<span style="color: #0000BB">&lt;?php&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$titre</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">?&gt;</span>&lt;/h1&gt;<br>&lt;p&gt;<span style="color: #0000BB">&lt;?php&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$contenu</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">?&gt;</span>&lt;/p&gt;<br>&lt;/body&gt;<br>&lt;/html&gt;<br></span>
+</code></div>
+<a class="demo" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/http/demo/integ.php">Résultat</a>
+<ul>
+<li>Regarder le code source de la page&nbsp;: noter que le premier bloc d'instructions a
+simplement disparu (il ne génère
+aucune sortie), mais il a bien été exécuté puisque les variables ont la bonne valeur.</li>
+</ul>
+</div>
+<!-- ################################### -->
+
+<!-- ################################### -->
+<div class="slide">
+<h2>Affichage des erreurs</h2>
+<ul>
+<li>PHP peut afficher les erreurs dans un fichier de log, et sur la sortie standard (c'est-à-dire dans le HTML généré)</li>
+<li>L'affichage dans le HTML est pratique pour développer… mais interdit sur un serveur en prod&nbsp;!</li>
+<li>Configuration dans le fichier de config (<code>php.ini</code>)&nbsp;:<ul>
+<li>Log géré par le flag <code>log_errors</code> (on/off) et la variable de config <code>error_log</code> (chemin absolu vers un fichier de log)</li>
+<li>Affichage HTML géré par le flag <code>display_errors</code> (on/off)</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+<!-- ################################### -->
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Parenthèse sur la configuration de PHP</h2>
+<ul>
+<li>Si pas accès au fichier de config, on peut utiliser des fichiers de config Apache locaux,
+les <code>.htaccess</code> (<a href="http://perishablepress.com/stupid-htaccess-tricks/">un guide</a>&nbsp;;
+<a href="http://perishablepress.com/how-to-enable-php-error-logging-via-htaccess/">solution pour activer le log</a>)</li>
+<li>On peut aussi modifier la valeur des paramètres de config dans un script avec
+la fonction <code>ini_set</code>, par exemple <code>ini_set('display_errors', 'on')</code>.
+<span class="handout">Cependant en cas de <i>parse error</i>, le script n'est pas exécuté du
+tout, et donc le <code>ini_set</code> n'a aucun effet…</span></li>
+<li><strong>Attention, sur votre www-prod, le flag <code>display_errors</code> est <code>off</code> et n'est modifiable que par un admin.</strong></li>
+
+</ul>
+
+</div>
+<!-- ################################### -->
+
+<div class="slide">
+<h2>En-têtes HTTP&nbsp;: fonction <code>header</code></h2>
+<ul>
+	<li>Surtout utilisé pour les redirections&nbsp;: <code>header("Location: http://google.fr");</code> (PHP se charge alors de passer un code 302)</li>
+	<li><code>header("Content-type: text/plain;");</code> pour renvoyer du texte brut par ex.  (exemples <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/http/demo/header.php">texte</a>, <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/http/demo/header_defaut.php">html par défaut</a>)</li>
+<li>On peut modifier/ajouter n'importe quel en-tête, par exemple
+<code>header('Content-Disposition: attachment; filename="exemple.html"');</code>
+va proposer la page à l'enregistrement (<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/http/demo/header_attachment.php">démo</a>)</li>
+	<li>Attention : <code>header</code> modifie l'en-tête HTTP, qui est avant le HTML <br>
+⇒ il ne faut pas commencer à écrire du texte avant l'instruction <code>header</code>&nbsp;:
+même un saut de ligne suffit à provoquer une erreur «&nbsp;Headers already sent&nbsp;»
+<a class="demo" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/http/demo/header_error.php">démo et explications</a></li>
+<li>Certaines installations bufferisent la sortie pour éviter ça, mais 
+toutes ne le font pas&nbsp;: c'est donc une fausse sécurité (un peu 
+comme désactiver les erreurs d'un compilateur…)</li>
+</ul>
+</div>
+
+
+<div class="slide" id="output-buffering"><a href="#output-buffering" class="slide-link" title="Lien vers ce slide">#</a>
+<h2>Output buffering</h2>
+<ul>
+<li>L'inclusion d'un script PHP provoque son exécution&nbsp;:
+tout ce qu'il écrit est directement affiché par le script appelant.</li>
+<li>Il est parfois utile de  ne pas afficher tout de suite le résultat
+de l'exécution d'une série d'instructions PHP, notamment pour ce cas-là</li>
+<li>Il faut utiliser l'<i lang="en">output buffering (OB)</i>&nbsp;:
+<div class="predemo">
+<div class="src hl "><code><span style="color: #000000">
+&lt;pre&gt;<br><span style="color: #0000BB">&lt;?php<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"One\n"</span><span style="color: #007700">;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">ob_start</span><span style="color: #007700">();&nbsp;&nbsp;</span><span style="color: #FF8000">/*&nbsp;on&nbsp;active&nbsp;l'output&nbsp;buffering&nbsp;:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;tout&nbsp;ce&nbsp;qui&nbsp;suit&nbsp;sera&nbsp;enregistré<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;dans&nbsp;un&nbsp;buffer&nbsp;au&nbsp;lieu&nbsp;d'être&nbsp;affiché<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br><br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"Two\n"</span><span style="color: #007700">;<br>&nbsp;&nbsp;&nbsp;&nbsp;include&nbsp;</span><span style="color: #DD0000">"demo/fichier.txt"</span><span style="color: #007700">;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$var&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">ob_get_clean</span><span style="color: #007700">();&nbsp;&nbsp;</span><span style="color: #FF8000">/*&nbsp;on&nbsp;désactive&nbsp;l'OB,&nbsp;on<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;récupère&nbsp;le&nbsp;contenu&nbsp;du<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;buffer,&nbsp;et&nbsp;on&nbsp;le&nbsp;vide.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br><br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"Three\n"</span><span style="color: #007700">;<br>&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Contenu&nbsp;du&nbsp;buffer&nbsp;:\n&nbsp;«&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$var&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"&nbsp;»\n"</span><span style="color: #007700">;<br></span><span style="color: #0000BB">?&gt;<br></span>&lt;/pre&gt;</span>
+</code></div>
+<div class="demo ">
+<pre>One
+Three
+Contenu du buffer :
+ « Two
+Coucou,
+je suis un fichier !
+
+Au revoir
+
+ »
+</pre>
+</div>
+</div>
+</li>
+<li>Il y a d'autres fonctions pour manipuler l'OB, mais dans 95% des
+cas ces deux-là suffisent.</li>
+</ul>
+</div>
+
+<!-- ################################### -->
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Variables «&nbsp;superglobales&nbsp;»</h2>
+<p>Elles sont accessibles partout</p>
+<p>Ce sont des tableaux associatifs</p>
+<ul>
+	<li><code>$_POST</code>&nbsp;: contient les données passées dans le corps d'une requête <code>POST</code></li>
+	<li><code>$_GET</code>&nbsp;: contient les paramètres de l'URL (même si la requête était <code>POST</code>&nbsp;!)
+ <a class="demo" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/http/demo/get.php?nom=toto&amp;x=12">Démo GET</a></li>
+  <li><code>$_SERVER</code> : données du serveur,
+on y trouve notamment
+<ul>
+<li>
+l'URL locale de la page
+courante (<code>$_SERVER['REQUEST_URI']</code>)</li>
+<li>et la «&nbsp;partie virtuelle&nbsp;» de l'URL courante (<code>$_SERVER['PATH_INFO']</code>).</li>
+<li>
+Attention, il y a beaucoup de données qui se ressemblent mais dont le fonctionnement
+est subtilement différent… et la doc n'est pas toujours très explicite
+ </li></ul></li>
+  <li><code>$_ENV</code> : données sur l'environnement</li>
+  <li><code>$_FILES $_COOKIE $_SESSION</code> : feront l'objet de cours spécifiques</li>
+</ul>
+<a class="demo local" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/http/superglobals.php/chemin/virtuel?variable=toto&amp;test=titi&amp;num=15">Exemple</a>
+
+<p>Rappel&nbsp;: <code>phpinfo()</code> affiche la configuration PHP de votre serveur et la valeur de toutes les superglobales (<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/http/info.php">Voir</a>)
+</p></div>
+
+<div class="slide">
+<h2>Existence de variables</h2>
+<p>Si on utilise une variable qui n'existe pas, un avertissement (notice) est lancé</p>
+<p class="conseq">il n'y a pas d'erreur, PHP considère que la variable a la valeur <code>null</code></p>
+<p>Ne pas s'appuyer là-dessus&nbsp;: s'il y a un avertissement, c'est pour une bonne raison (code pas propre, plus
+difficile à maintenir)</p>
+<div class="p">Il y a une pseudo-fonction pour tester si une variable existe ou non&nbsp;: <code>isset</code>
+<pre class="src "><code>if (isset($toto))
+	echo "La variable \$toto existe, voilà son contenu&nbsp;: $toto";
+else
+	echo "La variable \$toto n'existe pas";</code></pre>
+Le code précédent ne génère aucun avertissement.</div>
+<p>A priori, dans du code propre et bien organisé, <strong>on n'a <em>jamais</em> besoin de <code>isset()</code></strong>&nbsp;!</p>
+<div class="p">Pourtant, en pratique, <code>isset</code> est très souvent utilisée pour vérifier que les tableaux
+<code>$_GET</code> ou <code>$_POST</code> contiennent un paramètre donné
+<div class="conseq">utiliser plutôt <code>key_exists</code>, qui risque moins
+de cacher une erreur dans le code&nbsp;:
+<pre class="src "><code>if (key_exists('toto', $_GET))
+	$toto = $_GET['toto'];
+else
+	$toto = '';</code></pre>
+<span class="note">array_key_exists est un peu plus lent (genre 2 fois) à
+ cause de l'appel de fonction. c'est pas bien méchant. ça reste O(1) 
+normalement.</span></div>
+</div>
+</div>
+
+<!-- ################################### -->
+
+<div class="slide">
+<h2><code>empty()</code></h2>
+
+<div class="p">La pseudo-fonction <code>empty</code> permet de vérifier qu'une variable est «&nbsp;vide&nbsp;»,
+c'est-à-dire que
+<ul>
+<li>soit elle n'existe pas
+</li><li>soit elle existe, mais est (faiblement) égale à <code>false</code>
+</li></ul>
+</div>
+<p><strong>Attention</strong>, dans <a href="http://php.net/manual/en/function.empty.php#refsect1-function.empty-returnvalues">la liste des valeurs égales à <code>false</code></a>, il y a notamment la chaîne <code>'0'</code>&nbsp;!</p>
+<p class="conseq">même si vous savez que votre variable contient une chaîne, <code>empty()</code> ne vous permet pas de vérifier qu'elle est <em>vraiment</em> vide&nbsp;!</p>
+<p class="conseq">si vraiment besoin de manipuler des variables
+qui n'existent pas forcément, 
+il est conseillé d'utiliser plutôt <code>isset</code> et un test explicite
+(hors cas très particuliers).</p>
+<p>Il est également très fortement déconseillé d'utiliser <code>empty($maVariable)</code> si la variable
+est censée exister&nbsp;: cela peut cacher des erreurs dans le code (erreur dans le nom de variable, par exemple).</p>
+<p class="conseq">si besoin de tester qu'une variable est «&nbsp;vide&nbsp;», utiliser plutôt <code>!$maVariable</code> ou <code>$maVariable == false</code> (comparaison volontairement faible),
+ou mieux, comparer explicitement à la valeur vide qui vous intéresse&nbsp;: <code>$maChaine === ''</code> ou <code>$monTableau === []</code>.
+</p>
+<p>Pour résumer, il est encore plus déconseillé d'utiliser <code>empty</code> que <code>isset</code>.
+</p>
+<p>Détails sur <code>isset</code> et <code>empty</code>, leur relation avec <code>null</code>, et quand les utiliser&nbsp;: <a href="http://kunststube.net/isset/">the definitive guide to PHP’s <code>isset</code> and <code>empty</code></a></p>
+</div>
+
+
+
+</div> <!-- fin #presentation -->
+
+<aside id="liens">
+<h3>Spécifications et normes</h3>
+<ul>
+<li><a href="https://tools.ietf.org/html/rfc7230">RFC&nbsp;7230</a> et suivantes&nbsp;: Hypertext Transfer Protocol (HTTP/1.1)</li>
+<li><a href="https://tools.ietf.org/html/rfc3986">RFC&nbsp;3986</a> Uniform Resource Identifier (URI): Generic Syntax</li>
+</ul>
+<h3>Sites</h3>
+<ul>
+<li><a href="http://w3c.org/">Site du W3C</a> World Wide Web Consortium</li>
+</ul>
+<h3>Tutoriels</h3>
+<ul>
+<li><a href="https://howdns.works/">How DNS works</a> (en bande dessinée)</li>
+</ul>
+<h3>Lectures complémentaires</h3>
+<ul>
+<li><a href="http://www.ted.com/talks/lang/fr/tim_berners_lee_on_the_next_web.html">Vidéo TED, Tim Berners-Lee sur le futur web</a></li>
+</ul>
+
+</aside><!-- fin #liens -->
+</div> <!-- fin #contenu -->
+
+<footer class="license">
+	<a class="icone" rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+		<img alt="Licence Creative Commons CC-BY" style="border-width:0" src="HTTP,%20serveurs%20web,%20et%20pages%20dynamiques%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/88x31.png">
+	</a>
+	<p class="texte">
+		Ce cours est mis à disposition selon les termes de la <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">licence Creative Commons Attribution 4.0 International</a>.
+	</p></footer>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+	function toggleProj() {
+		const currentParams = new URLSearchParams(window.location.search);
+		if (currentParams.get('mode') === 'proj') {
+			console.log('found proj');
+			document.documentElement.classList.remove('proj');
+			currentParams.delete('mode');
+		} else {
+			console.log('not found proj');
+			document.documentElement.classList.add('proj');
+			currentParams.set('mode', 'proj');
+		}
+		window.history.pushState({}, '', '?' + currentParams + window.location.hash);
+	};
+
+	var buttons = document.querySelectorAll('.proj_switch button'), i;
+	for (i = 0; i < buttons.length; ++i) {
+		buttons[i].addEventListener("click", toggleProj);
+	}
+
+	document.addEventListener("keypress", function(e) {
+		if (e.target == document.body && String.fromCharCode(e.keyCode || e.charCode) == "m") {
+			toggleProj();
+		}
+	});
+
+	/* ajout de liens aux titres qui ont un id */
+	let slidesWithId = document.querySelectorAll('.slide[id]');
+	for (const slide of slidesWithId) {
+		const link = document.createElement('a');
+		link.href = '#' + slide.id;
+		link.classList.add('slide-link');
+		link.title = 'Lien vers ce slide';
+		link.textContent = '#';
+		slide.insertAdjacentElement('afterbegin', link);
+	}
+
+
+});
+</script>
+
+
+</body></html>

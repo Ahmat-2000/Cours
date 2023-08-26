@@ -1,0 +1,177 @@
+
+      body {
+      background-color: #fff; /* #b1cdcd; */
+      }
+
+      table {
+      width:100%;
+      border:1px solid black;
+      }
+      
+      .titcol {
+       width:7%;
+      }
+      .gdecol {
+       width:31%;
+      }
+
+      td {
+      text-align: center;
+      }
+      td.td {
+      text-align: left;
+      background-color: #d1ddcd;
+      }
+      td.tp {
+      text-align: left;
+      background-color: #c1cdcd;
+      }
+      td.cm {
+      text-align: left;
+      background-color: #e1cdcd;
+      }
+      code {
+      font-size: larger;
+      color: #662222;
+      }
+      .petit {
+      font-size: smaller;
+      }
+      div.question:before {
+      content: "Question : ";
+      font-weight: bold;
+      }
+      div.question {
+      background-color: #f1dddd;
+      border: solid #819d9d;
+      margin: 2em 1em 2em 0em;
+      padding: 1em;
+      }
+      div.etape:before {
+      content: "Étape : ";
+      font-weight: bold;
+      }
+      div.etape {
+      background-color: #f1f1d1;
+      border: solid #819d9d;
+      padding: 1em .5em 1em 3em;
+      margin: 0.5em 1em 0.5em 0em;
+      }
+      div.indication:before {
+      content: "Indication : ";
+      font-style: italic;
+      }
+      div.indication {
+      /*background-color: #f1f1d1;
+      border: solid #819d9d;*/
+      padding: 1em .5em 1em 1em;
+      margin: 0.5em 1em 0.5em 0em;
+      }
+      pre { 
+      font-family: monospace;
+      padding: 1em .5em 1em 3em;
+      margin: 0.5em 1em 0.5em 0em;
+      background-color: #efefef;
+      border: 1px solid #aaa;
+      }
+      .center {
+      text-align: center; 
+      }
+
+      .antlr-default {
+      }
+      .antlr-keyword {
+        /* antlr-keyword */
+        color: #000000;
+        font-weight: bold;
+      }
+      .antlr-ruledef {
+        /* antlr-ruledef */
+        color: #0000ff;
+        font-weight: bold;
+      }
+      .antlr-ruleref {
+        /* antlr-ruleref */
+        color: #00008b;
+      }
+      .antlr-tokendef {
+        /* antlr-tokendef */
+        color: #0000ff;
+        font-weight: bold;
+      }
+      .antlr-tokenref {
+        /* antlr-tokenref */
+        color: #8b5a00;
+      }
+      .antlr-font-lock-ruledef {
+        /* antlr-font-lock-ruledef-face */
+        color: #0000ff;
+        font-weight: bold;
+      }
+      .antlr-font-lock-ruleref {
+        /* antlr-font-lock-ruleref-face */
+        color: #00008b;
+      }
+      .antlr-font-lock-tokendef {
+        /* antlr-font-lock-tokendef-face */
+        color: #8b5a00;
+       /* font-weight: bold; */
+      }
+      .builtin {
+      /* font-lock-builtin-face */
+      color: #da70d6;
+      }
+      .comment {
+      /* font-lock-comment-face */
+      color: #b22222;
+      }
+      .comment-delimiter {
+      /* font-lock-comment-delimiter-face */
+      color: #b22222;
+      }
+      .doc {
+      /* font-lock-comment-face */
+      color: #b22222;
+      }
+      .function-name {
+      /* font-lock-function-name-face */
+      color: #0000ff;
+      }
+      .keyword {
+      /* font-lock-keyword-face */
+      color: #a020f0;
+      }
+      .string {
+      /* font-lock-string-face */
+      color: #a0522d;
+      text-decoration: underline;
+      }
+      .variable-name {
+        /* font-lock-variable-name-face */
+        color: #b8860b;
+      }
+      .type {
+      /* font-lock-type-face */
+      color: #228b22;
+      }
+      .comint-highlight-input {
+        /* comint-highlight-input */
+        font-weight: bold;
+      }
+      .comint-highlight-prompt {
+        /* comint-highlight-prompt */
+        color: #00008b;
+      }
+      .deltaTable {
+         width:120px;
+         height:140px;
+      }
+      
+      .instructions td {
+      border: solid grey;
+      text-align: center;
+      font-size: 18pt;
+      }
+      .instructions kbd {
+      font-size: 20pt;
+      }

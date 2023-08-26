@@ -1,0 +1,225 @@
+﻿:root{
+	--h-color: #820215;
+	--h-b-color: gray;
+	--b-color: #fce3e4;
+}
+body {
+	background-color:white;
+	color:black;
+	text-align:justify;
+	max-width: 23cm;
+	width: 100%;
+	margin: auto;
+	padding-bottom: 10vmin;
+	counter-reset: exercice;
+}
+
+a, a:link, a:hover {
+			 color:var(--h-color);
+			 text-decoration:none;
+
+}
+
+a:hover {
+			text-decoration:underline dotted;
+}
+table.couleurTitre {
+	background-color:blue;
+}
+
+.titre {
+	color:var(--h-color);
+	font-size:300%;
+	text-indent:30pt;
+  
+}
+
+.sousTitre {
+	color:gray;
+	font-size:15pt;
+	text-indent:70pt;
+}
+
+ h1 {
+	color: var(--h-color);
+	font-size:220%;
+	font-family: normal;
+	font-variant:small-caps;
+	margin-top:10vmin;
+	margin-bottom:5vmin;
+	border-style:dotted;
+	border-color:var(--h-b-color);
+	border-width:4px 0px 4px 0px;
+
+}
+
+
+ h2 {
+	font-size:160%;
+	font-family: normal;
+	font-variant:small-caps;
+	margin-top: 5vmin;
+	margin-left:30px;
+	padding:1%;
+	color:black;
+	border-style: dotted;
+	border-color: var(--h-b-color);
+	border-width: 0px 0px 3px 3px;
+	border-radius: 0 0 0 5px;
+      /* counter-increment: exercice; */
+}
+ h3 {
+	margin-top: 5vmin;
+				 color: var(--h-color);
+ }
+
+.lien {
+	color:black;
+	text-decoration:none;
+}
+	
+img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	border:0;
+}
+
+
+ pre {
+	border-style:dotted;
+	border-color:grey;
+	border-width:1px 1px 1px 1px;
+}
+/*
+pre.output {
+	background:lightblue;
+	border-style:dotted;
+	border-color:blue;
+	border-width:1px 1px 1px 1px;
+}	
+*/
+
+/*h2:before {
+  content: counter(exercice)". "
+}*/	
+
+p code.hljs { display: inline; }
+
+tt,code,pre {
+	color:blue;
+}
+
+figure {
+				display: inline-block;
+				margin: 20px;
+}
+
+figure img {
+				vertical-align: top;
+}
+
+figure figcaption{
+				text-align: center;
+				color: #888888;
+}
+
+div.exercice::before{
+				counter-increment: exercice;
+				content: "Question " counter(exercice) ". ";
+				color: black;
+				font-weight: 900;
+}
+
+div.exercice.bonus::before{
+				content: "Question " counter(exercice) " (Bonus). ";
+				counter-increment: exercice;
+				color: black;
+				font-weight: 900;
+}
+
+div.nb::before{
+	content: "Note : ";
+	color: black;
+	font-weight: 900;
+}
+
+div.nb{
+	--nb-b-color: #aaaaaa;
+	padding: 1%;
+	border: 1px solid var(--nb-b-color);
+	border-radius: 3px;
+	margin-bottom: .8em;
+}
+
+div.exercice {
+				font-family: Arial;
+				font-size: 1.1em;
+				padding: .5em;
+				font-style: italic;
+/*
+ 				border-left: thick solid orange;
+			  background: #fce3e4;
+				border-radius: 3px;
+ 				border-left: thick solid #ad010d;
+ */
+ 				border-left: thick solid var(--h-color);
+				background: var(--b-color);
+				border-radius: 3px;
+/**/	
+				margin-bottom: .8em;
+}
+
+div.definition {
+				font-family: Arial;
+				font-size: 1.1em;
+				padding: .5em;
+/*
+ 				border-left: thick solid orange;
+			  background: #fce3e4;
+				border-radius: 3px;
+ 				border-left: thick solid #ad010d;
+ */
+ 				border-left: thick solid #2a6916;
+				background: #baedaa;
+				border-radius: 3px;
+/**/	
+				margin-bottom: .8em;
+}
+
+div.definition::before{
+				counter-increment: definition;
+				content: "Definition " counter(definition) ". ";
+				color: black;
+				font-weight: 900;
+}
+
+
+.images {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-evenly;
+}
+
+/**** 
+ * Graphes 
+ * ***/
+
+.node rect {
+  stroke: #333;
+  fill: #eee;
+  stroke-width: 1.5px;
+}
+
+.edgePath path.path {
+  stroke: #333;
+  fill: none;
+  stroke-width: 1.5px;
+}
+
+.arrowhead {
+ stroke: blue;
+ fill: blue;
+ stroke-width: 1.5px;
+}

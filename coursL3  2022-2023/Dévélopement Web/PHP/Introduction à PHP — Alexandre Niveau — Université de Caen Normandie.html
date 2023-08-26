@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<title>Introduction à PHP — Alexandre Niveau — Université de Caen Normandie</title>
+
+	<meta name="author" content="Alexandre Niveau">
+	<meta name="company" content="Université de Caen">
+	<meta name="viewport" content="initial-scale=1">
+
+
+	<link rel="stylesheet" href="Introduction%20%C3%A0%20PHP%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/normalize.css">
+	<link rel="stylesheet" href="Introduction%20%C3%A0%20PHP%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/slides_alex.css">
+	<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png">
+
+	<!-- STYLES POUR DEMO -->
+	<style>
+.demo table { border 1px solid black; }
+.demo td { text-align: center; border: 1px solid black; }
+
+.output { color: white; background-color: #333; }
+	</style></head>
+<body>
+<header class="title slide">
+	<h1>Introduction à PHP</h1>
+	<div class="auteur">Alexandre Niveau</div>
+	<div class="affiliation">GREYC — Université de Caen</div>
+	<div class="details">
+		En partie adapté du cours de Jean-Marc Lecarpentier
+	</div>	<div class="proj_switch"><button title="basculer entre mode normal et mode projection (raccourci clavier «&nbsp;m&nbsp;»)">Changer de mode</button></div>
+</header>
+
+<div id="contenu">
+<div id="presentation" class="hidenotes">
+
+
+<div class="slide note">
+
+exo : piège avec + et . (utilisation de + au lieu de .)
+piège avec == sur les chaînes converties en entiers
+
+piège avec les valeurs de retour == à false
+
+leur faire découvrir ce qui se passe quand on utilise NULL comme tableau
+
+fonction anonymes ?
+
+multi bytes strings
+</div>
+
+<!-- ################################### -->
+
+<div class="slide">
+<h2>PHP pour <i>PHP: Hypertext Preprocessor</i></h2>
+<p>Un langage de script, comme Python ou bash</p>
+  <p>Spécialement conçu pour des applications web (architecture client/serveur)</p>
+  <p>Idée de départ : rendre «&nbsp;simple&nbsp;» la réalisation de sites web dynamiques
+  en permettant d'inclure des instructions dans le code HTML (en pratique, très souvent
+mal utilisé) </p>
+<p><a href="http://eev.ee/blog/2012/04/09/php-a-fractal-of-bad-design/">Pas le meilleur langage de programmation</a>, mais s'est progressivement amélioré dans les dernières années (versions 7 et&nbsp;8)
+</p><p>Toujours très utilisé,
+notamment par Wikipédia et Facebook (mais les internautes ne le voient 
+pas), et surtout par les principaux CMS (WordPress, Drupal, Joomla), qui
+ permettent aux administrateurs de modifier leur fonctionnement en 
+changeant le code</p>
+<p>De nos jours, PHP se veut un langage généraliste — pas seulement utile pour faire des pages web.</p>
+<p class="note">dans ce cours on commence par présenter PHP en ligne de commande, avant de l'utiliser côté serveur.</p>
+</div>
+
+<!-- ################################### -->
+
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Historique</h2>
+<ul>
+  <li>1994&nbsp;: création par <a href="http://lerdorf.com/">Rasmus Lerdorf</a> en bidouillant le langage <a href="http://www.perl.org/">Perl</a></li>
+  <li>1998&nbsp;: PHP version 3, le succès est large</li>
+  <li>2000&nbsp;: sortie de PHP4 et arrivée du moteur <a href="http://www.zend.com/">Zend</a></li>
+  <li>2004&nbsp;: arrivée de PHP5, langage complet avec de réelles fonctionnalités objet</li>
+	<li>2015&nbsp;: PHP7</li>
+	<li>2020&nbsp;: PHP8</li>
+</ul>
+<p>Dès le départ, PHP a été construit incrémentalement, en fonction des 
+besoins (de Rasmus Lerdorf au début, puis de la communauté), et en 
+agrégeant des idées de diverses origines</p>
+<p>Cela se sent dans la syntaxe&nbsp;: les variables et les boucles sont
+ celles de Perl, les références sont celles de C++, le modèle objet est 
+celui de Java, etc.</p>
+<p>Il y a de nombreuses façons de faire la même chose (plusieurs syntaxes pour le <code>if</code> par exemple)</p>
+<p>On ne verra pas tout le langage&nbsp;! En particulier, on ne verra 
+aucune nouveauté de la version 8, car c'est la 7.4 qui est installée sur
+ les machines de TP.</p>
+</div>
+
+
+<!-- ################################### -->
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Les bases</h2>
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br></span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"Hello,&nbsp;world!\n"</span><span style="color: #007700">;</span>
+</span>
+</code></div>
+<ul>
+<li>Un script PHP commence par les caractères <code>&lt;?php</code>
+</li><li>chaque instruction se termine par un point-virgule</li>
+<li>la commande <code>echo</code> permet d'afficher quelque chose</li>
+<li>Pour exécuter un script, on appelle l'interpréteur avec la commande <code>php</code>
+<pre class="output"><b>$</b> php mon_script.php</pre>
+<pre class=" output">Hello, world!
+
+</pre>
+</li></ul>
+</div>
+
+<!-- ################################### -->
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Commentaires</h2>
+<ul>
+  <li>À la C++ avec <code>//</code>, ou à la shell avec <code>#</code> (la suite de la ligne est ignorée)</li>
+  <li>À la C avec <code>/* ... */</code> (permet de commenter plusieurs lignes)</li>
+</ul>
+</div>
+
+
+<!-- ################################### -->
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Principaux types d'erreur</h2>
+<ul>
+  <li>Parse error : erreur de syntaxe dans le programme, il n'est pas exécuté du tout </li>
+  <li>Fatal error : arrête le programme</li>
+  <li>Warning : alerte, n'interrompt pas l'exécution</li>
+  <li>Notice : niveau d'alerte minimal — à ne pas négliger&nbsp;!</li>
+</ul>
+</div>
+
+<!-- ################################### -->
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Variables</h2>
+<div class="slidecontent">
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br>$message&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"Bonjour,&nbsp;oh&nbsp;monde&nbsp;!"</span><span style="color: #007700">;<br>echo&nbsp;</span><span style="color: #0000BB">$message</span><span style="color: #007700">;</span>
+</span>
+</code></div>
+<pre class=" output">Bonjour, oh monde !
+</pre>
+<ul>
+<li> Les variables ne sont pas déclarées
+</li>
+<li>Le nom d'une variable est  composé du caractère <code>$</code> suivi d'un symbole fait de lettres minuscules ou majuscules, de chiffres et de soulignés.
+</li><li>
+Les noms de variables sont sensibles à la casse&nbsp;: <code>$toto</code> ≠ <code>$Toto</code> ≠ <code>$TOTO</code> 
+</li><li>Les variables systèmes commencent par un caractère souligné (ex&nbsp;: <code>$_REQUEST</code>) et il est donc conseillé de ne pas utiliser de nom de variable commençant par un souligné.</li>
+<li>Les valeurs sont <em>faiblement typées</em>&nbsp;; il existe les 
+types entier, booléen, flottant, chaîne de caractères, tableau, et 
+objet, mais les valeurs peuvent changer de type en fonction du contexte 
+(conversions implicites)</li>
+<li>Toute variable n'ayant pas encore de valeur est de type <code>NULL</code>, qui n'a que la valeur <code>NULL</code></li>
+<li>Utiliser une variable non initialisée n'est pas une <em>erreur</em> —
+cela génère simplement une «&nbsp;notice&nbsp;». Les variables non initialisées contiennent la chaîne vide.
+Il est <strong>très déconseillé de le faire</strong>&nbsp;: un code propre ne doit générer aucune notice&nbsp;!
+</li></ul>
+</div>
+</div>
+
+<!-- ################################### -->
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Constantes</h2>
+<ul>
+  <li><code>define('TOTO', valeur);</code> pour définir la constante <code>TOTO</code></li>
+<li>NB: les constantes ne commencent pas par un dollar.</li>
+<li>NB: à la déclaration avec <code>define</code>,
+on met le nom de la constante dans une chaîne de caractères, mais on utilise la constante
+sans guillemets&nbsp;!
+  </li><li>Accepte seulement une valeur scalaire (booléen, entier, float ou chaîne de caractères), ou un tableau (PHP ≥ 7)</li>
+  <li>Portée des constantes : globale</li>
+<li>Attention&nbsp;: si on utilise une constante sans l'avoir définie, PHP la définit
+comme contenant son nom en chaînes de caractères, et génère une notice
+</li><li>On peut aussi déclarer une constante avec le mot-clef <code>const</code>&nbsp;:
+<pre class="src">const TOTO = 'Toto Dupont';</pre>
+Cependant ça ne fonctionne pas tout à fait pareil&nbsp;: les constantes déclarées avec <code>const</code>
+sont définies à la compilation, alors que celles déclarées avec <code>define</code>
+le sont à l'exécution. En pratique&nbsp;:
+<pre class="src">$var = 'une variable';
+define('TOTO', $var);  /* OK */
+const TUTU = $var;  /* Fatal error */</pre>
+</li></ul>
+</div>
+
+<!-- ################################### -->
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Inclusion de fichiers</h2>
+<p>On a très souvent besoin d'inclure du code d'un autre fichier PHP (ou HTML)</p>
+<div class="p">2 possibilités
+<ul>
+  <li><code>include</code> : génère simplement un warning en cas d'échec</li>
+	<li><code>require</code> : arrête le programme avec une erreur fatale en cas d'échec,
+donc rien ne s'affiche</li>
+</ul>
+</div>
+  <p>Instructions <code>include_once</code> et <code>require_once</code> pour éviter une inclusion multiple</p>
+<p>La gestion des chemins (quels accès sont autorisés ou non, quelle est
+ la référence des chemins relatifs dans un script inclus depuis un autre
+ script…) est relativement infernale&nbsp;: ne pas essayer de faire des 
+choses subtiles, ou prévoir un stock d'aspirine</p>
+
+</div>
+
+
+<!-- ################################### -->
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Déboguer</h2>
+<div class="p">Fonctions utiles
+<ul>
+  <li><code>print_r</code>, <code>var_export</code> ou <code>var_dump</code> affichent le contenu d'une variable de façon lisible (<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/php/demo/dump.php">démo</a>)</li>
+  <li><code>debug_print_backtrace()</code> affiche la backtrace de PHP (appels aux fonctions, aux fichiers inclus / requis, etc)</li>
+</ul>
+</div>
+</div>
+
+<!-- ################################### -->
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Opérateurs</h2>
+<ul>
+  <li>Arithmétiques&nbsp;: <code>+ - * / %</code></li>
+  <li>Concaténation de chaînes&nbsp;: <code>.</code> — <em>Attention</em>, ce n'est pas <code>+</code>&nbsp;!)
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br></span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"cou"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"cou\n"</span><span style="color: #007700">;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;concaténation<br></span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"cou"&nbsp;</span><span style="color: #007700">+&nbsp;</span><span style="color: #DD0000">"cou\n"</span><span style="color: #007700">;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;somme&nbsp;:&nbsp;les&nbsp;chaînes&nbsp;vont&nbsp;être&nbsp;implicitement&nbsp;converties&nbsp;en&nbsp;entiers&nbsp;!<br></span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br>echo&nbsp;</span><span style="color: #0000BB">7&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;affiche&nbsp;72<br></span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br>echo&nbsp;</span><span style="color: #0000BB">7.&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">.2</span><span style="color: #007700">;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;affiche&nbsp;70.2&nbsp;(équivaut&nbsp;à&nbsp;"7."&nbsp;.&nbsp;".2")</span>
+</span>
+</code></div>
+Résultat&nbsp;:
+<pre class=" output">coucou
+0
+72
+70.2
+</pre>
+<p class="note">L'opérateur est <code>.</code> justement à cause du typage faible, pour garder <code>+</code> pour l'addition</p>
+</li>
+  <li>Assignation&nbsp;: <code>= += -= *= /= .=</code></li>
+  <li>Comparaisons&nbsp;: <code>== != &lt;&gt; &lt;= &gt;= === !==</code> (voir plus loin)</li>
+  <li>Logiques&nbsp;: <code>|| &amp;&amp; and or xor !</code></li>
+  <li>Conversion explicite de type&nbsp;: <code>(int) (float) (string) (array) (object)</code></li>
+  <li>Opérateur ternaire&nbsp;: <code>$condition ? 'valeur si vrai' : 'valeur si faux'</code> 
+(<a href="http://stackoverflow.com/questions/20559150/ternary-operator-left-associativity">attention, leur chaînage est contre-intuitif…</a>)</li>
+  <li>Voir les <a href="http://fr.php.net/manual/fr/language.operators.php">opérateurs</a> dans le <a href="http://fr.php.net/manual/fr/">manuel</a></li>
+</ul>
+</div>
+
+<!-- ################################### -->
+<!-- ################################### -->
+
+<div class="slide" id="double-egal"><a href="#double-egal" class="slide-link" title="Lien vers ce slide">#</a>
+<h2>Opérateurs d'égalité faible</h2>
+<div class="p">Les opérateurs de comparaison <code>==</code>
+et <code>!=</code> sont très dangereux, pour deux raisons distinctes.
+<ol>
+<li>Il y a des conversions implicites
+lorsque l'on compare des valeurs de types différents (typage faible).
+<p>Une conséquence amusante est que l'opérateur <code>==</code> n'est <em>pas transitif</em>&nbsp;:
+par exemple, <code>'0' == 0</code> (la chaîne de caractère est automatiquement convertie en entier),
+<code>0 == 'toto'</code> (idem, et la conversion donne 0 car la chaîne ne commence pas par un nombre),
+mais
+<code>'0' != 'toto'</code>.</p>
+<p>Les résultats peuvent être surprenants&nbsp;: <code>false == '0'</code> mais <code>false != '00'</code> par exemple.
+<a href="http://php.net/manual/en/types.comparisons.php">(Tableaux des résultats de comparaison en fonction des types)</a>
+</p>
+</li>
+<li>Beaucoup plus grave&nbsp;: si on compare deux chaînes de caractères «&nbsp;numériques&nbsp;» (c'est-à-dire
+qu'elles contiennent un nombre), <strong>c'est leur valeur numérique qui est comparée</strong>&nbsp;!
+<p class="conseq">Par exemple, <code>'1' == '1.0'</code>, <code>'10' == '010'</code>, et <code>'1000' == '1e3'</code> (notation scientifique)…
+et les chaînes de caractères suivantes sont <em>toutes égales</em> (car leur valeur numérique est 0)&nbsp;:
+<code>'0'</code>, <code>'0000'</code>, <code>'0.'</code>, <code>'0.0000'</code>,
+<code>'0e1'</code>, mais aussi <code>'1234e-56789'</code> (à cause de l'arrondi)&nbsp;!</p>
+</li>
+</ol>
+</div>
+</div>
+
+<div class="slide">
+<h2>Opérateurs d'égalité stricte</h2>
+<p>PHP fournit également un opérateur d'égalité stricte (identité) <code>===</code> (et sa négation <code>!==</code>)&nbsp;:
+il vérifie l'égalité des valeurs et des types, <em>et</em> se comporte correctement sur les chaînes de caractères.</p>
+<p class="conseq">
+<strong>Toujours utiliser <code>===</code> et <code>!==</code> pour comparer des chaînes de caractères</strong>
+(ou des données dont le type n'est pas certain)&nbsp;!</p>
+<p class="conseq">En revanche, pour comparer des nombres qui peuvent être entiers ou flottants, il
+peut être opportun d'utiliser <code>==</code> (car par exemple <code>0 !== 0.0</code>, ce qui dans certains cas n'est pas ce qu'on veut)</p>
+</div>
+
+
+<!-- ################################### -->
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Chaînes de caractères et substitution des variables</h2>
+<ul>
+<li>PHP utilise deux délimiteurs pour les chaînes de caractères, qui fonctionnent comme en shell&nbsp;:
+<ul><li>les caractères d'une chaîne entre apostrophes (<i>single quotes</i>, <code>'</code>) sont laissés tels quels
+</li><li>dans une chaîne entre guillemets (<i>double quotes</i>, <code>"</code>, les variables sont substituées par leur valeur,
+et on peut utiliser certaines séquences d'échappement
+</li></ul>
+</li><li>Les séquences d'échappement les plus utiles :
+ <code>\n</code> pour fin de ligne, <code>\t</code> pour tabulation, <code>\$</code> pour dollar,
+<span class="note"> \[0-7]{1,3} pour un caractère donné en octal, <code>\x[0-9A-Fa-f]{1,2}</code> pour un caractère donné en hexadécimal, </span>
+ <code>\"</code> pour <code>"</code> et <code>\\</code> pour <code>\</code></li> 
+<li>Entre simples quotes, il n'existe que <code>\'</code> et <code>\\</code> comme échappement. Pour <code>x</code> autre que <code>'</code> ou <code>\</code>, <code>\x</code> donne <code>\x</code>.</li>
+<li class="note">Il existe une troisième façon de donner des constantes chaînes de caractères, les « heredoc ».</li>
+<li>On ne peut pas faire d'opération sur la variable à substituer&nbsp;:
+<div class="predemo">
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br></span><span style="color: #007700">for(</span><span style="color: #0000BB">$i&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">$i&nbsp;</span><span style="color: #007700">&lt;=&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">$i</span><span style="color: #007700">++)&nbsp;{&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"</span><span style="color: #0000BB">$i</span><span style="color: #DD0000">&nbsp;(</span><span style="color: #0000BB">$i</span><span style="color: #DD0000">*3)\n"</span><span style="color: #007700">;&nbsp;<br>}</span>
+</span>
+</code></div>
+<pre class="demo output">1 (1*3)
+2 (2*3)
+3 (3*3)
+4 (4*3)
+5 (5*3)
+6 (6*3)
+7 (7*3)
+8 (8*3)
+9 (9*3)
+10 (10*3)
+
+</pre>
+</div>
+⇒ il faudrait utiliser la concaténation.
+</li>
+</ul>
+
+</div>
+
+<!-- ################################### -->
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Caractères spéciaux dans les chaînes</h2>
+<p>PHP manipule les chaînes de caractères comme des suites d'octets
+</p><p>Si on met un caractère spécial, la chaîne contiendra la suite d'octet
+correspondant à l'encodage du fichier <code>.php</code> dans lequel elle est définie
+</p><p>Les fonctions de manipulation de chaînes «&nbsp;de base&nbsp;» considèrent qu'un caractère = un octet,
+ce qui n'est pas forcément vrai si les chaînes ne contiennent pas de l'ASCII
+</p><p>Il faut utiliser <a href="https://www.php.net/manual/fr/ref.mbstring.php">les fonctions dédiées aux chaînes «&nbsp;multi-octets&nbsp;»</a>
+</p></div>
+
+
+<!-- ################################### -->
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Structures de contrôle</h2>
+<div class="p">Les structures suivantes fonctionnent de même manière qu'en C (et Java)
+<ul>
+  <li><code>if ... else if ... else</code></li>
+  <li><code>for (...; ...; ...)</code></li>
+  <li><code>while</code></li>
+  <li><code>do ... while</code></li>
+  <li><code>switch</code> avec <code>case ... break;</code></li>
+</ul>
+</div>
+  <p>Voir les détails dans le <a href="http://fr.php.net/manual/fr/language.control-structures.php">manuel</a></p>
+</div>
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Fonctions</h2>
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">fact</span><span style="color: #007700">(</span><span style="color: #0000BB">$x</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$x&nbsp;</span><span style="color: #007700">&lt;=&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">)<br>&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">;<br>&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$x&nbsp;</span><span style="color: #007700">*&nbsp;</span><span style="color: #0000BB">fact</span><span style="color: #007700">(</span><span style="color: #0000BB">$x</span><span style="color: #007700">-</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br>}<br><br>echo&nbsp;</span><span style="color: #DD0000">"5!&nbsp;=&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">fact</span><span style="color: #007700">(</span><span style="color: #0000BB">5</span><span style="color: #007700">);<br>echo&nbsp;</span><span style="color: #DD0000">"50!&nbsp;=&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">fact</span><span style="color: #007700">(</span><span style="color: #0000BB">50</span><span style="color: #007700">);</span>
+</span>
+</code></div>
+<pre class=" output">5! = 12050! = 3.0414093201713E+64
+</pre>
+
+<ul>
+<li>Mot-clef <code>function</code></li>
+<li>On déclare une liste de paramètres formels </li>
+<li>La valeur des paramètres formels est une copie (paresseuse) des paramètres réels</li>
+<li><code>return</code> pour sortir de la fonction et retourner (ou pas) une valeur</li>
+<li>Les variables utilisées dans une fonction sont locales à la fonction</li>
+</ul>
+</div>
+
+<div class="slide">
+<h2>Détails sur les fonctions</h2>
+<div class="p">Les noms des fonctions ne sont <strong>pas</strong> sensibles à la casse&nbsp;:
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">toto</span><span style="color: #007700">()&nbsp;{&nbsp;echo&nbsp;</span><span style="color: #DD0000">"fonction&nbsp;toto\n"</span><span style="color: #007700">;&nbsp;}<br>function&nbsp;</span><span style="color: #0000BB">Toto</span><span style="color: #007700">()&nbsp;{&nbsp;echo&nbsp;</span><span style="color: #DD0000">"fonction&nbsp;Toto\n"</span><span style="color: #007700">;&nbsp;}</span>
+</span>
+</code></div>
+<pre class="output">PHP Fatal error:  Cannot redeclare Toto() (previously declared in
+/blabla/toto.php:2) in /blabla/toto.php on line 3</pre>
+</div>
+
+
+<p><strong>Attention</strong>, il est autorisé de passer trop d'arguments
+à une fonction : cela ne génère même pas une notice.
+</p><p>On peut définir des paramètres optionnels ayant une valeur par défaut&nbsp;:
+</p><div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">saluer</span><span style="color: #007700">(</span><span style="color: #0000BB">$nom</span><span style="color: #007700">=</span><span style="color: #DD0000">"chère&nbsp;personne"</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Bonjour,&nbsp;</span><span style="color: #0000BB">$nom</span><span style="color: #DD0000">&nbsp;!\n"</span><span style="color: #007700">;<br>}<br><br></span><span style="color: #0000BB">saluer</span><span style="color: #007700">(</span><span style="color: #DD0000">"Jean-Michel"</span><span style="color: #007700">);<br></span><span style="color: #0000BB">saluer</span><span style="color: #007700">();</span>
+</span>
+</code></div>
+<pre class=" output">Bonjour, Jean-Michel !
+Bonjour, chère personne !
+
+</pre>
+</div>
+
+
+<!-- ################################### -->
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Bibliothèques de fonctions</h2>
+<p>Existence de nombreuses bibliothèques, par ex.</p>
+<ul>
+	<li><a href="http://fr.php.net/manual/fr/ref.bc.php">BC Maths</a> pour travailler sur des nombres de grande taille 
+<!--
+(<a href="demo/old/factorielle.php" onclick="window.open(this.href, 'nouv', 'width=600, height=600, scrollbars'); return false;">exemple</a>) -->
+</li>
+	<li><a href="http://fr.php.net/manual/fr/book.datetime.php">Date et heure</a> pour créer et/ou afficher des dates <!--(<a href="demo/old/date.php" onclick="window.open(this.href, 'nouv', 'width=600, height=600, scrollbars'); return false;">exemple</a>)
+-->
+</li>
+	<li><a href="http://fr.php.net/manual/fr/ref.curl.php">CURL</a> pour gérer la communication avec différents serveurs et protocoles 
+<!-- (<a href="demo/old/curl.php" onclick="window.open(this.href, 'nouv', 'width=600, height=600, scrollbars'); return false;">exemple</a>) -->
+</li>
+  <li><a href="http://fr.php.net/manual/fr/ref.image.php">Images</a> avec un ensemble de fonctions utilisant la bibliothèque GD (<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/php/demo/histo.php">exemple</a>)</li>
+  <li><a href="http://fr.php.net/manual/fr/funcref.php">Liste complète</a></li>
+</ul>
+</div>
+
+<!-- ################################### -->
+<!-- ################################### -->
+
+<!-- ################################### -->
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Types composites</h2>
+<div class="p">PHP propose deux types composites
+<ul>
+<li>les objets, qu'on verra plus tard
+</li><li>les tableaux (<i>arrays</i>)
+</li></ul>
+</div>
+<p>On différencie usuellement tableaux numériques et tableaux associatifs,
+mais c'est une seule et même structure de données, le «&nbsp;tableau associatif ordonné&nbsp;» (<i>ordered map</i>). <small>On peut d'ailleurs&lt;
+mélanger les deux types d'indices.</small>
+</p></div>
+<div class="slide">
+<h2>Tableaux numériques</h2>
+<div class="predemo">
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php&nbsp;<br>$couleurs&nbsp;</span><span style="color: #007700">=&nbsp;array(<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"black"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"yellow"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"fuchsia"</span><span style="color: #007700">,<br>);<br><br></span><span style="color: #0000BB">$couleurs</span><span style="color: #007700">[]&nbsp;=&nbsp;</span><span style="color: #DD0000">"pink"</span><span style="color: #007700">;<br><br>echo&nbsp;</span><span style="color: #DD0000">"My&nbsp;favorite&nbsp;colors:\n"</span><span style="color: #007700">;<br>for&nbsp;(</span><span style="color: #0000BB">$i&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">$i&nbsp;</span><span style="color: #007700">&lt;&nbsp;</span><span style="color: #0000BB">count</span><span style="color: #007700">(</span><span style="color: #0000BB">$couleurs</span><span style="color: #007700">);&nbsp;</span><span style="color: #0000BB">$i</span><span style="color: #007700">++)&nbsp;{<br>&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"&nbsp;-&nbsp;the&nbsp;color&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">$couleurs</span><span style="color: #007700">[</span><span style="color: #0000BB">$i</span><span style="color: #007700">]}</span><span style="color: #DD0000">;\n"</span><span style="color: #007700">;<br>}</span>
+</span>
+</code></div>
+<pre class="demo output">My favorite colors:
+ - the color black;
+ - the color yellow;
+ - the color fuchsia;
+ - the color pink;
+
+</pre>
+</div>
+
+<ul>
+
+<li>La fonction <code>array</code> crée un tableau&nbsp;; on peut
+aussi utiliser la syntaxe «&nbsp;littéral&nbsp;» avec des crochets&nbsp;: <code>$tab = [ 4, 8, 7 ];</code>
+</li><li>La fonction <code>count</code> donne le nombre d'entrées du tableau, qui est dynamique.</li>
+<li>L'accès à un élément de tableau se fait à l'aide de l'opérateur «&nbsp;crochets&nbsp;».</li>
+<li>On peut ajouter un élément à la fin du tableau en faisant <code>$couleurs[] = "rouge";</code></li>
+ <li>Accolades pour la substitution dans les chaînes (pas toujours nécessaire mais plus sûr)<span class="note"> notamment pour tableaux ou objets</span></li>
+</ul>
+</div>
+
+<!-- ################################### -->
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Tableaux associatifs</h2>
+<p>PHP permet de mettre des chaînes de caractères comme indices ;
+on parle alors  de tableaux associatifs
+</p><p>Ils se comportent à peu près
+comme des dictionnaires en Python, mais sont <em>ordonnés</em></p>
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br>$couleurs&nbsp;</span><span style="color: #007700">=&nbsp;array(<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"red"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"#FF0000"</span><span style="color: #007700">,<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"white"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"#FFFFFF"</span><span style="color: #007700">,<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"blue"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"#0000FF"</span><span style="color: #007700">,<br>);<br><br>echo&nbsp;</span><span style="color: #0000BB">$couleurs</span><span style="color: #007700">[</span><span style="color: #DD0000">"blue"</span><span style="color: #007700">];</span>
+</span>
+</code></div>
+<pre class=" output">#0000FF
+</pre>
+
+<ul>
+<li>On peut préciser la valeur de l'indice dans l'expression <code>array(...)</code> avec <code>=&gt;</code></li>
+<li>On peut aussi ajouter un élément au tableau en faisant <code>$couleurs["green"] = "#00FF00";</code></li></ul>
+</div>
+
+<!-- ################################### --><!-- ################################### -->
+
+<div class="slide">
+<h2>Parcours d'un tableau</h2>
+<ul>
+<li>foreach permet d'itérer de façon simple sur toutes les valeurs d'un tableau&nbsp;:
+<div class="predemo">
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br></span><span style="color: #007700">foreach&nbsp;(</span><span style="color: #0000BB">$couleurs&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$c</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"</span><span style="color: #0000BB">$c</span><span style="color: #DD0000">\n"</span><span style="color: #007700">;<br>}</span>
+</span>
+</code></div>
+<pre class=" output">#FF0000
+#FFFFFF
+#0000FF
+
+</pre>
+</div>
+</li>
+
+<li>La syntaxe permet aussi de récupérer l'indice (la clef) en utilisant  <code>=&gt;</code>
+<div class="predemo">
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br></span><span style="color: #007700">foreach&nbsp;(</span><span style="color: #0000BB">$couleurs&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$c&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$rgb</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"la&nbsp;couleur&nbsp;</span><span style="color: #0000BB">$c</span><span style="color: #DD0000">&nbsp;a&nbsp;pour&nbsp;code&nbsp;hexa&nbsp;</span><span style="color: #0000BB">$rgb</span><span style="color: #DD0000">\n"</span><span style="color: #007700">;<br>}</span>
+</span>
+</code></div>
+<pre class=" output">la couleur red a pour code hexa #FF0000
+la couleur white a pour code hexa #FFFFFF
+la couleur blue a pour code hexa #0000FF
+
+</pre>
+</div>
+</li>
+<li>L'ordre d'affichage sera toujours le même, c'est-à-dire celui
+dans lequel les éléments ont été ajoutés (les tableaux associatifs en PHP
+sont ordonnés)</li>
+</ul>
+</div>
+<!-- ################################### -->
+
+
+
+
+<!-- ################################### -->
+
+
+</div> <!-- fin #presentation -->
+
+<aside id="liens">
+<h3>Spécifications et normes</h3>
+<ul>
+<li><a href="http://www.php.net/manual/fr/index.php">Manuel de PHP</a> (en français)</li>
+</ul>
+<h3>Tutoriels</h3>
+<ul>
+<li><a href="http://sylvie-vauthier.developpez.com/tutoriels/php/grand-debutant/?page=tableaux">Tableaux PHP</a> (en français)</li>
+</ul>
+<h3>Lectures complémentaires</h3>
+<ul>
+<li><a href="http://kunststube.net/encoding/">What every programmer needs to know about encodings and charsets to work with text</a> (avec des détails sur PHP)</li>
+</ul>
+
+</aside><!-- fin #liens -->
+</div> <!-- fin #contenu -->
+
+<footer class="license">
+	<a class="icone" rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+		<img alt="Licence Creative Commons CC-BY-NC-SA" style="border-width:0" src="Introduction%20%C3%A0%20PHP%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/88x31.png">
+	</a>
+	<p class="texte">
+		Ce cours est mis à disposition selon les termes de la <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">licence Creative Commons Attribution — Pas d’utilisation commerciale — Partage dans les mêmes conditions 4.0 International</a>.
+	</p></footer>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+	function toggleProj() {
+		const currentParams = new URLSearchParams(window.location.search);
+		if (currentParams.get('mode') === 'proj') {
+			console.log('found proj');
+			document.documentElement.classList.remove('proj');
+			currentParams.delete('mode');
+		} else {
+			console.log('not found proj');
+			document.documentElement.classList.add('proj');
+			currentParams.set('mode', 'proj');
+		}
+		window.history.pushState({}, '', '?' + currentParams + window.location.hash);
+	};
+
+	var buttons = document.querySelectorAll('.proj_switch button'), i;
+	for (i = 0; i < buttons.length; ++i) {
+		buttons[i].addEventListener("click", toggleProj);
+	}
+
+	document.addEventListener("keypress", function(e) {
+		if (e.target == document.body && String.fromCharCode(e.keyCode || e.charCode) == "m") {
+			toggleProj();
+		}
+	});
+
+	/* ajout de liens aux titres qui ont un id */
+	let slidesWithId = document.querySelectorAll('.slide[id]');
+	for (const slide of slidesWithId) {
+		const link = document.createElement('a');
+		link.href = '#' + slide.id;
+		link.classList.add('slide-link');
+		link.title = 'Lien vers ce slide';
+		link.textContent = '#';
+		slide.insertAdjacentElement('afterbegin', link);
+	}
+
+
+});
+</script>
+
+
+</body></html>

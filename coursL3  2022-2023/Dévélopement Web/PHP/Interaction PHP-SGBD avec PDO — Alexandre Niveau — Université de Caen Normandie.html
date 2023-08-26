@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<title>Interaction PHP-SGBD avec PDO — Alexandre Niveau — Université de Caen Normandie</title>
+
+	<meta name="author" content="Alexandre Niveau">
+	<meta name="company" content="Université de Caen">
+	<meta name="viewport" content="initial-scale=1">
+
+
+	<link rel="stylesheet" href="Interaction%20PHP-SGBD%20avec%20PDO%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/normalize.css">
+	<link rel="stylesheet" href="Interaction%20PHP-SGBD%20avec%20PDO%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/slides_alex.css">
+	<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png">
+
+</head>
+<body>
+<header class="title slide">
+	<h1>Interaction PHP-SGBD avec PDO</h1>
+	<div class="auteur">Alexandre Niveau</div>
+	<div class="affiliation">GREYC — Université de Caen</div>
+	<div class="details">
+		En partie adapté du cours de Jean-Marc Lecarpentier
+	</div>	<div class="proj_switch"><button title="basculer entre mode normal et mode projection (raccourci clavier «&nbsp;m&nbsp;»)">Changer de mode</button></div>
+</header>
+
+<div id="contenu">
+<div id="presentation" class="hidenotes">
+
+
+<div class="slide note">
+Voir exemple de live démo dans répertoire demo/. Rien d'intéressant. Utiliser une table
+créée à la volée via phpmyadmin me semble le plus simple et clair.
+</div>
+
+
+<!-- #################################################################### -->
+
+<div class="slide">
+<h2>Problématique</h2>
+<ul>
+<li>Site web dynamique avec des données qui évoluent ⇒ 
+le plus souvent, utilisation
+d'un système de gestion de base de données (SGBD)</li>
+<li>Divers SGBD existent&nbsp;: MySQL, PostGreSQL, Oracle, etc.</li>
+<li>PHP doit donc interagir avec divers SGBD</li>
+<li>Au départ, fonctions spécifiques à chacun :
+<ul><li><code>mysql_connect</code>, <code>mysql_query</code>…</li>
+<li><code>pg_connect</code>, <code>pg_query</code>…</li>
+</ul></li>
+<li>Pas de flexibilité dans le choix du SGBD</li>
+</ul>
+</div>
+
+<!-- ################################################################### -->
+
+
+<!-- #################################################################### -->
+
+<div class="slide">
+<h2>Couche d'abstraction</h2>
+<ul>
+<li>Limiter la dépendance au SGBD choisi</li>
+<li>Diverses solutions existent pour PHP&nbsp;:
+<ul>
+  <li>PEAR DB</li>
+  <li>PDO (PHP Data Object)</li>
+  <li>Zend Framework</li>
+  <li>Doctrine</li>
+  <li>etc.</li>
+</ul>
+</li>
+<li>On va utiliser PDO dans ce cours</li>
+<li>Attention, abstraction de l'<em>accès</em> à la BD, pas d'abstraction du SGBD
+lui-même&nbsp;: PDO ne traduit pas les requêtes vers le dialecte SQL du SGBD choisi&nbsp;!</li>
+</ul>
+</div>
+
+<!-- ################################################################### -->
+
+<!-- #################################################################### -->
+
+<div class="slide">
+<h2>Pourquoi PDO</h2>
+<ul>
+  <li>Le standard de PHP</li>
+  <li>Gestion des requêtes préparées</li>
+  <li>Programmation objet + exceptions</li>
+  <li>Gestion des transactions (si le SGBD le peut)</li>
+  <li>Simple d'utilisation</li>
+</ul>
+</div>
+
+<!-- ################################################################### -->
+
+<!-- #################################################################### -->
+
+<div class="slide">
+<h2>Connexion au serveur</h2>
+<ul>
+
+	<li>Création d'une instance de PDO&nbsp;:
+<code class="hl "><span style="color: #0000BB">$pdo&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PDO</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$user</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$pass</span><span style="color: #007700">);</span></code></li>
+  <li>Le DSN (Data Source Name) donne des informations sur la BD utilisée.</li>
+<li>Le format général est <code>driver:<var>infos</var></code>.
+</li><li><code>driver</code> dépend de la BD utilisée. Exemples&nbsp;: <code>mysql</code> ou <code>pgsql</code>
+</li><li>Les informations et leur format dépendent du driver.
+ Exemples de DSN pour plusieurs drivers&nbsp;:
+  <ul>
+     <li>Pour PostgreSQL, <code>pgsql:host=localhost;dbname=mydatabase</code></li>
+     <li>Pour MySQL, <code>mysql:host=mysql.info.unicaen.fr;port=3306;dbname=jml_3;charset=utf8</code></li>
+     <li>Pour Oracle, <code>oci:dbname=//localhost:1521/mydb</code></li>
+     <li>Pour IBM, <code>ibm:DRIVER={IBM DB2 ODBC DRIVER};DATABASE=accounts; HOSTNAME=1.2.3,4;PORT=23456;PROTOCOL=TCPIP;</code></li>
+     <li>etc.</li>
+</ul>
+</li>
+<li>Dans ce cours on utilisera MySQL — voir slide suivant
+</li></ul>
+</div>
+
+<!-- ################################################################### -->
+<!-- #################################################################### -->
+
+<div class="slide">
+<h2>Connexion à un serveur MySQL</h2>
+<p>Pour MySQL, les informations du DSN ont la forme de couples <code><var>clef</var>=<var>valeur</var></code>
+séparés par des points-virgules. <em>Attention à ne pas mettre d'espaces&nbsp;!</em>
+</p><div class="p">Les informations attendues dans le DSN pour MySQL sont
+<ul>
+<li><code>host</code>, le nom ou l'IP de la machine sur laquelle tourne le serveur
+</li><li><code>port</code>, le port du host sur lequel le serveur MySQL écoute (optionnel, vaut 3306 par défaut)
+</li><li><code>dbname</code>, le nom de la base de données à utiliser
+</li><li><code>charset</code>, l'encodage de caractères de la base — <strong>très important</strong> pour éviter certaines failles de sécurité (voir plus loin)
+</li></ul>
+</div>
+<div class="p">Serveur MySQL du département info&nbsp;: <code>mysql.info.unicaen.fr</code><br>
+Plusieurs remarques&nbsp;:
+<ul><li>Attention, il est accessible depuis le serveur web et depuis les machines des salles TP, mais <em>pas depuis l'extérieur</em> (et donc notamment pas depuis eduroam)&nbsp;!</li>
+<li>Outil graphique en ligne pour accéder à vos bases&nbsp;: <code>https://<var>NUMETU</var>.users.info.unicaen.fr/phpmyadmin</code>
+<span class="note">attention, sur phpmyadmin de sandbox et ensweb c'est localhost, mais pour les étu c'est bien mysql.info.unicaen.fr</span>
+</li>
+<li>Il est possible qu'aucune base ne soit créée dans votre compte au 
+départ, vous devez le faire vous-même&nbsp;— attention, les noms des 
+bases
+que vous avez le droit de créer sont très contraints&nbsp;!</li>
+</ul>
+</div>
+
+</div>
+
+<!-- ################################################################### -->
+<!-- #################################################################### -->
+
+<div class="slide">
+<h2>Options de connexion</h2>
+<ul>
+<li>L'objet PDO qu'on a créé est paramétrable avec <a href="https://www.php.net/manual/fr/pdo.setattribute.php">un tas d'options</a>
+  </li><li>Pour modifier ces paramètres&nbsp;:
+	<code class="hl "><span style="color: #0000BB">$pdo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setAttribute</span><span style="color: #007700">(</span><span style="color: #0000BB">$attribute</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$value</span><span style="color: #007700">);</span></code>, ou
+passer les options dans le constructeur avec un tableau associatif</li>
+  <li>Les paramètres peuvent être génériques ou spécifiques au SGBD utilisé</li>
+  <li>Les paramètres (et certaines valeurs) sont des constantes définies dans la classe PDO</li>
+  <li>Utilisé notamment pour définir la gestion des erreurs</li>
+</ul>
+</div>
+
+<!-- ################################################################### -->
+<!-- #################################################################### -->
+
+<div class="slide" id="gestion-des-erreurs"><a href="#gestion-des-erreurs" class="slide-link" title="Lien vers ce slide">#</a>
+<h2>Gestion des erreurs</h2>
+<div class="p">On positionne l'attribut <code>PDO::ATTR_ERRMODE</code>
+<ul>
+<li><code>PDO::ERRMODE_SILENT</code> (option par défaut)&nbsp;: les erreurs sont signalées seulement
+par le code d'erreur renvoyé par la fonction ⇒ il faut absolument vérifier le code d'erreur à chaque appel <p class="conseq"><strong>à changer absolument&nbsp;!</strong></p></li>
+<li><code>PDO::ERRMODE_WARNING</code>&nbsp;: émet un message de niveau E_WARNING en cas d'erreur</li>
+<li><code>PDO::ERRMODE_EXCEPTION</code>&nbsp;: renvoie une <code>PDOException</code> avec code et
+information sur l'erreur</li>
+</ul></div>
+<p>En pratique&nbsp;: <code class="hl "><span style="color: #0000BB">$pdo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setAttribute</span><span style="color: #007700">(</span><span style="color: #0000BB">PDO</span><span style="color: #007700">::</span><span style="color: #0000BB">ATTR_ERRMODE</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">PDO</span><span style="color: #007700">::</span><span style="color: #0000BB">ERRMODE_EXCEPTION</span><span style="color: #007700">);</span></code></p>
+<p class="conseq"><strong>fortement recommandé</strong> pour bénéficier de la gestion des exceptions</p>
+</div>
+
+<!-- ################################################################### -->
+<!-- #################################################################### -->
+
+<div class="slide">
+<h2>Exécution de requêtes</h2>
+<div class="p">Pour faire des requêtes «&nbsp;constantes&nbsp;» (qui n'utilisent pas de variables PHP),
+méthode <code>query</code>
+</div>
+<p>Elle renvoie le résultat sous forme d'objet <code>PDOStatement</code>,
+via lequel on peut récupérer les données sous divers formats</p>
+<div class="p">Exemples&nbsp;:
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br>&nbsp;&nbsp;</span><span style="color: #FF8000">/*&nbsp;requête&nbsp;select&nbsp;*/<br>&nbsp;&nbsp;</span><span style="color: #0000BB">$requete&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'SELECT&nbsp;*&nbsp;FROM&nbsp;users;'</span><span style="color: #007700">;<br>&nbsp;&nbsp;</span><span style="color: #0000BB">$stmt&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$pdo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #0000BB">$requete</span><span style="color: #007700">);<br>&nbsp;&nbsp;</span><span style="color: #FF8000">/*&nbsp;récupération&nbsp;de&nbsp;la&nbsp;ligne&nbsp;courante&nbsp;*/<br>&nbsp;&nbsp;</span><span style="color: #0000BB">$ligne&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$stmt</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch</span><span style="color: #007700">();<br>&nbsp;&nbsp;</span><span style="color: #0000BB">var_export</span><span style="color: #007700">(</span><span style="color: #0000BB">$ligne</span><span style="color: #007700">);<br><br>&nbsp;&nbsp;</span><span style="color: #FF8000">/*&nbsp;requêtes&nbsp;insert/update/delete&nbsp;*/<br>&nbsp;&nbsp;</span><span style="color: #0000BB">$requete&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"INSERT&nbsp;INTO&nbsp;users&nbsp;VALUES&nbsp;('Toto',&nbsp;'Dupont');"</span><span style="color: #007700">;<br>&nbsp;&nbsp;</span><span style="color: #0000BB">$stmt&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$pdo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #0000BB">$requete</span><span style="color: #007700">);<br>&nbsp;&nbsp;</span><span style="color: #FF8000">/*&nbsp;pas&nbsp;de&nbsp;lignes&nbsp;à&nbsp;récupérer&nbsp;dans&nbsp;le&nbsp;PDOStatement,&nbsp;mais<br>&nbsp;&nbsp;&nbsp;*&nbsp;on&nbsp;peut&nbsp;vouloir&nbsp;savoir&nbsp;combien&nbsp;de&nbsp;lignes&nbsp;ont&nbsp;été&nbsp;affectées:&nbsp;*/<br>&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">'Nombre&nbsp;de&nbsp;lignes&nbsp;affectées&nbsp;:'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$stmt</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">rowCount</span><span style="color: #007700">();<br></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+</div>
+</div>
+
+<!-- ################################################################### -->
+<!-- #################################################################### -->
+
+<div class="slide">
+<h2>Format des données</h2>
+<div class="p">Les objets <code>PDOStatement</code> obtenus suite à un <code>SELECT</code>
+ont en particulier deux méthodes permettant de récupérer les données&nbsp;:
+<ul>
+<li><code>fetch</code> ne renvoie qu'<strong>une seule</strong> ligne de résultat</li>
+<li><code>fetchAll</code> renvoie un tableau avec tous les résultats <p class="conseq"><em>attention</em>, ne pas utiliser s'il y a potentiellement beaucoup de résultats&nbsp;!</p></li>
+</ul>
+</div>
+<ul>
+<li>Différents modes pour <code>fetch</code>&nbsp;:
+<ul>
+<li><code>PDO::FETCH_ASSOC</code>&nbsp;: tableau indexé avec les noms de colonnes</li>
+<li><code>PDO::FETCH_BOTH</code> (défaut)&nbsp;: retourne un tableau indexé par les noms de colonnes mais <em>aussi</em> par les numéros de colonnes</li>
+<li><code>PDO::FETCH_OBJ</code>&nbsp;: retourne un objet anonyme avec les propriétés  qui correspondent aux noms des colonnes</li>
+<li><code>PDO::FETCH_INTO</code>&nbsp;: met à jour une instance existante de la classe demandée</li>
+</ul></li>
+<li>Marchent aussi avec <code>fetchAll</code>
+</li></ul>
+</div>
+
+
+<div class="slide">
+<h2>Exemples de <code>fetch</code> et <code>fetchAll</code></h2>
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br>$stmt&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$pdo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">"SELECT&nbsp;name,&nbsp;species&nbsp;FROM&nbsp;animals"</span><span style="color: #007700">);<br></span><span style="color: #0000BB">$tableau&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$stmt</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchAll</span><span style="color: #007700">(</span><span style="color: #0000BB">PDO</span><span style="color: #007700">::</span><span style="color: #0000BB">FETCH_ASSOC</span><span style="color: #007700">);<br>foreach&nbsp;(</span><span style="color: #0000BB">$tableau&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$ligne</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/*&nbsp;les&nbsp;champs&nbsp;correspondant&nbsp;à&nbsp;des&nbsp;indices&nbsp;*/<br>&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"Nom&nbsp;:"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$ligne</span><span style="color: #007700">[</span><span style="color: #DD0000">'name'</span><span style="color: #007700">];<br>&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Espèce&nbsp;:"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$ligne</span><span style="color: #007700">[</span><span style="color: #DD0000">'species'</span><span style="color: #007700">];<br>}<br><br></span><span style="color: #0000BB">$stmt&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$pdo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">"SELECT&nbsp;name,&nbsp;species&nbsp;FROM&nbsp;animals"</span><span style="color: #007700">);<br></span><span style="color: #FF8000">/*&nbsp;on&nbsp;peut&nbsp;préciser&nbsp;le&nbsp;mode&nbsp;globalement&nbsp;:&nbsp;*/<br></span><span style="color: #0000BB">$stmt</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setFetchMode</span><span style="color: #007700">(</span><span style="color: #0000BB">PDO</span><span style="color: #007700">::</span><span style="color: #0000BB">FETCH_OBJ</span><span style="color: #007700">);<br></span><span style="color: #FF8000">/*&nbsp;utilisation&nbsp;classique&nbsp;de&nbsp;fetch()&nbsp;:<br>&nbsp;&nbsp;&nbsp;on&nbsp;récupère&nbsp;une&nbsp;ligne&nbsp;à&nbsp;la&nbsp;fois,&nbsp;tant&nbsp;qu'il&nbsp;en&nbsp;reste&nbsp;*/<br></span><span style="color: #007700">while&nbsp;((</span><span style="color: #0000BB">$ligne&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$stmt</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch</span><span style="color: #007700">())&nbsp;!==&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/*&nbsp;les&nbsp;champs&nbsp;correspondent&nbsp;à&nbsp;des&nbsp;attributs&nbsp;*/<br>&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"Nom&nbsp;:"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$ligne</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">name</span><span style="color: #007700">;<br>&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Espèce&nbsp;:"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$ligne</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">species</span><span style="color: #007700">;<br>}<br></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+</div>
+
+<!-- ################################################################### -->
+<div class="slide">
+<h2>Attention&nbsp;!!</h2>
+  <p>La méthode <code>query</code> n'est à utiliser <strong>que</strong>
+pour faire des requêtes «&nbsp;constantes&nbsp;», c'est-à-dire avec une chaîne de caractères
+littérale, <strong>sans variables</strong></p>
+<p>Ne pas respecter cette consigne rend votre site <strong>vulnérable aux injections SQL</strong></p>
+<p class="note">demo : si on met une apostrophe dans un champ ? et que peut-on faire de plus ?</p>
+</div>
+
+<!-- ################################################################### -->
+
+<div class="slide">
+<h2>Injection SQL</h2>
+<div class="p">Exemple typique de code vulnérable à une injection SQL&nbsp;:
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br></span><span style="color: #FF8000">/*&nbsp;---&nbsp;À&nbsp;NE&nbsp;PAS&nbsp;FAIRE&nbsp;---&nbsp;*/<br>&nbsp;&nbsp;</span><span style="color: #0000BB">$login&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$_GET</span><span style="color: #007700">[</span><span style="color: #DD0000">'login'</span><span style="color: #007700">];<br>&nbsp;&nbsp;</span><span style="color: #0000BB">$pdo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">"SELECT&nbsp;name&nbsp;FROM&nbsp;users&nbsp;WHERE&nbsp;login='</span><span style="color: #0000BB">$login</span><span style="color: #DD0000">'"</span><span style="color: #007700">);&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;très&nbsp;dangereux&nbsp;!<br></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+</div>
+<ul><li>Les internautes peuvent passer du code arbitraire à votre BD,
+par exemple <code>'; DROP TABLE users; --</code>
+<small><a href="https://www.xkcd.com/327/">(le grand classique)</a></small></li>
+<li>La vulnérabilité vient du fait que les données n'ont pas été proprement
+<em>échappées</em>, ce qui est de toute façon nécessaire indépendamment
+de la sécurité (on peut légitimement essayer de mettre des apostrophes
+dans son login)</li>
+<li>Une solution&nbsp;: bien penser à toujours échapper les entrées qui viennent
+de l'utilisateur…</li>
+<li>Meilleure solution&nbsp;: utiliser des <em>requêtes préparées</em></li>
+</ul>
+</div>
+
+
+<!-- #################################################################### -->
+
+<div class="slide">
+<h2>Requêtes préparées</h2>
+  <p>PDO permet la préparation de requêtes par le moteur SQL</p>
+<div class="p">Objectifs&nbsp;:
+<ul>
+  <li>Optimisation de l'exécution de requêtes répétées</li>
+<li>Échappement <em>automatique</em> et propre des données dans les requêtes
+  <p class="conseq">sécurité vis-à-vis des injections SQL</p>
+</li>
+</ul>
+</div>
+</div>
+
+
+<!-- ################################################################### -->
+<div class="slide" id="requetes-preparees-principe"><a href="#requetes-preparees-principe" class="slide-link" title="Lien vers ce slide">#</a>
+<h2>Requêtes préparées&nbsp;: principe</h2>
+<ul>
+<li>La requête contient des champs non remplis, auxquels on peut
+donner des noms (<i>placeholders</i>) qui commencent par un caractère deux-points&nbsp;:
+<pre class="src "><code>$rq = "UPDATE users SET name=<strong>:nom</strong>, birthday=<strong>:naissance</strong> WHERE id=<strong>:id</strong>"</code></pre>
+</li>
+<li>Au lieu d'exécuter une requête, on la <em>prépare</em>, et
+on récupère un <i>statement</i> (<code>PDOStatement</code>)&nbsp;:
+<pre class="src "><code>$stmt = $pdo-&gt;prepare($rq);</code></pre>
+</li>
+<li>On a fixé la forme de la requête, impossible de la modifier (par exemple
+en modifiant la clause WHERE) ou d'en rajouter une à la suite</li>
+<li>On remplit les trous avec les données, et on exécute la requête&nbsp;:
+<pre class="src "><code>$data = array(
+  ':id' =&gt; 23456,
+  ':nom' =&gt; 'Rachel',
+  ':naissance' =&gt; '2023-12-04',
+);
+$stmt-&gt;execute($data);</code></pre>
+</li>
+<li>Les caractères spéciaux dans les
+données sont échappées par PDO, donc pas de risque d'oubli ⇒ intégrité
+des données dans la base</li>
+<li>Attention&nbsp;: on ne peut pas mettre un <i>placeholder</i> à la place du nom
+de la table ou des champs. Seules les valeurs sont concernées.</li>
+</ul>
+</div>
+<!-- #################################################################### -->
+
+<div class="slide">
+<h2>Autre exemple de requête préparée</h2>
+<p>Avec un <code>SELECT</code>, on utilise aussi <code>execute</code></p>
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br></span><span style="color: #FF8000">/***&nbsp;préparation&nbsp;***/<br></span><span style="color: #0000BB">$rq&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"SELECT&nbsp;*&nbsp;FROM&nbsp;animals&nbsp;WHERE&nbsp;species&nbsp;=&nbsp;:espece&nbsp;AND&nbsp;name&nbsp;=&nbsp;:nom"</span><span style="color: #007700">;<br></span><span style="color: #0000BB">$stmt&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$pdo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">prepare</span><span style="color: #007700">(</span><span style="color: #0000BB">$rq</span><span style="color: #007700">);<br></span><span style="color: #FF8000">/***&nbsp;remplissage&nbsp;des&nbsp;paramètres&nbsp;***/<br></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">":espece"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"humain"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">":nom"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"Jean-Michel"</span><span style="color: #007700">);<br></span><span style="color: #FF8000">/***&nbsp;exécution&nbsp;du&nbsp;statement&nbsp;***/<br></span><span style="color: #0000BB">$stmt</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">execute</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br></span><span style="color: #FF8000">/***&nbsp;récupération&nbsp;du&nbsp;résultat&nbsp;***/<br></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$stmt</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchAll</span><span style="color: #007700">();<br></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+<p><em>Attention</em> à bien appeler <code>execute</code> avant de faire
+<code>fetch</code>/<code>fetchAll</code>&nbsp;!
+</p>
+</div>
+<!-- #################################################################### -->
+
+<div class="slide">
+<h2>Compléments&nbsp;: Guillemets autour des paramètres</h2>
+<ul>
+<li>Pas de guillemets autour des paramètres dans la requête</li>
+<li>Ils sont ajoutés par PDO lors de l'exécution de la requête</li>
+<li>C'est le cas quel que soit le type du champ (même pour les nombres)</li>
+<li>En général ça ne pose pas de problème&nbsp;: le SGBD fait les conversions
+en utilisant le type des champs dans le schéma de BD</li>
+<li>Mais ça ne fonctionne pas pour les autres nombres. Par
+exemple <code>LIMIT</code> en SQL attend des entiers sans guillemets&nbsp;:</li>
+</ul>
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br>$rq&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"SELECT&nbsp;name&nbsp;FROM&nbsp;animals&nbsp;LIMIT&nbsp;:nb"</span><span style="color: #007700">;<br></span><span style="color: #0000BB">$stmt&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$pdo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">prepare</span><span style="color: #007700">(</span><span style="color: #0000BB">$rq</span><span style="color: #007700">);<br></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">":nb"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">);<br></span><span style="color: #FF8000">/*&nbsp;ne&nbsp;fonctionne&nbsp;pas&nbsp;:&nbsp;la&nbsp;requête&nbsp;exécutée&nbsp;est&nbsp;*<br>&nbsp;*&nbsp;&nbsp;&nbsp;SELECT&nbsp;name&nbsp;FROM&nbsp;animals&nbsp;LIMIT&nbsp;'10'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br></span><span style="color: #0000BB">$stmt</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">execute</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$stmt</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchAll</span><span style="color: #007700">();</span>
+</span>
+</code></div>
+</div>
+
+<!-- #################################################################### -->
+
+<div class="slide">
+<h2>Compléments&nbsp;: Type des paramètres</h2>
+<ul><li>Pour éviter ça il faut préciser à PDO le type du paramètre</li>
+<li>Le plus simple est d'utiliser <code>bindValue</code></li>
+<li>Trois principaux types possibles&nbsp;:
+<ul><li><code>PDO::PARAM_STR</code> (par défaut)</li>
+<li><code>PDO::PARAM_INT</code></li>
+<li><code>PDO::PARAM_BOOL</code></li>
+</ul></li>
+<li>Avec les deux derniers, les valeurs ne sont pas converties en chaînes
+et aucun guillemet n'est ajouté
+<div class="src hl "><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br>$rq&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"SELECT&nbsp;name&nbsp;FROM&nbsp;animals&nbsp;LIMIT&nbsp;:nb"</span><span style="color: #007700">;<br></span><span style="color: #0000BB">$stmt&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$pdo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">prepare</span><span style="color: #007700">(</span><span style="color: #0000BB">$rq</span><span style="color: #007700">);<br></span><span style="color: #0000BB">$stmt</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">bindValue</span><span style="color: #007700">(</span><span style="color: #DD0000">":nb"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">PDO</span><span style="color: #007700">::</span><span style="color: #0000BB">PARAM_INT</span><span style="color: #007700">);<br></span><span style="color: #0000BB">$stmt</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">execute</span><span style="color: #007700">();<br></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$stmt</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchAll</span><span style="color: #007700">();</span>
+</span>
+</code></div>
+</li>
+<li>Attention, si la valeur ne correspond pas au type, il n'y aura
+pas de conversion ni d'erreur (sauf cas très particuliers). Ce n'est pas
+une sécurité supplémentaire, mais une indication de formatage de requête SQL.</li>
+</ul></div>
+
+
+<!-- ################################################################### -->
+
+<div class="slide">
+<h2>Compléments&nbsp;: Émulation, encodage</h2>
+
+<div class="p">Par défaut, PDO ne fait qu'<em>émuler</em> la préparation des requêtes
+<ul>
+<li>Il se charge d'échapper les entrées&nbsp;; mais il n'y a pas d'optimisation de vitesse</li>
+<li>De cette façon, on peut profiter de la sécurité apportée par les requêtes préparées
+même pour les SGBD qui ne les supportent pas.</li>
+<li>Pour désactiver l'émulation, et utiliser les requêtes préparées natives du SGBD,
+mettre l'option <code>PDO::ATTR_EMULATE_PREPARES</code> à <code>false</code></li>
+</ul>
+</div>
+<div class="p">Il est important de préciser l'encodage de la base
+dans le DSN lors de la création de l'instance de PDO</div>
+<p class="conseq">ne pas le faire peut créer <a href="https://stackoverflow.com/questions/5741187/sql-injection-that-gets-around-mysql-real-escape-string/12118602#12118602">une vulnérabilité dont même les requêtes préparées ne protègent pas</a> si elles ne sont qu'émulées.</p>
+<p>Au passage, il n'y a qu'<strong>un seul encodage</strong> à utiliser dans MySQL&nbsp;: <strong><code>utf8mb4</code></strong> (et pas <code>utf8</code>, qui n'est pas le vrai UTF-8&nbsp;!)</p>
+
+<p>Une dernière chose&nbsp;: la méthode <a href="http://php.net/manual/en/pdo.lastinsertid.php"><code>lastInsertId()</code></a> de PDO
+renvoie la valeur de la clef primaire autoincrémentée de la dernière entrée ajoutée
+(si le SGBD supporte cette fonction).</p>
+<p class="conseq">peut être utile pour MySQL (pour PostgreSQL, utiliser <code>INSERT… RETURNING</code>
+semble plus simple)</p>
+
+</div>
+
+
+</div> <!-- fin #presentation -->
+
+<aside id="liens">
+<h3>Références et guides</h3>
+<ul>
+<li><a href="http://php.net/manual/fr/book.pdo.php">Manuel PHP sur PDO</a></li>
+</ul>
+<h3>Tutoriels</h3>
+<ul>
+<li><a href="https://phpdelusions.net/pdo">Un bon tutoriel PDO</a> (en anglais)</li>
+</ul>
+<h3>Lectures complémentaires</h3>
+<ul>
+<li><a href="https://mathiasbynens.be/notes/mysql-utf8mb4">How to support full Unicode in MySQL databases</a> : car ce que MySQL appelle UTF-8 n'est pas de l'UTF-8…</li>
+</ul>
+
+</aside><!-- fin #liens -->
+</div> <!-- fin #contenu -->
+
+<footer class="license">
+	<a class="icone" rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+		<img alt="Licence Creative Commons CC-BY-NC-SA" style="border-width:0" src="Interaction%20PHP-SGBD%20avec%20PDO%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/88x31.png">
+	</a>
+	<p class="texte">
+		Ce cours est mis à disposition selon les termes de la <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">licence Creative Commons Attribution — Pas d’utilisation commerciale — Partage dans les mêmes conditions 4.0 International</a>.
+	</p></footer>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+	function toggleProj() {
+		const currentParams = new URLSearchParams(window.location.search);
+		if (currentParams.get('mode') === 'proj') {
+			console.log('found proj');
+			document.documentElement.classList.remove('proj');
+			currentParams.delete('mode');
+		} else {
+			console.log('not found proj');
+			document.documentElement.classList.add('proj');
+			currentParams.set('mode', 'proj');
+		}
+		window.history.pushState({}, '', '?' + currentParams + window.location.hash);
+	};
+
+	var buttons = document.querySelectorAll('.proj_switch button'), i;
+	for (i = 0; i < buttons.length; ++i) {
+		buttons[i].addEventListener("click", toggleProj);
+	}
+
+	document.addEventListener("keypress", function(e) {
+		if (e.target == document.body && String.fromCharCode(e.keyCode || e.charCode) == "m") {
+			toggleProj();
+		}
+	});
+
+	/* ajout de liens aux titres qui ont un id */
+	let slidesWithId = document.querySelectorAll('.slide[id]');
+	for (const slide of slidesWithId) {
+		const link = document.createElement('a');
+		link.href = '#' + slide.id;
+		link.classList.add('slide-link');
+		link.title = 'Lien vers ce slide';
+		link.textContent = '#';
+		slide.insertAdjacentElement('afterbegin', link);
+	}
+
+
+});
+</script>
+
+
+</body></html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>Architecture d'un site web&nbsp;: manipulation des données</title>
+<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png"> 
+<link rel="stylesheet" href="Architecture%20d'un%20site%20web%20manipulation%20des%20donn%C3%A9es_files/normalize.css">
+<link rel="stylesheet" type="text/css" href="Architecture%20d'un%20site%20web%20manipulation%20des%20donn%C3%A9es_files/fiche_alex.css">
+    <style>
+.object {
+  font-style: italic;
+  font-weight: bold;
+  color: #39b583;
+}    </style> 
+</head>
+<body>
+<div id="wrapper">
+
+<header id="tetiere">
+	<div class="logo">
+	<a href="https://ensweb.users.info.unicaen.fr/TW4B/" title="Technologies du Web — Université de Caen" class="logo"><span class="accessibilite">Logo de l'université de Caen</span></a>
+	</div>
+	<div class="titreCours">
+			<h1>Architecture d'un site web&nbsp;: manipulation des données</h1>
+						<p class="diplome">Licence Informatique 3ème année</p>
+			<p class="enseignants">Alexandre Niveau — Jean-Marc Lecarpentier</p>
+	</div>
+	<section class="contexte">
+	<h2><a href="https://ensweb.users.info.unicaen.fr/TW4B/">Enseignement des technologies du Web</a></h2>
+		<ul>
+			<li>Module&nbsp;: <a href="https://ensweb.users.info.unicaen.fr/TW4B/">TW4B : Programmation d’applications web avancées</a></li>
+		<li><a href="http://www.unicaen.fr/">Université de Caen</a>, année&nbsp;2022-2023</li>
+		</ul>
+	</section><!-- fin de contexte -->
+		<div class="clearer">&nbsp;</div>
+</header><!-- fin de tetiere -->
+
+<main id="majeur">
+
+
+
+<!--  ##########  introduction  ########  -->
+
+<section class="bloc"><h2>Architecture d'un site web&nbsp;: manipulation des données</h2>
+<h3>Notes de cours</h3>
+<ul>
+<li><a class="titrePres" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/crud/">Manipulation des données dans l’architecture MVCR</a>
+<ul>
+<li>Problèmes liés à la manipulation des données</li>
+<li>Architecture pour CRUD de base</li>
+<li>Démonstration sur le <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/crud/couleurs/">site des couleurs</a> (<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/crud/couleurs.zip">archive</a>)</li>
+</ul></li>
+</ul>
+</section><!-- fin de l'introduction -->
+<section class="bloc">
+<h2>Travail personnel</h2><section>
+<h3>Objectifs</h3>
+<p>
+L'exercice est une application directe de l'architecture
+présentée en cours pour la manipulation des données.
+</p>
+<p><strong>NB</strong>: il faut avoir terminé les parties obligatoires du TP précédent avant de commencer celui-ci.</p>
+</section>
+	<section class="exo-among-others exercice" id="exo-01">
+		<h3>Exercice&nbsp;1&nbsp;— Manipulation des données dans MVCR	<a href="#exo-01" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+		<p>On va continuer le site sur les animaux/<i class="object">objets</i> fait au TP précédent,
+en permettant aux internautes d'ajouter leurs propres <i class="object">objets</i> à la base.</p>
+<p>Une nouvelle fois, l'énoncé est long mais c'est parce que l'exercice
+est très guidé&nbsp;; il n'y a pas de difficulté particulière.
+Si vous avez des doutes, jetez un œil à l'exemple des couleurs qui a été en partie présenté en cours
+(<a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/crud/couleurs/">résultat final</a>, <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/crud/couleurs.zip">archive du code</a>).
+<strong>Ne faites pas de copier-coller</strong>, réécrire est beaucoup plus efficace pour l'apprentissage.
+De plus, l'exercice est (comme celui du TP précédent) très incrémental&nbsp;: j'essaie de justifier chaque ajout de
+complexité dans l'architecture. On ne prendra pas le chemin le plus direct vers la version finale, ne soyez pas surpris
+si ça ne ressemble pas immédiatement à l'exemple présenté en cours.
+</p>
+
+<h4>Préliminaires&nbsp;: persistance des données et affichage de debug</h4>
+<p>Avant de commencer cet exercice, il faut avoir terminé l'exercice d'introduction
+à l'architecture du TP précédent,
+au moins jusqu'à la partie «&nbsp;Stockage&nbsp;» incluse.
+Si vous avez fait (certains morceaux de) la partie «&nbsp;Compléments&nbsp;», il faudra
+adapter un peu certaines questions, mais vous devriez vous y retrouver.</p>
+<p>La pseudo-base (statique) qu'on a utilisée ne suffit plus pour cet exercice,
+puisqu'on veut pouvoir y rajouter des <i class="object">objets</i>&nbsp;: il faut que les modifications
+soient persistantes. Pour cela, on pourrait stocker nos <i class="object">objets</i> dans
+une BD MySQL, mais pour gagner du temps on va choisir une solution
+plus simple (au moins au début), celle d'enregistrer
+notre tableau dans un fichier.
+</p><ol>
+<li>Télécharger le fichier définissant la classe <code>ObjectFileDB</code> (ainsi que la classe <code>FileStore</code>
+sur laquelle elle s'appuie)
+ dans <a href="https://ensweb.users.info.unicaen.fr/TW4B/tp/mvcr/objectfiledb.zip">cette archive</a>
+(ou faites un copier-coller <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/crud/file_store.php">du code</a>).
+Le placer dans un répertoire <code>src/lib</code>.</li>
+<li>Créer une classe <code>AnimalStorageFile</code> <small>(adapter le nom à vos <i class="object">objets</i>)</small> dans <code>src/model</code>,
+avec un attribut <code>$db</code> qui contiendra l'instance de ObjectFileDB qui va servir
+à enregistrer la «&nbsp;base&nbsp;». Regarder le code de ObjectFileDB, et en particulier la documentation,
+pour comprendre comment vous allez devoir l'utiliser. Vous pouvez aussi regarder comment fonctionne <a href="https://ensweb.users.info.unicaen.fr/TW4B/pres/crud/#ColorStorageFile">la classe <code>ColorStorageFile</code>
+dans le site des couleurs</a>.
+</li>
+<li>Ajouter une méthode <code>reinit()</code> à <code>AnimalStorageFile</code>,
+qui remet la base dans l'état «&nbsp;initial&nbsp;», c'est-à-dire avec les animaux
+du TP précédent écrits en dur (Médor, Félix et Denver) <small>(adapter à vos <i class="object">objets</i>)</small>.
+Attention, contrairement au TP précédent, c'est ObjectFileDB qui contrôle les identifiants (qui sont au format hexadécimal).
+</li>
+<li><code>AnimalStorageFile</code> doit implémenter l'interface <code>AnimalStorage</code>.
+Copier les méthodes <code>read</code>
+et <code>readAll</code> de la classe <code>AnimalStorageStub</code>,
+et les adapter si besoin.</li>
+<li>Modifier le routeur (ou le fichier de configuration) pour que
+le contrôleur utilise un <code>AnimalStorageFile</code> à la place de l'<code>AnimalStorageStub</code>.
+<strong>Attention</strong>, le serveur du département n'autorise pas PHP
+à écrire n'importe où. Le plus simple est de mettre le fichier de sauvegarde dans le répertoire <code>/users/LOGIN/tmp</code>.
+Bien sûr, sur un vrai site, on mettrait le fichier à un endroit plus sûr…
+Appeler <code>reinit()</code> sur la base après l'avoir créée.</li>
+<li>Tester&nbsp;: la liste doit fonctionner (mais suivre les liens génère une erreur, puisque <code>reinit()</code> est appelée entretemps et change tous les identifiants).
+Enlever l'appel à <code>reinit()</code>&nbsp;: tout doit marcher comme avant.</li>
+<li>Ajouter la méthode suivante à la vue&nbsp;:
+<pre class="src">public function makeDebugPage($variable) {
+	$this-&gt;title = 'Debug';
+	$this-&gt;content = '&lt;pre&gt;'.htmlspecialchars(var_export($variable, true)).'&lt;/pre&gt;';
+}</pre>
+Elle va faciliter le debug en nous permettant d'afficher le contenu d'une variable.
+La tester depuis le routeur en lui faisant afficher divers objets.</li>
+</ol>
+
+<h4>Création d'un nouvel animal</h4>
+<ol>
+<li>La page avec le formulaire de création d'un animal sera (par exemple) à l'URL <code>animaux.php?action=nouveau</code>, et la page destinée à recevoir les données sera à l'URL
+<code>animaux.php?action=sauverNouveau</code> <small>(en remplaçant <code>animaux.php</code> par le nom de <em>votre</em> script)</small>.
+Ajouter au routeur des méthodes <code>getAnimalCreationURL()</code> et <code>getAnimalSaveURL()</code> <small>(adapter les noms à vos <i class="object">objets</i>)</small> qui renvoient ces URLs.
+</li>
+<li>Ajouter une méthode <code>makeAnimalCreationPage()</code> <small>(adapter le nom à vos <i class="object">objets</i>)</small> à la vue.
+Elle doit afficher un formulaire de création d'un animal, avec trois champs texte&nbsp;:
+<code>nom</code>, <code>espece</code> et <code>age</code> (et/ou d'autres, en fonction de la classe représentant vos <i class="object">objets</i>).
+Le formulaire doit envoyer les données en <code>POST</code> à l'URL donnée par le 
+<code>getAnimalSaveURL()</code> <small>(ou votre équivalent)</small> du routeur.</li>
+<li>Ajouter une méthode <code>saveNewAnimal(array $data)</code>
+au contrôleur, qui se contente d'afficher son argument grâce à <code>makeDebugPage</code>.</li>
+<li>Modifier le routeur pour qu'il analyse le paramètre <code>action</code>
+de l'URL, et qu'il appelle <code>makeAnimalCreationPage()</code> de la vue si le paramètre est <code>nouveau</code>, et qu'il appelle <code>saveNewAnimal($_POST)</code> du contrôleur
+si le paramètre est <code>sauverNouveau</code>.
+Cela permet de tester que tout fonctionne pour le moment.
+</li>
+<li>Dans la méthode <code>saveNewAnimal</code>,
+au lieu d'afficher le tableau passé en argument,
+l'utiliser pour créer une instance de Animal et l'afficher 
+avec <code>makeAnimalPage</code>. Ça devrait fonctionner,
+mais l'animal n'est pas ajouté à la base (on peut le constater en affichant la liste
+des animaux).</li>
+<li>Ajouter une méthode <code>create(Animal $a)</code>  <small>(adapter le type à vos <i class="object">objets</i>)</small>à l'interface <code>AnimalStorage</code>, et l'implémenter dans <code>AnimalStorageFile</code>. Cette méthode doit ajouter à la base l'animal donné en argument, et retourner l'identifiant de l'animal ainsi créé.</li>
+<li>Faire en sorte que <code>saveNewAnimal</code> ajoute le nouvel animal à la base
+avant de le passer à la vue.</li>
+<li>Vérifier que tout marche bien&nbsp;: on doit pouvoir créer des animaux qui s'ajoutent
+à la liste.</li>
+</ol>
+
+<h4>Validation</h4>
+<p>Les internautes peuvent maintenant ajouter leurs <i class="object">objets</i> favoris à votre site.
+Cependant, ils peuvent aussi envoyer des données incorrectes, par exemple
+en laissant les champs vides. On va commencer par faire une validation de base,
+et on gérera les données incomplètes dans la section suivante.</p>
+<ol>
+<li>Modifier <code>saveNewAnimal()</code> pour qu'il ne soit pas possible
+d'ajouter un animal dont le nom ou l'espèce soient vides
+ou dont l'âge ne soit pas un nombre positif <small>(adapter si nécessaire aux attributs de vos <i class="object">objets</i>)</small>. On pourra afficher une page d'erreur par exemple.</li>
+<li>Cette solution n'est pas idéale&nbsp;: en cas d'erreur, l'internaute
+ perd ce qu'il ou elle a entré.
+Il est bien plus ergonomique de lui redonner la main sur le formulaire 
+avec les champs tels qu'ils ont été remplis. Pour cela, en cas d'erreur,
+ le contrôleur va redonner le tableau qu'il a reçu
+ à la méthode <code>makeAnimalCreationPage</code>
+de la vue, pour qu'elle remplisse les champs du formulaire avec.
+Faire les modifications nécessaires. (Attention notamment à ce que tous les appels
+à <code>makeAnimalCreationPage</code> soient corrects.)
+</li>
+<li>C'est mieux, mais maintenant il est moins clair pour l'internaute
+qu'une erreur est survenue. D'autre part, la raison pour laquelle
+les données étaient invalides n'est pas forcément évidente&nbsp;: il est nécessaire
+d'en informer l'internaute. Faire en sorte que le contrôleur
+passe une chaîne <code>$error</code> à <code>makeAnimalCreationPage</code>
+qui se chargera de l'afficher. La chaîne sera <code>null</code> s'il n'y avait
+pas d'erreur, et contiendra sinon une explication sur l'erreur.</li>
+<li>Vérifier que tout fonctionne, c'est-à-dire le cas normal et tous les cas d'erreur.</li>
+
+<li>Essayer d'ajouter un animal qui aurait pour espèce «&nbsp;<code>&lt;script&gt;alert('coucou')&lt;/script&gt;</code>&nbsp;» <small>(ou mettez cette chaîne de caractères dans un
+des champs du formulaire qui se retrouvera affiché sur la page de l'<i class="object">objet</i>)</small>. Que se passe-t-il&nbsp;? Que faut-il faire pour empêcher ça&nbsp;?</li>
+</ol>
+
+<h4>Gestion des données incomplètes</h4>
+<p>Il y a deux problèmes avec notre manipulation des données.
+D'abord, c'est le contrôleur qui décide quelles données sont valides 
+(alors que ça concerne le modèle). D'autre part, il y a duplication du 
+nom des champs de formulaire, dans la vue et dans le contrôleur. C'est 
+moins gênant que pour les paramètres d'URL,
+car ils sont moins visibles, mais ils font cependant partie de 
+l'interface «&nbsp;externe&nbsp;» du
+site (pas comme les noms des variables PHP, par exemple),
+et à ce titre ils se doivent d'être relativement faciles à changer.</p>
+<p>On va gérer ces deux problèmes à la fois en ajoutant une nouvelle classe au modèle,
+<code>AnimalBuilder</code> <small>(adapter à vos <i class="object">objets</i>)</small>, qui représente un animal en cours de manipulation (création ou modification) dans l'application,
+et qui permet de construire l'instance de <code>Animal</code> correspondante.</p>
+<ol>
+<li>Créer cette classe et lui donner un attribut <code>$data</code>,
+passé en argument à son constructeur, et un attribut <code>$error</code>, initialisé à <code>null</code>. Ajouter un accesseur pour chacun de ces attributs.</li>
+<li>Modifier la méthode <code>saveNewAnimal</code> du contrôleur pour qu'elle crée une 
+instance de <code>AnimalBuilder</code> avec le tableau <code>$data</code> qu'elle
+a elle-même reçu du routeur.</li>
+<li>Ajouter une méthode <code>createAnimal()</code> dans <code>AnimalBuilder</code>,
+qui crée une nouvelle
+instance de <code>Animal</code> en utilisant l'attribut <code>$data</code> (déplacer le code depuis le contrôleur).</li>
+<li>Ajouter une méthode <code>isValid()</code> dans <code>AnimalBuilder</code>,
+qui vérifie que les données de son attribut <code>$data</code> sont correctes (déplacer à nouveau le code depuis le contrôleur). Si elles ne le sont pas, placer la chaîne expliquant l'erreur
+dans l'attribut <code>$error</code>.</li>
+<li>Modifier la méthode <code>makeAnimalCreationPage</code> pour qu'elle ne prenne
+comme argument qu'une instance de <code>AnimalBuilder</code>, et l'utilise pour pré-remplir les champs et pour afficher l'erreur éventuelle.</li>
+<li>Modifier <code>saveNewAnimal</code> pour 
+utiliser l'instance de <code>AnimalBuilder</code>.
+Vérifier que tout marche toujours (normalement non&nbsp;: il faut modifier l'appel initial à
+<code>makeAnimalCreationPage</code>, qui doit récupérer un <code>AnimalBuilder</code> vide&nbsp;; qui doit s'occuper de le construire&nbsp;?)
+</li>
+<li>Il ne reste plus qu'à «&nbsp;cacher&nbsp;» les noms des champs.
+Ajouter à <code>AnimalBuilder</code> des constantes <code>NAME_REF</code>, <code>SPECIES_REF</code>
+et <code>AGE_REF</code> <small>(adapter aux champs des formulaires pour vos <i class="object">objets</i>)</small>, qui contiennent respectivement <code>nom</code>, <code>espece</code>
+et <code>age</code>. Utiliser ces constantes dans la classe en question, et dans <code>makeAnimalCreationPage</code>
+à la place des noms de champ codés «&nbsp;en dur&nbsp;».
+<!--
+Ajouter à <code>AnimalBuilder</code> des méthodes <code>getNameRef()</code>, <code>getSpeciesRef()</code>
+et <code>getAgeRef()</code>, qui renvoient respectivement <code>nom</code>, <code>espece</code>
+et <code>age</code>. Utiliser ces méthodes dans <code>makeAnimalCreationPage</code>
+à la place des noms de champ codés « en dur ».
+-->
+</li>
+<li>Vérifier que tout marche toujours, puis changer les noms des champs (les passer en majuscules par exemple).
+Normalement, vous ne devriez avoir à modifier que les constantes de <code>AnimalBuilder</code>,
+et tout doit toujours marcher (et les noms des champs modifiés se verront dans le HTML).</li>
+</ol>
+
+<h4>Suppression d'un animal (optionnel)</h4>
+<p>La suppression est beaucoup plus simple que la création
+(en particulier, pas besoin de <code>AnimalBuilder</code>). Les questions
+suivantes sont un peu moins guidées. Penser à tester vos ajouts au
+fur et à mesure, par exemple en utilisant l'affichage de debug&nbsp;!</p>
+<ol>
+<li>Ajouter au routeur des méthodes <code>getAnimalAskDeletionURL($id)</code>
+(page demandant à l'internaute de confirmer son souhait de supprimer l'animal)
+et <code>getAnimalDeletionURL($id)</code>
+(page supprimant effectivement l'animal).
+Faire en sorte qu'accéder à ces URL affiche quelque chose
+(en utilisant la méthode de debug, par exemple).</li>
+<li>Ajouter sur la page de chaque animal en lien vers la page de suppression. NB:
+il faut que <code>makeAnimalPage</code> ait accès à l'identifiant de l'animal dont elle affiche la page.
+On peut mettre l'identifiant comme attribut dans la classe <code>Animal</code>, mais ce n'est pas idéal (ce n'est
+pas une caractéristique de l'animal, mais un détail de l'implémentation du stockage…). Il est préférable de simplement
+passer l'identifiant en paramètre.</li>
+<li>Implémenter la méthode <code>makeAnimalDeletionPage($id)</code>
+de la vue, qui doit afficher un bouton de confirmation envoyant
+une requête <code>POST</code> à l'URL de suppression effective.</li>
+<li>Implémenter la méthode <code>askAnimalDeletion($id)</code>
+du contrôleur, qui vérifie que l'animal existe avant d'appeler
+<code>makeAnimalDeletionPage($id)</code> (un message d'erreur doit être affiché
+dans le cas contraire).</li>
+<li>Ajouter une méthode <code>delete($id)</code> à <code>AnimalStorage</code>
+et l'implémenter dans <code>AnimalStorageFile</code>.</li>
+<li>Implémenter la méthode <code>deleteAnimal($id)</code> du contrôleur,
+qui supprime effectivement l'animal.</li>
+</ol>
+
+<h4>Compléments (optionnel)</h4>
+<p class="info">Assurez-vous de maîtriser ce qui précède
+avant de vous attaquer à ces questions moins guidées.
+</p>
+<ol>
+<li>Ajouter la possibilité de modifier un animal&nbsp;: les principes sont les mêmes
+que pour la création, mais il va falloir ajouter des méthodes à
+<code>AnimalBuilder</code>.</li>
+<li>Faire la section «&nbsp;Compléments&nbsp;» de l'exercice du TP précédent,
+et faire en sorte que les opérations CRUD fonctionnent toujours.
+Pour les URL plus propres, on pourra prendre par exemple
+<code>animaux.php/nouveau</code>, <code>animaux.php/2328/supprimer</code>,
+et <code>animaux.php/2328/modifier</code>, la distinction
+entre page de formulaire et page de «&nbsp;confirmation&nbsp;»
+pouvant se faire par le choix de la méthode HTTP utilisée
+(récupérable en PHP par <code>$_SERVER['REQUEST_METHOD']</code>).
+</li>
+<li>Au lieu d'afficher une seule chaîne avec les erreurs,
+faire en sorte que chaque erreur s'affiche à côté du champ concerné.</li>
+</ol>
+
+	</section>
+
+<!-- ********************************************************************** -->
+
+</section><!-- fin de travail -->
+</main><!-- fin de majeur -->
+
+
+</div> <!-- fermeture du wrapper -->
+
+
+</body></html>

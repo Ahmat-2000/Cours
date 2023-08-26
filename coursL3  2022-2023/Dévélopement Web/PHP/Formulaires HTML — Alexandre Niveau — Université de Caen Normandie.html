@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<title>Formulaires HTML — Alexandre Niveau — Université de Caen Normandie</title>
+
+	<meta name="author" content="Alexandre Niveau">
+	<meta name="company" content="Université de Caen">
+	<meta name="viewport" content="initial-scale=1">
+
+
+	<link rel="stylesheet" href="Formulaires%20HTML%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/normalize.css">
+	<link rel="stylesheet" href="Formulaires%20HTML%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/slides_alex.css">
+	<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png">
+
+	<!-- STYLES POUR DEMO -->
+	<style>
+.demo form {
+	border: 1px solid black;
+	background: wheat;
+	padding: 10px;
+	box-sizing: border-box;
+	height: 100%;
+}
+
+.demo fieldset {
+	border: 1px solid darkgoldenrod;
+	margin-bottom: .5em;
+}
+
+.predemo form > * {
+	display: block;
+}
+	</style></head>
+<body>
+<header class="title slide">
+	<h1>Formulaires HTML</h1>
+	<div class="auteur">Alexandre Niveau</div>
+	<div class="affiliation">GREYC — Université de Caen</div>
+	<div class="proj_switch"><button title="basculer entre mode normal et mode projection (raccourci clavier «&nbsp;m&nbsp;»)">Changer de mode</button></div>
+</header>
+
+<div id="contenu">
+<div id="presentation" class="hidenotes">
+
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Retour sur la méthode GET</h2>
+
+<div class="p">Pour l'instant, on n'a utilisé
+qu'une seule méthode de HTTP&nbsp;: la méthode <code>GET</code>,
+qui permet de <em>récupérer</em> une ressource
+</div>
+<p>Caractéristique importante&nbsp;: c'est une «&nbsp;<i lang="en">safe method</i> &nbsp;⇒&nbsp; elle est définie comme devant n'avoir <strong>aucun effet de bord</strong>
+</p><p class="conseq">elle n'est pas censée modifier l'état de l'application <small>(hormis pour des détails secondaires, comme un compteur de visites)</small>
+</p><p class="conseq">elle est «&nbsp;sûre&nbsp;», au sens où on peut l'utiliser sans crainte ⇒ important par exemple pour les robots indexeurs&nbsp;!
+</p><p>On peut donner des paramètres à l'URL demandée avec <code>GET</code>, qui vont affecter
+la façon dont la ressource est récupérée, ou le type de contenu
+</p><p>C'est le standard (RFC 7231) qui impose que GET soit une safe 
+method, mais en pratique il n'y a aucune contrainte technique qui oblige
+ à respecter cette contrainte
+</p><p class="conseq">il est <em>possible</em> d'utiliser les paramètres d'URL pour faire des <em>actions</em> (qui modifient l'état) sur un site web… mais c'est une très mauvaise idée&nbsp;!
+</p><p>Pour faire des actions, il est préférable d'utiliser d'autres méthodes
+</p></div>
+
+<div class="slide">
+<h2>Les méthodes non <i>safe</i></h2>
+
+<div class="p">Il y a trois méthodes HTTP qui permettent de modifier l'état de l'application&nbsp;:
+<ul>
+<li>POST permet d'envoyer des données
+</li><li>PUT permet d'enregistrer une ressource à un chemin donné
+</li><li>DELETE permet de supprimer la ressource d'un chemin donné
+</li></ul>
+</div>
+<p>En pratique les deux dernières sont rarement utilisées (voir plus loin),
+c'est en général POST qui est utilisée pour tous les cas de figure non couverts par GET
+</p></div>
+
+
+<!-- ################################### -->
+
+<div class="slide">
+<h2>Anatomie d'un POST</h2>
+<p>Pour envoyer des données avec la méthode <code>POST</code> de HTTP,
+on les met
+dans le
+corps de la requête</p>
+<p>Le format des données est libre, mais en général il suit
+la même syntaxe que les paramètres d'URL (à quelques détails près)
+</p><p class="conseq">formellement, il s'agit du format MIME
+<code>application/x-www-form-urlencoded</code>
+<!--
+<div class="p">
+Requête souvent générée <i>via</i> un <strong>formulaire HTML</strong>,
+et utilise alors
+le format <code>application/x-www-form-urlencoded</code> (sauf cas particuliers)
+-->
+</p><pre class="code">POST /chemin/pagederecup HTTP/1.1
+Host: example.com
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 21
+
+nom=Toto&amp;couleur=vert+clair
+</pre>
+<p>Couples clef-valeur séparés par des <code>&amp;</code></p>
+<p>Espaces remplacées par <code>+</code></p>
+<p>Encodage particulier des caractères spéciaux et non-ASCII</p>
+</div>
+
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Formulaires HTML</h2>
+
+<p>HTML fournit une interface permettant aux internautes de construire «&nbsp;interactivement&nbsp;»
+ces couples clef-valeur&nbsp;: les <em>formulaires</em></p>
+<p>Ils sont principalement utiles pour envoyer des données (méthode <code>POST</code>)&nbsp;:
+poster un commentaire, s'authentifier sur un site…</p>
+<p>Mais ils permettent aussi de construire une URL paramétrée&nbsp;:
+champ de recherche, contrôle de l'affichage du contenu (ordre, filtrage)…</p>
+<p>Ils fonctionnent exactement de la même manière pour les deux usages&nbsp;;
+dans les deux cas le navigateur utilise le contenu du formulaire
+pour construire une chaîne de couples clef-valeur</p>
+<div class="p">Il faut juste préciser une URL et la méthode à utiliser&nbsp;:
+<ul><li>si on met <code>POST</code>, le navigateur met la chaîne dans
+une requête <code>POST</code> qu'il envoie à l'URL fournie</li>
+<li>si on met <code>GET</code>, le navigateur met la chaîne à la fin de l'URL fournie
+après un <code>?</code>, et il envoie une requête <code>GET</code>
+à l'URL paramétrée ainsi obtenue</li>
+</ul></div>
+
+</div>
+
+
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Base d'un formulaire</h2>
+<div class="p">L'élément représentant un formulaire est <code>form</code>
+<pre class="src "><code><span class="html-tag">&lt;form action="page_de_recup" method="post"&gt;</span>
+    …
+<span class="html-tag">&lt;/form&gt;</span></code></pre>
+</div>
+<p>Attribut <code>action</code>&nbsp;: URL de la page qui va récupérer les données (par défaut, la même page)</p>
+<p>Attribut <code>method</code>&nbsp;: méthode HTTP à utiliser pour transmettre les données&nbsp;; soit <code>GET</code> soit <code>POST</code> (par défaut <code>GET</code>)</p>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Élément <code>input</code></h2>
+<p>Les formulaires sont constitués de texte et de widgets</p>
+<p>La plupart des widgets sont créés avec l'élément <code>input</code></p>
+<div class="p">Le type de widget est contrôlé par l'attribut <code>type</code>
+<pre class="src "><code><span class="html-tag">&lt;form&gt;</span>
+   <span class="html-tag">&lt;input type="text" /&gt;</span>
+   <span class="html-tag">&lt;input type="checkbox" /&gt;</span>
+   <span class="html-tag">&lt;input type="radio" /&gt;</span>
+<span class="html-tag">&lt;/form&gt;</span></code></pre>
+<div class="demo ">
+<form>
+   <input type="text">
+   <input type="checkbox">
+   <input type="radio">
+</form>
+</div>
+</div>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Labels</h2>
+<p>Les légendes des champs du formulaires doivent être placés dans des éléments <code>label</code> (étiquettes)</p>
+<p>Les labels doivent être explicitement associés à leurs champs&nbsp;: <em>extrêmement important</em>
+pour l'accessibilité et pour l'ergonomie&nbsp;!</p>
+<div class="p">Pour associer un label à un champ, le plus simple est de mettre le champ <em>dans</em> le label&nbsp;:
+<pre class="src "><code><span class="html-tag">&lt;form&gt;</span>
+  <strong><span class="html-tag">&lt;label&gt;</span></strong>Ville&nbsp;: <span class="html-tag">&lt;input type="text" /&gt;</span><strong><span class="html-tag">&lt;/label&gt;</span></strong>
+  <strong><span class="html-tag">&lt;label&gt;</span></strong>Capitale&nbsp;: <span class="html-tag">&lt;input type="checkbox" /&gt;</span><strong><span class="html-tag">&lt;/label&gt;</span></strong>
+<span class="html-tag">&lt;/form&gt;</span></code></pre>
+<div class="demo ">
+<form>
+  <label>Ville&nbsp;: <input type="text"></label>
+  <label>Capitale&nbsp;: <input type="checkbox"></label>
+</form>
+</div>
+<small>(Cliquer sur les labels&nbsp;!)</small>
+</div>
+</div>
+
+<div class="slide">
+<h2>Autre solution pour associer un label à un champ</h2>
+<div class="p">Si on ne veut pas mettre le champ dans le label,
+on peut aussi relier le label au champ grâce à l'attribut <code>for</code>, qui fait référence à l'<code>id</code> du champ.
+<em>En général, la solution précédente suffit, est plus rapide à écrire et donne un code plus lisible.</em>
+<pre class="src "><code><span class="html-tag">&lt;form&gt;</span>
+  <span class="html-tag">&lt;div&gt;</span>
+    <span class="html-tag">&lt;label <strong>for="ville"</strong>&gt;</span>Ville&nbsp;:<span class="html-tag">&lt;/label&gt;</span>
+    <span class="html-tag">&lt;input type="text" <strong>id="ville"</strong> /&gt;</span>
+  <span class="html-tag">&lt;/div&gt;</span>
+  <span class="html-tag">&lt;div&gt;</span>
+    <span class="html-tag">&lt;label <strong>for="cap"</strong>&gt;</span>Capitale<span class="html-tag">&lt;/label&gt;</span>
+    <span class="html-tag">&lt;input type="checkbox" <strong>id="cap"</strong> /&gt;</span>
+  <span class="html-tag">&lt;/div&gt;</span>
+<span class="html-tag">&lt;/form&gt;</span></code></pre>
+<div class="demo ">
+<form>
+  <div>
+    <label for="ville">Ville&nbsp;:</label>
+    <input type="text" id="ville">
+  </div>
+  <div>
+    <label for="cap">Capitale</label>
+    <input type="checkbox" id="cap">
+  </div>
+</form>
+</div>
+<small>(Cliquer sur les labels&nbsp;!)</small>
+</div></div>
+
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Bouton de soumission</h2>
+<p>Un formulaire est inutile si on ne peut pas le soumettre</p>
+<div class="p">Élément <code>button</code>
+<pre class="src "><code><span class="html-tag">&lt;form&gt;</span>
+   <span class="html-tag">&lt;input type="text" value="Texte par défaut" /&gt;</span>
+   <strong><span class="html-tag">&lt;button type="submit"&gt;</span>Envoyer !<span class="html-tag">&lt;/button&gt;</span></strong>
+<span class="html-tag">&lt;/form&gt;</span></code></pre>
+<div class="demo ">
+<form>
+   <input type="text" value="Texte par défaut">
+   <button type="submit">Envoyer !</button>
+</form>
+</div>
+</div>
+<div class="p">Trois types de bouton :
+<ul><li><code>submit</code> envoie les données</li>
+<li><code>reset</code> remet tous les champs du formulaire à leur valeur par défaut</li>
+<li><code>button</code> ne fait rien&nbsp;! Utile pour les scripts côté client</li>
+</ul>
+</div>
+</div>
+
+<div class="slide">
+<h2>Noms des paramètres</h2>
+<p>Les données entrées sur les widgets servent
+à donner des valeurs à des variables</p>
+<p>Il faut donner des noms à ces variables, pour que le serveur sache
+à quoi sert chaque donnée&nbsp;!</p>
+<div class="p">La plupart des widgets utilisent l'attribut <code>name</code> pour cela
+<pre class="src "><code><span class="html-tag">&lt;form&gt;</span>
+   <span class="html-tag">&lt;input type="text" value="Caen" <strong>name="ville"</strong> /&gt;</span>
+   <span class="html-tag">&lt;input type="text" value="France" <strong>name="pays"</strong> /&gt;</span>
+   <span class="html-tag">&lt;input type="checkbox" <strong>name="coche"</strong> /&gt;</span>
+   <span class="html-tag">&lt;button type="submit"&gt;</span>Envoyer !<span class="html-tag">&lt;/button&gt;</span>
+<span class="html-tag">&lt;/form&gt;</span></code></pre>
+<div class="demo ">
+<form>
+   <input type="text" value="Caen" name="ville">
+   <input type="text" value="France" name="pays">
+   <input type="checkbox" name="coche">
+   <button type="submit">Envoyer !</button>
+</form>
+</div>
+</div>
+<p>Attention au comportement des <i>checkbox</i></p>
+<p><strong>Ne pas confondre les attributs <code>name</code> et <code>id</code>…</strong></p>
+</div>
+
+<div class="slide">
+<h2>Utilisation des données comme paramètres d'une page</h2>
+<p>Dans l'exemple précédent, cliquer sur le bouton recharge la même page,
+mais l'URL a changé car le navigateur a ajouté des <em>paramètres d'URL</em>,
+construits à partir des noms des widgets et des valeurs fournies par l'internaute</p>
+<p>Pour renvoyer vers une autre page, il faut donner l'URL dans
+l'attribut <code>action</code> de l'élément <code>form</code></p>
+<p>Dans cet exemple on renvoie vers une page qui fait quelque chose
+avec les paramètres&nbsp;:
+</p><pre class="src "><code><span class="html-tag">&lt;form action="demo/recup.php"&gt;</span>
+   <span class="html-tag">&lt;input type="text" value="Caen" <strong>name="ville"</strong> /&gt;</span>
+   <span class="html-tag">&lt;input type="text" value="France" <strong>name="pays"</strong> /&gt;</span>
+   <span class="html-tag">&lt;input type="checkbox" <strong>name="coche"</strong> /&gt;</span>
+   <span class="html-tag">&lt;button type="submit"&gt;</span>Envoyer !<span class="html-tag">&lt;/button&gt;</span>
+<span class="html-tag">&lt;/form&gt;</span></code></pre>
+<div class="demo ">
+<form action="demo/recup.php">
+   <input type="text" value="Caen" name="ville">
+   <input type="text" value="France" name="pays">
+   <input type="checkbox" name="coche">
+   <button type="submit">Envoyer !</button>
+</form>
+</div>
+<p>NB&nbsp;: une simple page HTML ne sait rien faire avec les paramètres d'URL, c'est
+le serveur qui va analyser les paramètres et modifier le HTML envoyé en fonction.
+</p>
+</div>
+<!-- ########################################################################### -->
+<div class="slide">
+<h2>Envoi des données</h2>
+<p>Les paramètres d'URL ne conviennent pas à toutes les situations</p>
+<p>On a souvent besoin d'<em>envoyer</em> des données au serveur</p>
+<p>Dans ce cas, on peut spécifier que le navigateur doit utiliser la
+méthode <code>POST</code> de HTTP, en écrivant <code>method="POST"</code>
+comme attribut de l'élément <code>form</code> (la valeur par défaut de <code>method</code>
+est <code>GET</code> ⇒ construit une URL paramétrée)</p>
+<pre class="src "><code><span class="html-tag">&lt;form action="demo/recup.php" method="POST"&gt;</span>
+   <span class="html-tag">&lt;input type="text" value="Caen" <strong>name="ville"</strong> /&gt;</span>
+   <span class="html-tag">&lt;input type="text" value="France" <strong>name="pays"</strong> /&gt;</span>
+   <span class="html-tag">&lt;input type="checkbox" <strong>name="coche"</strong> /&gt;</span>
+   <span class="html-tag">&lt;button type="submit"&gt;</span>Envoyer !<span class="html-tag">&lt;/button&gt;</span>
+<span class="html-tag">&lt;/form&gt;</span></code></pre>
+<div class="demo ">
+<form action="demo/recup.php" method="POST">
+   <input type="text" value="Caen" name="ville">
+   <input type="text" value="France" name="pays">
+   <input type="checkbox" name="coche">
+   <button type="submit">Envoyer !</button>
+</form>
+</div>
+</div>
+
+<div class="slide">
+<h2><code>GET</code> vs <code>POST</code></h2>
+<p>Dans les deux cas, cliquer sur le bouton <code>submit</code> construit les couples clef-valeur et les communique au serveur</p>
+<p>N'importe quel programme peut être utilisé pour les récupérer&nbsp;: 
+il suffit qu'il comprenne le protocole HTTP, ou qu'il puisse être lancé 
+par le serveur lorsqu'un client
+demande l'URL en question (ex.&nbsp;: script PHP)</p>
+<div class="p">Caractéristiques des deux techniques&nbsp;:
+	<ul>
+		<li>paramètres d'URL (<code>method="GET"</code>)&nbsp;: limités en 
+pratique à environ 2000 caractères (voire 255)&nbsp;; ne devraient être 
+utilisés que pour filtrer et rechercher</li>
+		<li>corps de la requête HTTP (<code>method="POST"</code>)&nbsp;: pas de limite de taille, et pas visible par l'internaute</li>
+	</ul>
+</div>
+<p>NB&nbsp;: il est parfaitement possible d'envoyer des données avec <code>POST</code>
+à une URL paramétrée&nbsp;!</p>
+
+<p>
+Si hésitation entre paramètres d'URL et méthode POST, se demander si l'URL paramétrée aurait un sens en tant que lien. Il n'est <em>envisageable</em> d'utiliser la méthode GET que si la réponse est oui.</p>
+
+<div class="p"><strong>Attention</strong>&nbsp;: les données de la requête <code>POST</code> ne sont pas <em>affichées</em> par les navigateurs, mais elles ne sont pas <em>cachées</em>&nbsp;!
+	<ul>
+		<li>Il est possible de les voir (par ex. avec l'outil «&nbsp;network monitor&nbsp;» de Firefox)</li>
+		<li>Elles circulent en clair sur le réseau</li>
+	</ul>
+</div>
+<p class="conseq">
+	Ne pas penser que <code>POST</code> est plus sécurisé que <code>GET</code>
+</p>
+
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Remarque sur les paramètres</h2>
+
+<p>Les paramètres d'URL sont souvent utilisés abusivement pour le 
+routage (mauvaises pratiques qui se sont répandues notamment par le 
+biais de PHP), par ex.
+<code>http://toto.fr/forum?post=754</code></p>
+<p><em>Ce n'est pas non plus leur rôle</em>&nbsp;!</p>
+<p class="conseq">L'URL du post 754 devrait être quelque chose comme <code>http://toto.fr/forum/posts/754</code></p>
+<p>Les paramètres, comme leur nom l'indique,
+servent à <em>paramétrer</em> une page</p>
+<div class="p conseq"> ils ne devraient être utilisés que pour <em>filtrer</em> ou <em>rechercher</em>&nbsp;:
+<pre class="src">http://toto.fr/forum?date=2015-02-23&amp;sort=title
+http://toto.fr/forum?q=glace+vanille
+</pre>
+</div>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Boutons radio</h2>
+<p>Les boutons radio n'ont d'intérêt qu'en groupe&nbsp;: un seul peut être sélectionné</p>
+<p>C'est l'attribut <code>name</code> qui les groupe</p>
+<div class="p">Le paramètre prendra la valeur du bouton sélectionné&nbsp;: cette valeur correspond à l'attribut <code>value</code>
+<pre class="src "><code><span class="html-tag">&lt;form action="demo/recup.php" method="POST"&gt;</span>
+  Les formulaires HTML, vous êtes&nbsp;:
+  <span class="html-tag">&lt;label&gt;</span><span class="html-tag">&lt;input type="radio" value="oui" <strong>name="fan"</strong> /&gt;</span> Fan<span class="html-tag">&lt;/label&gt;</span>
+  <span class="html-tag">&lt;label&gt;</span><span class="html-tag">&lt;input type="radio" value="non" <strong>name="fan"</strong> /&gt;</span> Pas fan<span class="html-tag">&lt;/label&gt;</span>
+  <span class="html-tag">&lt;label&gt;</span><span class="html-tag">&lt;input type="radio" value="?" <strong>name="fan"</strong> /&gt;</span> NSPP<span class="html-tag">&lt;/label&gt;</span>
+  <span class="html-tag">&lt;button type=submit&gt;</span>Envoyer !<span class="html-tag">&lt;/button&gt;</span>
+<span class="html-tag">&lt;/form&gt;</span></code></pre>
+<div class="demo ">
+<form action="demo/recup.php" method="POST">
+  Les formulaires HTML, vous êtes&nbsp;:
+  <label><input type="radio" value="oui" name="fan"> Fan</label>
+  <label><input type="radio" value="non" name="fan"> Pas fan</label>
+  <label><input type="radio" value="?" name="fan"> NSPP</label>
+  <button type="submit">Envoyer !</button>
+</form>
+</div>
+</div>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Grouper des champs</h2>
+<p>L'élément <code>fieldset</code> permet de grouper des champs qui ont un rapport logique
+entre eux
+et de leur associer un label commun avec <code>legend</code></p>
+<div class="p">Utile notamment pour les cases à cocher et les boutons radio
+<pre class="src "><code><span class="html-tag">&lt;form action="demo/recup.php" method="POST"&gt;</span>
+    <span class="html-tag">&lt;fieldset&gt;</span>
+      <span class="html-tag">&lt;legend&gt;</span>Les formulaires HTML, vous êtes&nbsp;:<span class="html-tag">&lt;/legend&gt;</span>
+      <span class="html-tag">&lt;label&gt;</span><span class="html-tag">&lt;input type="radio" value="oui" <strong>name="fan"</strong> /&gt;</span> Fan<span class="html-tag">&lt;/label&gt;</span>
+      <span class="html-tag">&lt;label&gt;</span><span class="html-tag">&lt;input type="radio" value="non" <strong>name="fan"</strong> /&gt;</span> Pas fan<span class="html-tag">&lt;/label&gt;</span>
+      <span class="html-tag">&lt;label&gt;</span><span class="html-tag">&lt;input type="radio" value="?" <strong>name="fan"</strong> /&gt;</span> NSPP<span class="html-tag">&lt;/label&gt;</span>
+    <span class="html-tag">&lt;/fieldset&gt;</span>
+    <span class="html-tag">&lt;button type=submit&gt;</span>Envoyer !<span class="html-tag">&lt;/button&gt;</span>
+<span class="html-tag">&lt;/form&gt;</span></code></pre>
+<div class="demo ">
+<form action="demo/recup.php" method="POST">
+    <fieldset>
+      <legend>Les formulaires HTML, vous êtes&nbsp;:</legend>
+      <label><input type="radio" value="oui" name="fan"> Fan</label>
+      <label><input type="radio" value="non" name="fan"> Pas fan</label>
+      <label><input type="radio" value="?" name="fan"> NSPP</label>
+    </fieldset>
+    <button type="submit">Envoyer !</button>
+</form>
+</div>
+</div>
+<!-- <p>Les lecteurs d'écran lisent la légende <em>avant chaque champ</em> &rArr; ne pas les utiliser à tort et à travers</p>
+j'enlève : ce n'est apparemment pas vrai (c'était le cas sous IE mais pas standard) -->
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Texte multi-lignes</h2>
+<div class="p">On utilise l'élément <code>textarea</code> pour du texte sur plusieurs lignes
+<pre class="src "><code><span class="html-tag">&lt;form action="demo/recup.php" method="POST"&gt;</span>
+  <strong><span class="html-tag">&lt;textarea cols="30" rows="5" name="multi"&gt;</span></strong>Mettre du texte ici !<strong><span class="html-tag">&lt;/textarea&gt;</span></strong>
+  <span class="html-tag">&lt;button type="submit"&gt;</span>Go<span class="html-tag">&lt;/button&gt;</span>
+<span class="html-tag">&lt;/form&gt;</span></code></pre>
+<div class="demo ">
+<form action="demo/recup.php" method="POST">
+  <textarea cols="30" rows="5" name="multi">Mettre du texte ici !</textarea>
+  <button type="submit">Go</button>
+</form>
+</div>
+</div>
+<p>Propriété CSS <code>resize</code> pour que l'internaute puisse modifier la taille
+(valeurs&nbsp;: <code>horizontal</code>, <code>vertical</code>, <code>both</code>)</p>
+<p>Attention, contrairement à <code>input</code>,
+<code>textarea</code> a une balise ouvrante et une balise fermante (le contenu
+est utilisé comme valeur par défaut)</p>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Valeur par défaut et <i lang="en">placeholder</i></h2>
+<div class="p">Dans les champs texte, on peut mettre une valeur par défaut&nbsp;:
+	<div class="predemo">
+<pre class="src "><code><span class="html-tag">&lt;form action="demo/recup.php" method="POST"&gt;</span>
+  <span class="html-tag">&lt;input type="text" size="10" name="prenom" <strong>value="Prénom"</strong> /&gt;</span>
+  <span class="html-tag">&lt;textarea cols="10" rows="5" name="comm"&gt;</span><strong>Votre commentaire…</strong><span class="html-tag">&lt;/textarea&gt;</span>
+  <span class="html-tag">&lt;button type="submit"&gt;</span>Envoyer<span class="html-tag">&lt;/button&gt;</span>
+<span class="html-tag">&lt;/form&gt;</span></code></pre>
+<div class="demo ">
+<form action="demo/recup.php" method="POST">
+  <input type="text" size="10" name="prenom" value="Prénom">
+  <textarea cols="10" rows="5" name="comm">Votre commentaire…</textarea>
+  <button type="submit">Envoyer</button>
+</form>
+</div>
+	</div>
+</div>
+<p>L'internaute doit effacer le contenu avant de taper</p>
+<p>En règle générale, c'est plutôt une sorte de «&nbsp;mode d'emploi&nbsp;» qu'on voudrait</p>
+<div class="p">Il faut utiliser l'attribut <code>placeholder</code>&nbsp;:
+	<div class="predemo">
+<pre class="src "><code><span class="html-tag">&lt;form action="demo/recup.php" method="POST"&gt;</span>
+  <span class="html-tag">&lt;input type="text" size="10" name="prenom" <strong>placeholder="Prénom"</strong> /&gt;</span>
+  <span class="html-tag">&lt;textarea cols="10" rows="5" name="comm" <strong>placeholder="Votre commentaire…"</strong>&gt;</span><span class="html-tag">&lt;/textarea&gt;</span>
+  <span class="html-tag">&lt;button type="submit"&gt;</span>Envoyer<span class="html-tag">&lt;/button&gt;</span>
+<span class="html-tag">&lt;/form&gt;</span></code></pre>
+<div class="demo ">
+<form action="demo/recup.php" method="POST">
+  <input type="text" size="10" name="prenom" placeholder="Prénom">
+  <textarea cols="10" rows="5" name="comm" placeholder="Votre commentaire…"></textarea>
+  <button type="submit">Envoyer</button>
+</form>
+</div>
+	</div>
+</div>
+<p>Attention, les exemples ci-dessous sont simplifiés&nbsp;: dans la pratique, il ne faut jamais utiliser
+un <i lang="en">placeholder</i> <strong>à la place</strong> d'un <code>label</code>&nbsp;!
+Le formulaire doit être compréhensible sans le <i lang="en">placeholder</i>, qui n'est pas toujours affiché.</p>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Menu déroulant</h2>
+<div class="p">Le menu déroulant s'obtient avec l'élément <code>select</code>, qui contient plusieurs éléments <code>option</code>
+<pre class="src "><code><span class="html-tag">&lt;form action="demo/recup.php" method="GET"&gt;</span>
+  <span class="html-tag">&lt;select name="fruit"&gt;</span>
+    <span class="html-tag">&lt;option&gt;</span>Fraise<span class="html-tag">&lt;/option&gt;</span>
+    <span class="html-tag">&lt;option&gt;</span>Pomme<span class="html-tag">&lt;/option&gt;</span>
+    <span class="html-tag">&lt;option&gt;</span>Raisin<span class="html-tag">&lt;/option&gt;</span>
+  <span class="html-tag">&lt;/select&gt;</span>
+  <span class="html-tag">&lt;button type="submit"&gt;</span>Go<span class="html-tag">&lt;/button&gt;</span>
+<span class="html-tag">&lt;/form&gt;</span></code></pre>
+<div class="demo ">
+<form action="demo/recup.php" method="GET">
+  <select name="fruit">
+    <option selected="selected">Fraise</option>
+    <option>Pomme</option>
+    <option>Raisin</option>
+  </select>
+  <button type="submit">Go</button>
+</form>
+</div>
+</div>
+<p>La valeur du paramètre est le contenu de l'élément <code>option</code> sélectionné, ou le contenu de son attribut <code>value</code> s'il existe</p>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Groupes d'options dans un menu</h2>
+<div class="p">
+On peut grouper les options d'un menu déroulant avec l'élément <code>optgroup</code>
+<pre class="src "><code><span class="html-tag">&lt;form action="demo/recup.php" method="GET"&gt;</span>
+  <span class="html-tag">&lt;select name="instrument"&gt;</span>
+    <span class="html-tag">&lt;optgroup label="Bois"&gt;</span>
+      <span class="html-tag">&lt;option value="clarinette"&gt;</span>Clarinette (si♭)<span class="html-tag">&lt;/option&gt;</span>
+      <span class="html-tag">&lt;option value="basson"&gt;</span>Basson (ut)<span class="html-tag">&lt;/option&gt;</span>
+      <span class="html-tag">&lt;option value="sax"&gt;</span>Saxophone (mi♭)<span class="html-tag">&lt;/option&gt;</span>
+    <span class="html-tag">&lt;/optgroup&gt;</span>
+    <span class="html-tag">&lt;optgroup label="Cuivres"&gt;</span>
+      <span class="html-tag">&lt;option value="trompette"&gt;</span>Trompette (si♭)<span class="html-tag">&lt;/option&gt;</span>
+      <span class="html-tag">&lt;option value="trombone"&gt;</span>Trombone (ut)<span class="html-tag">&lt;/option&gt;</span>
+      <span class="html-tag">&lt;option value="tuba"&gt;</span>Tuba (fa)<span class="html-tag">&lt;/option&gt;</span>
+    <span class="html-tag">&lt;/optgroup&gt;</span>
+  <span class="html-tag">&lt;/select&gt;</span>
+  <span class="html-tag">&lt;button type="submit"&gt;</span>Go<span class="html-tag">&lt;/button&gt;</span>
+<span class="html-tag">&lt;/form&gt;</span></code></pre>
+<div class="demo ">
+<form action="demo/recup.php" method="GET">
+  <select name="instrument">
+    <optgroup label="Bois">
+      <option value="clarinette" selected="selected">Clarinette (si♭)</option>
+      <option value="basson">Basson (ut)</option>
+      <option value="sax">Saxophone (mi♭)</option>
+    </optgroup>
+    <optgroup label="Cuivres">
+      <option value="trompette">Trompette (si♭)</option>
+      <option value="trombone">Trombone (ut)</option>
+      <option value="tuba">Tuba (fa)</option>
+    </optgroup>
+  </select>
+  <button type="submit">Go</button>
+</form>
+</div>
+</div>
+<p class="note">remarquer l'utilisation de <code>value</code> (on n'utilise
+pas les noms «&nbsp;compliqués&nbsp;» des instruments dans le code)</p>
+<p>Améliore aussi l'accessibilité</p>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Menu à choix multiples</h2>
+<div class="p">
+	Choix multiples possibles en utilisant un menu déroulant <code>select</code>
+	avec l'attribut booléen <code>multiple</code>
+	<div class="predemo">
+<pre class="src "><code><span class="html-tag">&lt;form action="demo/recup.php" method="GET"&gt;</span>
+  <span class="html-tag">&lt;select <strong>multiple</strong> name="fruit"&gt;</span>
+    <span class="html-tag">&lt;option&gt;</span>Fraise<span class="html-tag">&lt;/option&gt;</span> <span class="html-tag">&lt;option&gt;</span>Pomme<span class="html-tag">&lt;/option&gt;</span>
+  <span class="html-tag">&lt;/select&gt;</span>
+  <span class="html-tag">&lt;button type="submit"&gt;</span>Go<span class="html-tag">&lt;/button&gt;</span>
+<span class="html-tag">&lt;/form&gt;</span></code></pre>
+<div class="demo ">
+<form action="demo/recup.php" method="GET">
+  <select multiple="multiple" name="fruit">
+    <option>Fraise</option> <option>Pomme</option>
+  </select>
+  <button type="submit">Go</button>
+</form>
+</div>
+	</div>
+</div>
+<p>NB&nbsp;: attribut <em>booléen</em> = pas besoin de valeur, la simple <em>présence</em> de l'attribut lui donne la valeur «&nbsp;vrai&nbsp;»</p>
+<div class="p">
+	Si on teste l'exemple précédent, on voit que le paramètre est défini plusieurs fois dans l'URL.
+	Il faut que le script de récupération
+	sache quoi faire. Avec PHP, le plus simple est d'utiliser une syntaxe particulière pour le nom&nbsp;:
+	<div class="predemo">
+<pre class="src "><code><span class="html-tag">&lt;form action="demo/recup.php" method="GET"&gt;</span>
+  <span class="html-tag">&lt;select multiple name="<strong>fruit[]</strong>"&gt;</span>
+    <span class="html-tag">&lt;option&gt;</span>Fraise<span class="html-tag">&lt;/option&gt;</span> <span class="html-tag">&lt;option&gt;</span>Pomme<span class="html-tag">&lt;/option&gt;</span>
+  <span class="html-tag">&lt;/select&gt;</span>
+  <span class="html-tag">&lt;button type="submit"&gt;</span>Go<span class="html-tag">&lt;/button&gt;</span>
+<span class="html-tag">&lt;/form&gt;</span></code></pre>
+<div class="demo ">
+<form action="demo/recup.php" method="GET">
+  <select multiple="multiple" name="fruit[]">
+    <option>Fraise</option> <option>Pomme</option>
+  </select>
+  <button type="submit">Go</button>
+</form>
+</div>
+	</div>
+</div>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Autres widgets</h2>
+<p>Il existe un certain nombre de <code>input</code> différents, notamment
+des variantes du champ <code>text</code> qui donnent plus de <em>sémantique</em>&nbsp;:
+<code>email</code>, <code>url</code>, <code>number</code>…</p>
+<p>Intérêt&nbsp;: éviter les erreurs de l'internaute (on ne peut pas soumettre le formulaire si les valeurs sont incohérentes)
+et augmenter l'ergonomie (par exemple les claviers proposés sur mobile peuvent être adaptés au champ)</p>
+<p>
+Voir par exemple <a href="https://www.alsacreations.com/tuto/lire/1372-formulaires-html5-nouveaux-types-champs-input.html">ce guide en français sur Alsacréations</a></p>
+</div>
+
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Quelques compléments</h2>
+<p>Attribut <code>target</code> de l'élément <code>form</code>&nbsp;:
+indique où sera affichée la réponse. <code>_self</code> pour la même fenêtre (ou iframe), <code>_blank</code> pour une nouvelle</p>
+<p>Attribut booléen <code>checked</code>&nbsp;: permet qu'une case soit
+cochée par défaut, ou qu'un bouton radio soit sélectionné par défaut.</p>
+<p>Attribut booléen <code>selected</code>&nbsp;: idem, mais pour une option dans
+un menu déroulant.</p>
+</div>
+
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Validation côté client</h2>
+<p>Attribut booléen <code>disabled</code>&nbsp;: valable pour tous les widgets, permet de les rendre non modifiables.</p>
+<p>Attribut booléen <code>required</code>&nbsp;: valable pour tous les widgets, permet de les rendre obligatoires.</p>
+<p>Voir <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Forms">le tutoriel complet sur MDN</a>
+pour d'autres compléments, notamment sur la validation des formulaires
+(attributs HTML <code>pattern</code>, <code>min</code> et <code>max</code>, etc., pour empêcher l'internaute de soumettre des valeurs aberrantes)</p>
+</div>
+<!-- ########################################################################### -->
+
+<div class="slide">
+<h2>Style des formulaires</h2>
+
+<p>Tout n'est pas modifiable par CSS dans les formulaires, notamment les menus déroulants…</p>
+<div class="p">Pour sélectionner un type d'<code>input</code>&nbsp;:
+utiliser les sélecteurs par attribut
+<pre class="src "><code>input[type=text] {
+	border: 2px dotted green;
+}</code></pre>
+</div>
+<div class="p">Nombreuses pseudo-classes utiles pour les éléments de formulaire
+<ul>
+	<li><code>:focus</code>, sélectionne les éléments qui ont le focus, très utile pour les champs texte</li>
+	<li><code>:checked</code> sélectionne les cases cochées, les boutons radio sélectionnés,
+et les options choisies dans un menu déroulant <small>(peut être détourné, un peu comme <code>:target</code>, pour rendre les pages un peu dynamiques&nbsp;!)</small></li>
+<li><code>:default</code> sélectionne les éléments qui sont dans leur état par défaut
+(ex.: cases à cocher)</li>
+<li><code>:valid</code> et <code>:invalid</code>, pour styler les champs dont
+la validation est correcte ou non</li>
+<li><code>:disabled</code> et <code>:enabled</code> sélectionnent les éléments désactivés ou non
+par l'attribut HTML <code>disabled</code></li>
+<li><code>:required</code> et <code>:optional</code> sélectionnent
+les élements obligatoires ou non (attribut HTML <code>required</code>)</li>
+</ul></div>
+<p>Attention à <code>width</code>&nbsp;: les widgets ont chacun leur propre interprétation. Préciser <code>box-sizing: border-box;</code> pour être tranquille</p>
+<p>Tous les détails sur <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Forms/Styling_HTML_forms">le tutoriel de MDN</a></p>
+</div>
+
+<!-- ########################################################################### -->
+
+
+</div> <!-- fin #presentation -->
+
+<aside id="liens">
+<h3>Spécifications et normes</h3>
+<ul>
+<li><a href="http://www.w3.org/TR/html5/forms.html">W3C&nbsp;: HTML5 Forms</a></li>
+</ul>
+<h3>Tutoriels</h3>
+<ul>
+<li><a href="https://www.alsacreations.com/tuto/lire/1372-formulaires-html5-nouveaux-types-champs-input.html">Formulaires HTML5 : nouveaux types de champs</a> sur Alsacréations</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Forms">HTML forms guide,</a> tutoriel très complet de MDN</li>
+<li><a href="http://webaim.org/techniques/forms/">Creating Accessible Forms</a></li>
+<li><a href="http://www.gargan.org/en/Web_Development/Form_Layout_with_CSS/">Form Layout with CSS</a></li>
+</ul>
+
+</aside><!-- fin #liens -->
+</div> <!-- fin #contenu -->
+
+<footer class="license">
+	<a class="icone" rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+		<img alt="Licence Creative Commons CC-BY" style="border-width:0" src="Formulaires%20HTML%20%E2%80%94%20Alexandre%20Niveau%20%E2%80%94%20Universit%C3%A9%20de%20Caen%20Normandie_files/88x31.png">
+	</a>
+	<p class="texte">
+		Ce cours est mis à disposition selon les termes de la <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">licence Creative Commons Attribution 4.0 International</a>.
+	</p></footer>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+	function toggleProj() {
+		const currentParams = new URLSearchParams(window.location.search);
+		if (currentParams.get('mode') === 'proj') {
+			console.log('found proj');
+			document.documentElement.classList.remove('proj');
+			currentParams.delete('mode');
+		} else {
+			console.log('not found proj');
+			document.documentElement.classList.add('proj');
+			currentParams.set('mode', 'proj');
+		}
+		window.history.pushState({}, '', '?' + currentParams + window.location.hash);
+	};
+
+	var buttons = document.querySelectorAll('.proj_switch button'), i;
+	for (i = 0; i < buttons.length; ++i) {
+		buttons[i].addEventListener("click", toggleProj);
+	}
+
+	document.addEventListener("keypress", function(e) {
+		if (e.target == document.body && String.fromCharCode(e.keyCode || e.charCode) == "m") {
+			toggleProj();
+		}
+	});
+
+	/* ajout de liens aux titres qui ont un id */
+	let slidesWithId = document.querySelectorAll('.slide[id]');
+	for (const slide of slidesWithId) {
+		const link = document.createElement('a');
+		link.href = '#' + slide.id;
+		link.classList.add('slide-link');
+		link.title = 'Lien vers ce slide';
+		link.textContent = '#';
+		slide.insertAdjacentElement('afterbegin', link);
+	}
+
+
+});
+</script>
+
+
+</body></html>

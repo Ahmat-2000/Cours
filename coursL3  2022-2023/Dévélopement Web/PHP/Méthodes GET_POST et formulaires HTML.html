@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>Méthodes GET/POST et formulaires HTML</title>
+<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png"> 
+<link rel="stylesheet" href="M%C3%A9thodes%20GET_POST%20et%20formulaires%20HTML_files/normalize.css">
+<link rel="stylesheet" type="text/css" href="M%C3%A9thodes%20GET_POST%20et%20formulaires%20HTML_files/fiche_alex.css">
+</head>
+<body>
+<div id="wrapper">
+
+<header id="tetiere">
+	<div class="logo">
+	<a href="https://ensweb.users.info.unicaen.fr/TW4B/" title="Technologies du Web — Université de Caen" class="logo"><span class="accessibilite">Logo de l'université de Caen</span></a>
+	</div>
+	<div class="titreCours">
+			<h1>Méthodes GET/POST et formulaires HTML</h1>
+						<p class="diplome">Licence Informatique 3ème année</p>
+			<p class="enseignants">Alexandre Niveau — Jean-Marc Lecarpentier</p>
+	</div>
+	<section class="contexte">
+	<h2><a href="https://ensweb.users.info.unicaen.fr/TW4B/">Enseignement des technologies du Web</a></h2>
+		<ul>
+			<li>Module&nbsp;: <a href="https://ensweb.users.info.unicaen.fr/TW4B/">TW4B : Programmation d’applications web avancées</a></li>
+		<li><a href="http://www.unicaen.fr/">Université de Caen</a>, année&nbsp;2022-2023</li>
+		</ul>
+	</section><!-- fin de contexte -->
+		<div class="clearer">&nbsp;</div>
+</header><!-- fin de tetiere -->
+
+<main id="majeur">
+
+
+
+<!--  ##########  introduction  ########  -->
+
+<section class="bloc"><h2>Méthodes GET/POST et formulaires HTML</h2>
+<h3>Notes de cours</h3>
+<ul>
+<li><a class="titrePres" href="https://ensweb.users.info.unicaen.fr/TW4B/pres/form/">Envoi de données avec HTTP &amp; Formulaires HTML</a>
+<ul>
+<li>Envoi de données avec HTTP</li>
+<li>Méthode POST</li>
+<li>Fonctionnement général des formulaires HTML</li>
+<li>Détails sur des widgets particuliers (boutons radio, <code>select</code>…)</li>
+<li>Style et validation côté client</li>
+</ul></li>
+</ul>
+</section><!-- fin de l'introduction -->
+<section class="bloc">
+<h2>Travail personnel</h2><section>
+<h3>Objectifs</h3>
+<p>Dans ce TP, on manipule des formulaires avec les méthodes GET et 
+POST. Le 3e exo est différent&nbsp;: il s'agit d'une introduction à 
+l'architecture d'un site web, qui permet d'aborder
+les problématiques qui seront abordées ensuite en cours.
+</p>
+</section>
+	<section class="exo-among-others exercice" id="exo-01">
+		<h3>Exercice&nbsp;1&nbsp;— Formulaire simple	<a href="#exo-01" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+		<div class="info">
+Si vous avez fini l’exercice «&nbsp;Table de multiplication&nbsp;» du 
+TP&nbsp;3, vous pourrez utiliser votre page à la place de celle hébergée
+ sur ensweb. Le mieux est de tester les deux&nbsp;!</div>
+<p>On dispose d'<a href="https://ensweb.users.info.unicaen.fr/TW4B/tp/mult/multiplication.php?borne=10">une page qui affiche une table de multiplication</a>.
+Cette page utilise le paramètre d'URL <code>borne</code> pour contrôler la taille de la table.</p>
+<ol>
+<li>Essayer différentes valeurs du paramètre.</li>
+
+
+<li>Créer une page HTML <code>formulaire.html</code>
+contenant un formulaire avec un champ texte et un bouton de soumission
+contenant le texte «&nbsp;Afficher&nbsp;». Le résultat devrait ressembler à la figure suivante.
+<div class="figuregallery"><figure><img src="M%C3%A9thodes%20GET_POST%20et%20formulaires%20HTML_files/base.png" alt="Un formulaire HTML très simple"></figure></div>
+</li>
+<li>Ajouter une étiquette au champ texte, qui dit «&nbsp;Taille de la table&nbsp;:&nbsp;».
+<div class="figuregallery"><figure><img src="M%C3%A9thodes%20GET_POST%20et%20formulaires%20HTML_files/label.png" alt="Un formulaire HTML avec un label"></figure></div>
+S'assurer qu'un clic sur l'étiquette place le curseur dans le champ texte.</li>
+<li>Faire en sorte que lors de la soumission, les données du formulaires soient transmises
+à
+l'URL <code>https://ensweb.users.info.unicaen.fr/TW4B/tp/mult/multiplication.php</code>,
+en passant le contenu du champ texte comme valeur du paramètre <code>borne</code>.
+</li>
+<li><strong>Optionnel&nbsp;:</strong> empêcher l'internaute de soumettre
+ le formulaire (c'est-à-dire que le navigateur ne doit pas lancer de 
+requête) si le champ texte ne contient pas un entier positif.
+De la même façon, empêcher la soumission si l'entier n'est pas entre 1 
+et 100.</li>
+</ol>
+	</section>
+
+<!-- ********************************************************************** -->
+
+	<section class="exo-among-others exercice" id="exo-02">
+		<h3>Exercice&nbsp;2&nbsp;— Formulaire et récupération	<a href="#exo-02" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+			<figure><img src="M%C3%A9thodes%20GET_POST%20et%20formulaires%20HTML_files/formulaire.png" alt="Un formulaire HTML"></figure>
+<ol>
+<li>Écrire une page HTML contenant un formulaire correspondant au modèle ci-dessus.</li>
+<li>Lors d'un clic sur «&nbsp;Envoyer&nbsp;», les données doivent être transmises à une page PHP
+<code>recup.php</code>, sans qu'elles n'apparaissent dans l'URL.</li>
+<li>Écrire la page <code>recup.php</code>&nbsp;: pour commencer, afficher simplement le nom donné par l'internaute.</li>
+<li>Modifier le code pour donner un nom par défaut à l'internaute (par 
+exemple «&nbsp;X&nbsp;») si aucun nom ou un nom vide est donné. <strong>Attention&nbsp;:</strong>
+ si l'internaute dit s'appeler «&nbsp;0&nbsp;», ce n'est pas un nom 
+vide&nbsp;; il n'y a pas lieu de le remplacer par le nom par défaut. 
+Vérifiez bien que votre page se comporte correctement.
+</li><li>Faire en sorte que la couleur de fond de la page plaise au maximum à l'internaute.</li>
+<li>Saluer l'internaute dans toutes les langues qu'il ou elle dit parler.
+Si aucune langue n'a été sélectionnée, <em>rediriger</em> l'internaute vers une page d'erreur <code>erreur.html</code>.</li>
+</ol>
+	</section>
+
+<!-- ********************************************************************** -->
+
+	<section class="exo-among-others exercice" id="exo-03">
+		<h3>Exercice&nbsp;3&nbsp;— Architecture d’un site simple	<a href="#exo-03" class="exo-link" title="Lien vers cet exercice">#</a>
+</h3>
+			<p>Récupérer <a href="https://ensweb.users.info.unicaen.fr/TW4B/tp/poemes/poemes.zip">cette archive</a>. Elle contient un répertoire <code>poemes</code>, qui lui-même contient</p>
+<ul>
+	<li>un répertoire <code>textes</code>, avec les textes de quatre poèmes</li>
+	<li>un répertoire <code>images</code>, avec les images des poètes</li>
+	<li>un fichier <code>donnees.php</code>, qui déclare un tableau contenant des informations sur les poèmes (auteur, titre, image correspondante)</li>
+</ul>
+<p>Le but de l'exercice est de réaliser un site présentant ces quatre 
+poèmes. Un site plus conséquent utiliserait évidemment une base de 
+données&nbsp;;
+un des objectifs est de vous faire manipuler les tableaux PHP, et de 
+vous faire travailler sur l'architecture d'un site indépendamment des
+problèmes spécifiques aux BD (connexion, erreurs de requêtes, etc.).</p>
+<p>Une version naïve du site consisterait à créer un script PHP par page
+ (donc un pour chaque poème + la page d'accueil). C'est une très 
+mauvaise idée&nbsp;: il
+y a énormément de redondances entre les scripts, et si on veut rajouter 
+un poème à la liste, c'est compliqué.</p>
+<p>Une meilleure solution est de faire en sorte que le site ne soit généré que par <em>un seul et même script principal</em>, qui va choisir quoi afficher en fonction de l'URL.
+</p><p>Pour simplifier l'énoncé et l'exercice, on va utiliser un <em>paramètre</em> d'URL pour choisir le poème à afficher. Ce choix vous semble-t-il pertinent&nbsp;?</p>
+
+<h4>Première partie&nbsp;: un site fonctionnel</h4>
+<ol>
+<li>Placer le répertoire <code>poemes</code> sur le serveur, et créer un fichier <code>index.php</code> dans le répertoire.
+Mettre un modèle de page HTML de base dans le fichier <code>index.php</code>. Dans toute cette partie,
+on ne modifiera <strong>que</strong> ce fichier <code>index.php</code>&nbsp;: notre site va contenir plusieurs pages, mais toutes seront générées par cet unique script.</li>
+<li>Inclure le fichier <code>donnees.php</code> depuis le fichier <code>index.php</code>. On va ainsi pouvoir accéder aux informations sur les poèmes.</li>
+<li>Afficher une liste des titres des poèmes (en utilisant le tableau, bien sûr !).</li>
+<li>Récupérer le paramètre <code>poeme</code> dans l'URL, et si sa valeur correspond à l'une des quatre clefs (<code>boheme</code>, <code>correspondances</code>,
+<code>bois</code>, <code>automne</code>), alors on va afficher la page 
+du poème correspondant&nbsp;: pour l'instant, afficher le titre du poème
+ comme titre principal de la page
+(<code>h1</code>) et dans l'élément <code>title</code> de l'en-tête HTML.</li>
+<li>Ajouter à la page le texte du poème correspondant, et le nom de l'auteur en-dessous.</li>
+<li>Ajouter l'image correspondante, avec comme texte alternatif le nom de l'auteur.</li>
+<li>Transformer la liste des titres de poèmes en une liste de 
+liens&nbsp;: un clic sur un poème mène à la «&nbsp;page&nbsp;» 
+correspondante.</li>
+<li>Faire en sorte que s'il n'y pas de paramètre <code>poeme</code> dans l'URL, un message d'accueil soit affiché.</li>
+<li>Faire en sorte que si la valeur du paramètre <code>poeme</code> dans l'URL est erronée, un message d'erreur soit affiché.</li>
+</ol>
+
+<h4>Deuxième partie&nbsp;: une meilleure architecture</h4>
+<p>À ce niveau-là, le mini-site doit fonctionner correctement. Il n'est 
+cependant pas très propre, car on a mélangé la logique et l'affichage.
+Pour bien faire, il faut séparer notre fichier en deux morceaux.</p>
+<ul>
+<li><code>index.php</code> va être le contrôleur, il ne s'occupera que 
+d'analyser l'URL pour déterminer le poème désiré et récupérer les 
+informations correspondantes dans les données. Il ne devra rien afficher
+ lui-même&nbsp;:
+une fois son travail terminé, il se contentera d'inclure l'autre 
+fichier.</li>
+<li>On va créer un fichier <code>squelette.php</code>, qui au contraire ne s'occupera que de l'affichage. Il contiendra une page HTML «&nbsp;à trous&nbsp;» (on parle de <i>template</i>)&nbsp;:
+on n'utilisera PHP que pour afficher des variables. Les variables seront remplies au préalable par le contrôleur.</li>
+</ul>
+<p>Créer un squelette pour les pages affichant un poème, et modifier <code>index.php</code> pour qu'il se comporte comme un contrôleur tel que décrit ci-dessus.</p> 
+<p>Créer un squelette pour les autres pages (accueil et erreur) si nécessaire, et adapter <code>index.php</code>. <strong>Remarque</strong>&nbsp;: si vous estimez que vos squelettes partagent trop de code HTML,
+n'hésitez pas 
+à extraire des fragments communs, qui seront inclus depuis plusieurs squelettes
+(l'exemple typique est le pied de page).</p>
+
+
+<h4>Troisième partie&nbsp;: recherche dans les poèmes</h4>
+<p>Faire en sorte que le site reconnaisse un paramètre <code>recherche</code>
+ dans l'URL, qui permet de chercher une chaîne de caractères dans le 
+texte des poèmes. Le site doit effectuer une liste de liens vers les 
+poèmes correspondants, ou bien un message du type «&nbsp;Aucun poème ne 
+correspond à votre recherche&nbsp;». (Si nécessaire, la page des 
+résultats de recherche pourra bien sûr faire l'objet d'un squelette 
+spécifique.)
+</p><p>Ajouter un formulaire de recherche sur toutes les pages du site, qui va permettre d'exploiter le paramètre <code>recherche</code>.
+</p><p>Le script <code>index.php</code> commence (un peu…) à grossir&nbsp;: de fait, il est chargé de deux missions orthogonales, à savoir le <em>choix</em> de l'action à effectuer (afficher un poème, la page d'accueil, ou la page des résultats de recherche) et
+l'<em>implémentation</em> de cette action (remplir les trous du 
+squelette, faire la recherche). La première mission est plutôt un 
+travail de «&nbsp;routage&nbsp;» ou d'«&nbsp;aiguillage&nbsp;». Essayez 
+de séparer du contrôleur cette mission de routage.
+</p><p><strong>Pour les rapides</strong>&nbsp;: une façon de vérifier la
+ bonne séparation des responsabilités dans votre architecture est de 
+faire en sorte que le programme principal puisse être appelé soit via 
+HTTP, soit en ligne de commande. <!-- (NB : on avait déjà fait un travail de ce type dans un précédent TP, pour l'automate cellulaire élémentaire). -->
+</p><ul><li>Dans un premier temps, si on se contente de récupérer du 
+HTML dans les deux cas, seul la partie «&nbsp;routage&nbsp;» devrait 
+changer.
+</li><li>A priori on préférerait ne pas avoir de HTML dans le 
+terminal&nbsp;; on ne peut donc pas se contenter de faire inclure des 
+squelettes au contrôleur. Implémenter un système de <code>Displayer</code>s (comme cela a été fait dans de précédents TP) pour gérer les deux situations de manière propre.
+	</li></ul></section>
+
+<!-- ********************************************************************** -->
+
+</section><!-- fin de travail -->
+</main><!-- fin de majeur -->
+
+
+</div> <!-- fermeture du wrapper -->
+
+
+</body></html>

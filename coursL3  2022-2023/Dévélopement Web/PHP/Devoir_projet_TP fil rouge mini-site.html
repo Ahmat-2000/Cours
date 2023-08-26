@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html class="" lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>Devoir/projet/TP fil rouge&nbsp;: mini-site</title>
+<link rel="icon" type="image/png" href="https://ensweb.users.info.unicaen.fr/TW4B/ui/images/favicon.png"> 
+<link rel="stylesheet" href="Devoir_projet_TP%20fil%20rouge%20mini-site_files/normalize.css">
+<link rel="stylesheet" type="text/css" href="Devoir_projet_TP%20fil%20rouge%20mini-site_files/fiche_alex.css">
+    <style>
+.object {
+  font-style: italic;
+  font-weight: bold;
+  color: #39b583;
+}    </style> 
+</head>
+<body>
+<div id="wrapper">
+
+<header id="tetiere">
+	<div class="logo">
+	<a href="https://ensweb.users.info.unicaen.fr/TW4B/" title="Technologies du Web — Université de Caen" class="logo"><span class="accessibilite">Logo de l'université de Caen</span></a>
+	</div>
+	<div class="titreCours">
+			<h1>Devoir/projet/TP fil rouge&nbsp;: mini-site</h1>
+			<p class="soustitre">2022-2023</p>
+			<p class="diplome">Licence Informatique 3ème année</p>
+			<p class="enseignants">Alexandre Niveau — Jean-Marc Lecarpentier</p>
+	</div>
+	<section class="contexte">
+	<h2><a href="https://ensweb.users.info.unicaen.fr/TW4B/">Enseignement des technologies du Web</a></h2>
+		<ul>
+			<li>Module&nbsp;: <a href="https://ensweb.users.info.unicaen.fr/TW4B/">TW4B : Programmation d’applications web avancées</a></li>
+		<li><a href="http://www.unicaen.fr/">Université de Caen</a>, année&nbsp;2022-2023</li>
+		</ul>
+	</section><!-- fin de contexte -->
+		<div class="clearer">&nbsp;</div>
+</header><!-- fin de tetiere -->
+
+<main id="majeur">
+
+
+
+<!--  ##########  introduction  ########  -->
+
+<section class="bloc"><h2>Devoir/projet/TP fil rouge&nbsp;: mini-site</h2><p class="soustitre">2022-2023</p>
+
+
+<!-- *************************************************************************** -->
+
+<h3>Objectifs</h3>
+
+<p>L'objectif du projet est de réaliser un site qui met en oeuvre les principes de développement web
+vus tout au long du module Technologies Web.</p>
+
+<h3>Sujet</h3>
+
+<p>Vous devez réaliser <strong>individuellement</strong> un mini-site qui présente des choses <em>listables</em>&nbsp;;
+dans la suite de l'énoncé, nous parlerons d'«&nbsp;<i class="object">objets</i>&nbsp;»,
+ mais ce ne sont pas nécessairement des objets au sens propre.
+Cela pourra être par exemple des livres, loutres, chansons, pays, 
+voitures, mots, pots de chambre, recettes, disques, personnes, 
+événements historiques, arbres, boîtes de camembert…</p>
+<p>
+Préférez un sujet original (en particulier, autre chose que votre page 
+perso, et autre chose que les Pokémon)&nbsp;; mais vous ne serez pas 
+évalué·e sur le choix du sujet.
+Cependant, ne reprenez pas tels quels les <i class="object">objets</i> «&nbsp;poème&nbsp;», «&nbsp;couleur&nbsp;» et «&nbsp;animal&nbsp;» manipulés en cours et en TP.</p>
+<p><strong>Attention,</strong> le contenu et le design graphique du site
+ en lui-même ne seront pas pris en compte. Cependant, même avec un 
+design très basique on veillera à avoir une présentation claire des 
+pages, et à respecter les principes d'ergonomie et d'accessibilité vus 
+en cours.</p>
+
+<h3>Contraintes techniques</h3>
+
+<ul>
+    <li>Le site devra être hébergé sur le serveur web du département.</li>
+    <li>Le code source de votre site devra être déposé sur un dépôt <em>git</em> de l'université (voir plus loin).
+    </li><li>Vous devrez stocker les <i class="object">objets</i>  dans une base de données MySQL sur le serveur du département.</li>
+    <li>Vous devrez utiliser <strong>l'architecture MVCR</strong> vue en
+ cours et détaillée lors des TP,
+        avec en particulier une bonne séparation des classes métier (le 
+modèle), de l'affichage (vues), de la gestion des requêtes HTTP 
+(routeur),
+        de la gestion des actions (contrôleurs), de la validation des 
+données (<i lang="en">builders</i>), et des détails de stockage en base de données.</li>
+    <li>Les pages générées devront être <strong>valides HTML5</strong> selon <a href="https://validator.w3.org/">le validateur du W3C</a> («Validate by URI» devrait fonctionner).</li>
+    <li>Tout le code doit être écrit par vous : vous ne pouvez pas utiliser de frameworks et le plagiat sera sévèrement puni.</li>
+</ul>
+
+<h3>Consignes</h3>
+  <p>Votre site devra remplir les consignes suivantes.</p>
+<ul>
+<li>Il devra comporter une page listant tous les <i class="object">objets</i>.</li>
+<li>Chaque <i class="object">objet</i> de la liste devra avoir une page dédiée, typiquement avec plus de détails.</li>
+<li>Il doit être possible&nbsp;:
+<ul>
+<li>d'ajouter un nouvel <i class="object">objet</i> à la liste, qui se comporte de la même façon que les autres&nbsp;;
+</li><li>de supprimer n'importe quel <i class="object">objet</i> de la liste&nbsp;;
+</li><li>de modifier les caractéristiques de n'importe quel <i class="object">objet</i> de la liste.
+    </li></ul>
+</li><li>Le site devra contenir une page de type «&nbsp;à propos&nbsp;»,
+ avec 
+                    <ul>
+                        <li><strong>votre numéro étudiant</strong></li>
+                        <li>une liste des points réalisés (en particulier les compléments, voir plus loin)</li>
+                        <li>d'éventuelles explications sur vos choix en 
+matière de design, modélisation, code, si vous avez quelque chose 
+d'intéressant à dire</li>
+                        <li>tout ce qu'il vous semble utile de nous signaler.</li>
+                    </ul>
+</li></ul>
+
+
+
+
+<!-- *************************************************************************** -->
+
+
+<h3>Barème indicatif</h3>
+
+<p>Le nombre de points pourra être modifié si nécessaire.
+Voir plus haut pour les détails sur chaque élément.</p>
+<h4>Réalisation de base (17.5 points)</h4>
+<ul>
+<li>Liste d'<i class="object">objets</i>, affichables indépendamment (TP07)&nbsp;: 3.5 points</li>
+<li>Création basique d'<i class="object">objets</i> (TP08)&nbsp;: 1.5 points</li>
+<li>Modification basique d'<i class="object">objets</i> (TP08)&nbsp;: 1.5 points</li>
+<li>Builders pour la manipulation d'<i class="object">objets</i> (TP08)&nbsp;: 3.5 points</li>
+<li>Suppression d'<i class="object">objets</i> (TP08)&nbsp;: 2 points</li>
+<li>Redirection en GET après création/modif/suppression réussie (TP09)&nbsp;: 1 point
+</li><li>Gestion du feedback (TP09)&nbsp;: 1 point
+</li><li>Redirection en GET après POST même lors des erreurs (TP09)&nbsp;: 1 point
+</li><li>Utilisation d'une base de données MySQL (TP10)&nbsp;: 2.5 points
+</li></ul>
+
+<h4>Compléments (2.5 points)</h4>
+<p>En outre vous devez réaliser un complément au choix dans la liste suivante&nbsp;:
+</p><ul>
+<li>routage via le chemin virtuel (PATH_INFO) dans les URL plutôt qu'avec des paramètres d'URL 
+</li><li>possibilité de filtrer la liste des <i class="object">objets</i> via un champ de recherche
+</li><li>possibilité de modifier l'ordre d'affichage de la liste (tri par date, ou suivant les attributs des <i class="object">objets</i>…)
+</li><li>pagination de la liste (ne montrer que N <i class="object">objets</i> par page)
+</li><li>possibilité d'illustrer un <i class="object">objet</i> en 
+uploadant une image (l'upload sera vu lors du dernier cours&nbsp;; 
+attention les images uploadées devront être placées dans un répertoire 
+spécifique, voir plus bas).
+</li></ul>
+<p>Attention, il s'agit d'intégrer ces fonctionnalités <strong>proprement</strong> dans l'architecture.</p>
+
+<h3>Critères d'évaluation</h3>
+
+<p>Les points suivants seront particulièrement importants pour l'évaluation de votre projet. <strong>Ils pourront occasionner de fortes pénalités</strong>, même si votre site fonctionne. La pénalité maximale pour chaque item est indiquée entre parenthèses.</p>
+
+<ul>
+    <li>Respect des consignes de rendu (-20)</li>
+    <li><strong>Respect des principes de l'architecture MVCR</strong> vus en CM/TP (-20)</li>
+    <li>Qualité du code PHP réalisé (lisibilité, propreté, documentation) (-10)</li>
+    <li>Organisation des dossiers et fichiers (-5)</li>
+    <li>Qualité de l'ergonomie et de l'accessibilité du site (-10)
+    </li>
+    <li>Non vulnérabilité aux principales failles de sécurité vues en 
+cours (injections SQL et JavaScript, «&nbsp;fuite&nbsp;» de la base de 
+données) (-10) </li>
+</ul>
+    <p>N'hésitez pas à vous entraider, mais ne copiez pas le code des autres. Nous serons sévères envers les fraudes.</p>
+
+
+
+
+
+<!-- *************************************************************************** -->
+
+<h3 id="rendu">Rendu du devoir</h3>
+
+<ul>
+    <li>La date limite de rendu du devoir est le <strong>28 novembre 23:59:59</strong>.</li>
+    <li>Vous devrez :
+        <ul>
+            <li>Déposer régulièrement votre code sur le dépôt Git que nous vous aurons créé sur <a href="https://git.unicaen.fr/">https://git.unicaen.fr/</a>
+ (vous recevrez les instructions très bientôt). Attention, il s'agit 
+bien d'utiliser le dépôt normalement, avec des commits contenant du <strong>code</strong>, pas de déposer une archive en fin de projet comme sur ecampus.</li>
+	    <li>Déployer votre site sur votre espace du serveur web de l'université, à l'URL  <code>https://dev-<var>LOGIN</var>.users.info.unicaen.fr/dm-tw4b-2022/</code>.
+Vous devez créer le répertoire s'il n'a pas été créé automatiquement&nbsp;; <strong>vous ne devez pas le supprimer ou le renommer</strong>.
+ Après la date limite, il sera rendu inaccessible en écriture jusqu'à ce
+ que la correction soit terminée (excepté le répertoire <code>dm-tw4b-2022/upload</code>, pour que l'<i>upload</i> de fichiers puisse continuer à fonctionner).</li>
+        </ul>
+    </li>
+    <li>Un <em>dump</em> de votre base de données (voir la commande <a href="https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#mysqldump-syntax" target="_blank">mysqldump</a>) sera placé dans le dossier <code>dump</code> de votre Git.</li>
+</ul>
+
+
+
+<p>Si vous n'utilisez que votre propre serveur pour développer votre site, <strong>prévoyez de la marge</strong>
+    pour le déploiement sur le serveur du département. Entre la BD, les 
+différences de versions de PHP et la configuration d'Apache, il peut y 
+avoir énormément de problèmes imprévisibles.</p>
+<p>En cas de problème au moment du rendu de votre travail, <strong>contactez-nous le plus rapidement possible</strong>. Nous ne vous aiderons pas une fois la date limite dépassée.</p>
+
+<h3>Remarques sur l'architecture</h3>
+<p>Un des objectifs du DM est de vous faire appliquer l'architecture présentée en cours
+et détaillée dans le gros exercice filé vu en TP.
+Certains des choix faits dans cet exercice sont destinés
+à en simplifier l'énoncé&nbsp;: ils ne représentent pas une consigne ferme.
+Par exemple, si vous regardez les sources du site des poèmes ou des couleurs,
+vous verrez qu'il y a des variations. Vous pouvez vous aussi tout à fait faire des choix différents.</p>
+<p>Cependant, <strong>les principes de l'architecture MVCR doivent être respectés</strong>.
+Plus vous vous éloignerez de la structure présentée en cours/TP, plus 
+vous vous
+exposerez à la critique. Réfléchissez bien avant de faire des choix 
+architecturaux trop différents (vous pouvez aussi évidemment en discuter
+ avec nous), et si vous décidez de les faire, <strong>justifiez-les</strong> sur votre page «&nbsp;à propos&nbsp;». 
+</p>
+<p><small>Remarque pour les spécialistes du PHP&nbsp;: il n'est pas 
+interdit de réutiliser des bouts de code que vous auriez déjà écrits,
+mais ne reprenez pas tout le super framework perso sur lequel vous 
+travaillez depuis deux ans. C'est très difficile à évaluer, ça prend 
+beaucoup de temps, ce n'est pas très juste par rapport aux autres (car 
+on n'évalue alors pas un simple DM mais le travail de plusieurs 
+mois/années), et on ne peut pas vérifier votre implication personnelle 
+dans le développement. Ça peut être frustrant pour vous, mais ce type de
+ frustration est courant en informatique — et rien ne vous empêche 
+d'intégrer proprement vos idées dans l'architecture demandée.</small></p>
+
+
+</section><!-- fin de l'introduction -->
+
+</main><!-- fin de majeur -->
+
+
+</div> <!-- fermeture du wrapper -->
+
+
+</body></html>
